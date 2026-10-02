@@ -40,3 +40,10 @@ Public API yang kami gunakan bersumber dari basis data Open Food Facts: [https:/
 - login sebagai pengguna: Dapat mengakses kalkulator kalori, melengkapi profil, mengakses katalog nutrisi, dan panduan porsi makan sehat.
 
 - login sebagai admin: Dapat merubah/menambahkan informasi pada katalog nutrisi dan panduan makan sehat, serta mengakses admin portal
+
+# Tautan Figma
+
+Link Figma : https://www.figma.com/design/V68iKwXFe8rn1on5zE9wi6/Caloreat?node-id=0-1&t=RW25UIKrE2cFGLEP-1
+
+
+
