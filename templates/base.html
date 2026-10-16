@@ -1,0 +1,40 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500&family=Outfit:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/css/style.css">
+  <title>{% block title %}CALOREAT{% endblock %}</title>
+</head>
+<body>
+    <main class="card">
+        <header class="nav">
+            <nav class="nav-links" aria-label="Menu utama">
+            <a href="#home">Home</a>
+            <a href="#description">Description</a>
+            <a href="#licenses">...</a>
+            <a href="#pricing">...</a>
+            </nav>
+
+            <a class="logo" href="#" aria-label="Beranda">
+            <img src="/static/img/logo_caloreat.png" alt="Logo CALOREAT" height="64">
+            </a>
+
+            <div class="nav-actions">
+            <a class="btn btn-soft" href="#">Login</a>
+            <a class="btn btn-outline" href="#">Sign Up</a>
+            </div>
+        </header>
+        {% block content %} {% endblock content %}
+        <footer class="footer">
+            <div class="footer-title">
+                <h3>© Kelompok PBP D4</h1>
+            </div>
+        </footer>
+    </main>
+</body>
+</html>
