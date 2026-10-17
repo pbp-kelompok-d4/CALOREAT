@@ -40,7 +40,7 @@
     </div>
 
     <div class="dashboard-reviews">
-      <div class="dashboard-reviews-title-button">
+      <div class="dashboard-reviews-header">
         <h2 class="dashboard-reviews__title">What our Customers say?</h2>
         <button type="button" class="btn add-reviews-button">
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
@@ -50,9 +50,9 @@
           Write a Review
         </button> 
       </div>
+
       <div class="dashboard-review-box">
         <div class="dashboard-review-comments">
-
           {% for review in review_list %}
             <div class="dashboard-review-card">
               <img class="review-avatar" src="{{ review.profile_picture }}" alt="{{ review.customer_name }}'s profile picture" loading="lazy">
@@ -68,7 +68,6 @@
               <p>There are no reviews yet, add some!</p>
             </div>
           {% endfor %}
-
         </div>
       </div>
     </div>
