@@ -1,30 +1,60 @@
 {% extends 'base.html' %}
 {% block title %}Home{% endblock title %}
 {% block content %}
-  <section class="hero">
-    <div class="hero-text">
-      <h1>Your daily food compass</h1>
-      <p>Know your meal, own your goal.</p>
-      <a class="btn btn-yellow" href="#">Join the waiting list</a>
-    </div>
-    <div class="stage">
-      <img class="deco deco-left" src="/static/img/tomat-kiri.png" alt="" aria-hidden="true">
-      <div class="plate" aria-hidden="true">
-        <span>caloreat</span>
+  <div class="main-content">
+    <section class="hero">
+      <div class="hero-text">
+        <h1>Your daily food compass</h1>
+        <p>Know your meal, own your goal.</p>
       </div>
-      <img class="deco deco-right" src="/static/img/tomat-kanan.png" alt="" aria-hidden="true">
+      <div class="stage">
+        <img class="deco deco-left" src="/static/img/tomat-kiri.png" alt="" aria-hidden="true">
+        <div class="plate" aria-hidden="true">
+          <span>caloreat</span>
+        </div>
+        <img class="deco deco-right" src="/static/img/tomat-kanan.png" alt="" aria-hidden="true">
+      </div>
+
+      <div class="search-option">
+        <form method="get" class="food-search">
+          <span class="food-search__icon" aria-hidden="true">☰</span>
+          <input type="search"
+                  name="title"
+                  placeholder="Hamburger"
+                  class="food-search__input"
+                  aria-label="Cari makanan">
+          <button type="submit" class="food-search__button">Search</button>
+        </form>
+      </div>
+    </section>
+
+    <div class="dashboard-education">
+      <h2 class="dashboard-education__title">Why use Caloreat?</h2>
+      <div class="dashboard-education-box">
+        <div class="dashboard-content">
+          <div class="dashboard-placeholder dashboard-placeholder--main"></div>
+          <div class="dashboard-placeholder dashboard-placeholder--top"></div>
+          <div class="dashboard-placeholder dashboard-placeholder--bottom"></div>
+        </div>
+      </div>
     </div>
 
-    <div class="search-option">
-      <form method="get" class="food-search">
-        <span class="food-search__icon" aria-hidden="true">☰</span>
-        <input type="search"
-                name="title"
-                placeholder="Hamburger"
-                class="food-search__input"
-                aria-label="Cari makanan">
-        <button type="submit" class="food-search__button">Search</button>
-      </form>
+    <div class="dashboard-reviews">
+      <h2 class="dashboard-reviews__title">What our Customers say?</h2>
+      <div class="dashboard-review-box">
+        <div class="dashboard-review-comments">
+          <div class="dashboard-review-card">
+            <div class="review-avatar" aria-hidden="true"></div>
+            <div class="review-details">
+              <h3>Prawowi Sudodo</h3>
+              <div class="review-stars" aria-label="5 out of 5 stars">★★★★★</div>
+              <time datetime="2026-10-04">October 4, 2026</time>
+              <p>Love it.</p>
+            </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
-  </section>
+  </div>
 {% endblock content %}
