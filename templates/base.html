@@ -8,6 +8,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500&family=Outfit:wght@500;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/static/css/style.css">
+  <link rel="stylesheet" href="/static/css/auth.css">
   <title>{% block title %}CALOREAT{% endblock %}</title>
 </head>
 <body>
@@ -26,7 +27,7 @@
 
             <div class="nav-actions">
             <a class="btn btn-soft" href="#">Login</a>
-            <a class="btn btn-outline" href="#">Sign Up</a>
+            <a class="btn btn-outline" href="{% url 'main:register' %}">Sign Up</a>
             </div>
         </header>
         {% block content %} {% endblock content %}

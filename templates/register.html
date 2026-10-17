@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/authentication_page.css' %}">
+
+<main class="auth-page">
+
+  <!-- PANEL KIRI: GAMBAR DAN TAGLINE -->
+  <section class="auth-visual">
+    <div class="auth-slides">
+      <img class="auth-slide" src="{% static 'img/auth_page/indomie.svg' %}" alt="gambar mie rebus">
+      <img class="auth-slide" src="{% static 'img/auth_page/nasi-goreng.svg' %}" alt="gambar nasi goreng">
+      <img class="auth-slide" src="{% static 'img/auth_page/nasi-uduk.svg' %}" alt="nasi uduk">
+    </div>
+
+    <h2 class="auth-tagline">Know your meal,<br>own your goal.</h2>
+
+    <ul class="auth-points">
+      <li>Look up calories for any food</li>
+      <li>Calculate your daily needs</li>
+      <li>Stay on track with your goal</li>
+    </ul>
+  </section>
+
+  <!-- PANEL KANAN:  FORM -->
+  <section class="auth-panel">
+    <div class="auth-card">
+      <h1 class="auth-title">Create your account</h1>
+
+      <nav class="auth-toggle" aria-label="Pilih halaman">
+        <a href="{% url 'main:login' %}">Log in</a>
+        <a href="{% url 'main:register' %}" class="is-active" aria-current="page">Sign up</a>
+      </nav>
+
+      <form class="auth-form" method="post" novalidate>
+        {% csrf_token %}
+
+        {% if form.non_field_errors %}
+          {% for error in form.non_field_errors %}
+            <p class="auth-error">{{ error }}</p>
+          {% endfor %}
+        {% endif %}
+
+        <div class="auth-field {% if form.full_name.errors %}has-error{% endif %}">
+          <label for="{{ form.full_name.id_for_label }}">Full name</label>
+          {{ form.full_name }}
+          {% for error in form.full_name.errors %}
+            <p class="auth-error">{{ error }}</p>
+          {% endfor %}
+        </div>
+
+        <div class="auth-field {% if form.email.errors %}has-error{% endif %}">
+          <label for="{{ form.email.id_for_label }}">Email</label>
+          {{ form.email }}
+          {% for error in form.email.errors %}
+            <p class="auth-error">{{ error }}</p>
+          {% endfor %}
+        </div>
+
+        <div class="auth-field {% if form.password.errors %}has-error{% endif %}">
+          <label for="{{ form.password.id_for_label }}">Password</label>
+          {{ form.password }}
+          <p class="auth-hint">At least 8 characters.</p>
+          {% for error in form.password.errors %}
+            <p class="auth-error">{{ error }}</p>
+          {% endfor %}
+        </div>
+
+        <button type="submit" class="auth-submit">Create account</button>
+      </form>
+    </div>
+  </section>
+
+</main>
+{% endblock %}
