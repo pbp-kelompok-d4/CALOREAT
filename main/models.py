@@ -15,7 +15,7 @@ class Reviews(models.Model):
     customer_name = models.CharField(max_length=25)
     content = models.TextField()
     date = models.DateTimeField(auto_now_add=True, editable=False)
-    profile_picture = models.URLField(default="https://drive.google.com/file/d/1jQetxUJoI4cqaIimiiw1u2rkYLS5mInb/view?usp=sharing")
+    profile_picture = models.URLField(default="https://drive.google.com/thumbnail?id=1jQetxUJoI4cqaIimiiw1u2rkYLS5mInb&sz=w1000")
     star = models.CharField(max_length=5, choices=STAR_CHOICES, default='★★★★★')
 
     def __str__(self):

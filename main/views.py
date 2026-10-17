@@ -4,6 +4,11 @@ from django.contrib.auth import login, logout
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.shortcuts import redirect, render
 
+from main.models import Reviews
+
 # Menampilkan main.
 def show_main(request):
-    return render(request, "index.html")
+    context = {
+        'review_list': Reviews.objects.all(),
+    }
+    return render(request, "index.html", context)

@@ -298,6 +298,8 @@ h1 {
   width: 56px;
   height: 56px;
   border-radius: 50%;
+  object-fit: cover;
+  background: #cbd0d6;
 }
 
 .review-details {
@@ -317,7 +319,7 @@ h1 {
   line-height: 1;
 }
 
-.review-details time {
+.review-details .time {
   display: block;
   margin-top: 7px;
   color: var(--muted);
@@ -328,6 +330,15 @@ h1 {
   margin-top: 7px;
   font-size: 16px;
   line-height: 1.35;
+}
+
+.dashboard-review-empty {
+  display: grid;
+  grid-column: 1 / -1;
+  min-height: 190px;
+  place-items: center;
+  color: var(--muted);
+  text-align: center;
 }
 
 

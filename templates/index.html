@@ -43,16 +43,23 @@
       <h2 class="dashboard-reviews__title">What our Customers say?</h2>
       <div class="dashboard-review-box">
         <div class="dashboard-review-comments">
-          <div class="dashboard-review-card">
-            <div class="review-avatar" aria-hidden="true"></div>
-            <div class="review-details">
-              <h3>Prawowi Sudodo</h3>
-              <div class="review-stars" aria-label="5 out of 5 stars">★★★★★</div>
-              <time datetime="2026-10-04">October 4, 2026</time>
-              <p>Love it.</p>
+
+          {% for review in review_list %}
+            <div class="dashboard-review-card">
+              <img class="review-avatar" src="{{ review.profile_picture }}" alt="{{ review.customer_name }}'s profile picture" loading="lazy">
+              <div class="review-details">
+                <h3>{{ review.customer_name }}</h3>
+                <div class="review-stars">{{ review.star }}</div>
+                <div class="time">{{ review.date }}</div>
+                <p>{{ review.content }}</p>
+              </div>
             </div>
+          {% empty %}
+            <div class="dashboard-review-empty">
+              <p>There are no reviews yet, add some!</p>
             </div>
-          </div>
+          {% endfor %}
+
         </div>
       </div>
     </div>
