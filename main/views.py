@@ -9,6 +9,6 @@ from main.models import Reviews
 # Menampilkan main.
 def show_main(request):
     context = {
-        'review_list': Reviews.objects.all(),
+        'review_list': Reviews.objects.order_by('-date')[:9],
     }
     return render(request, "index.html", context)
