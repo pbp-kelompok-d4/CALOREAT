@@ -1,8 +1,7 @@
 :root {
-  /* Warna diambil langsung dari piksel desain Figma */
-  --card: #fffbea;      /* navbar / bingkai */
-  --hero-top: #f4e4a1;  /* hero atas */
-  --hero-bottom: #f9efc6; /* hero bawah */
+  --card: #fffbea;     
+  --hero-top: #f4e4a1; 
+  --hero-bottom: #f9efc6;
   --ink: #2a2108;
   --muted: #827345;
   --yellow: #f2b705;
@@ -30,7 +29,7 @@ a { color: inherit; text-decoration: none; }
   padding: 10px;
 }
 
-/* Navbar */
+/* NAVBAR */
 .nav {
   position: relative;
   z-index: 1;
@@ -48,7 +47,37 @@ a { color: inherit; text-decoration: none; }
 
 .nav-actions { display: flex; gap: 10px; justify-content: flex-end; }
 
-/* Buttons */
+.nav-user {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+.nav-user__name {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.nav-logout {
+  padding: 8px 16px;
+  border: 1px solid var(--ink);
+  border-radius: 999px;
+  background: transparent;
+  font: inherit;
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--ink);
+  cursor: pointer;
+}
+
+.nav-logout:hover {
+  background: var(--ink);
+  color: var(--card);
+}
+
+/* BUTTONS */
 .btn {
   display: inline-flex;
   align-items: center;
@@ -76,7 +105,7 @@ a { color: inherit; text-decoration: none; }
   border-radius: 32px;
 }
 
-/* Hero */
+/* HERO */
 .hero {
   flex: 1;
   min-height: 480px;
@@ -100,7 +129,7 @@ h1 {
 
 .hero-text p { margin: 14px 0 24px; font-size: clamp(16px, 2vw, 20px); }
 
-/* Piring + dekorasi tomat (sejajar dengan piring di semua ukuran layar) */
+/* DEKORASI */
 .stage {
   width: min(100%, 1240px);
   display: grid;
@@ -112,7 +141,6 @@ h1 {
 .deco-left  { justify-self: start; width: clamp(120px, 22vw, 350px); margin-left: 0; transform: translateY(-6%); }
 .deco-right { justify-self: end;   width: clamp(120px, 22vw, 350px); margin-right: 0; transform: translateY(-8%); }
 
-/* Piring "caloreat" */
 .plate {
   width: clamp(170px, 22vw, 330px);
   aspect-ratio: 1;
@@ -139,7 +167,7 @@ h1 {
 
 :focus-visible { outline: 2px solid var(--yellow-dark); outline-offset: 2px; }
 
-/* Search */
+/* SERACH */
 .search-option {
   width: min(100%, 620px);
 }
