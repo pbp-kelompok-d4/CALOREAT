@@ -8,13 +8,14 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500&family=Outfit:wght@500;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/static/css/style.css">
+  <link rel="stylesheet" href="/static/css/auth.css">
   <title>{% block title %}CALOREAT{% endblock %}</title>
 </head>
 <body>
     <main class="card">
         <header class="nav">
             <nav class="nav-links" aria-label="Menu utama">
-            <a href="#home">Home</a>
+            <a href="{% url 'main:show_main' %}">Home</a>
             <a href="#description">Description</a>
             <a href="#licenses">...</a>
             <a href="#pricing">...</a>
@@ -24,10 +25,21 @@
             <img src="/static/img/logo_caloreat.png" alt="Logo CALOREAT" height="64">
             </a>
 
-            <div class="nav-actions">
-            <a class="btn btn-soft" href="#">Login</a>
-            <a class="btn btn-outline" href="#">Sign Up</a>
-            </div>
+            {% if user.is_authenticated %}
+                <div class="nav-user">
+                    <span class="nav-user__name">{{ user.first_name|default:user.username }}</span>
+                    <form method="post" action="{% url 'main:logout' %}">
+                    {% csrf_token %}
+                    <button type="submit" class="nav-logout">Log out</button>
+                    </form>
+                </div>
+            {% else %}
+                <div class="nav-actions">
+                <a class="btn btn-soft" href="{% url 'main:login' %}">Login</a>
+                <a class="btn btn-outline" href="{% url 'main:register' %}">Sign Up</a>
+                </div>
+            {% endif %}
+            
         </header>
         {% block content %} {% endblock content %}
         <footer class="footer">
