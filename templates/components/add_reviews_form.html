@@ -1,0 +1,37 @@
+<div id="reviewModal" class="modal-overlay" style="display: none;">
+  <div class="modal-card">
+    <div class="modal-header">
+      <h3>Tulis Review Baru</h3>
+      <button type="button" class="modal-close-btn" id="closeModalBtn">&times;</button>
+    </div>
+
+    <form id="reviewForm" method="POST" data-url="{% url 'main:add_review_ajax' %}">
+      {% csrf_token %}
+      <div class="form-group">
+        <label for="customer_name">Your Name</label>
+        <input type="text" id="customer_name" name="customer_name" required placeholder="Contoh: Rori">
+      </div>
+
+      <div class="form-group">
+        <label for="star">Rating</label>
+        <select id="star" name="star" required>
+          <option value="★★★★★">★★★★★</option>
+          <option value="★★★★☆">★★★★☆</option>
+          <option value="★★★☆☆">★★★☆☆</option>
+          <option value="★★☆☆☆">★★☆☆☆</option>
+          <option value="★☆☆☆☆">★☆☆☆☆</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="content">Isi Review</label>
+        <textarea id="content" name="content" rows="3" required placeholder="Tulis ulasan kamu..."></textarea>
+      </div>
+
+      <div class="modal-actions">
+        <button type="button" class="btn btn-outline" id="cancelModalBtn">Batal</button>
+        <button type="submit" class="btn btn-yellow" id="submitBtn">Kirim Review</button>
+      </div>
+    </form>
+  </div>
+</div>
