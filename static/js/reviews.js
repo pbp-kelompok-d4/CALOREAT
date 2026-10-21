@@ -7,6 +7,16 @@ document.addEventListener("DOMContentLoaded", function () {
 	const container = document.getElementById("reviewCardsContainer");
 	const maxReviewsShown = 6;
 
+	// XSS protection
+	function escapeHtml(value) {
+		return String(value ?? '')
+			.replaceAll('&', '&amp;')
+			.replaceAll('<', '&lt;')
+			.replaceAll('>', '&gt;')
+			.replaceAll('"', '&quot;')
+			.replaceAll("'", '&#39;');
+	}
+
     // get reviews
 	async function refreshReviews() {
 		try {
@@ -28,12 +38,12 @@ document.addEventListener("DOMContentLoaded", function () {
 			reviews.slice(0, maxReviewsShown).forEach((review) => {
 				htmlString += `
 					<div class="dashboard-review-card">
-						<img class="review-avatar" src="${review.profile_picture}" alt="${review.customer_name}'s profile picture" loading="lazy">
+						<img class="review-avatar" src="${escapeHtml(review.profile_picture)}" alt="${escapeHtml(review.customer_name)}'s profile picture" loading="lazy">
 						<div class="review-details">
-							<h3>${review.customer_name}</h3>
-							<div class="review-stars">${review.star}</div>
-							<div class="time">${review.date}</div>
-							<p>${review.content}</p>
+							<h3>${escapeHtml(review.customer_name)}</h3>
+							<div class="review-stars">${escapeHtml(review.star)}</div>
+							<div class="time">${escapeHtml(review.date)}</div>
+							<p>${escapeHtml(review.content)}</p>
 						</div>
 					</div>
 				`;
