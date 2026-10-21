@@ -1,5 +1,6 @@
 from django.test import TestCase
 from django.urls import reverse
+from django.contrib.auth.models import User
 
 from main.models import Reviews
 
@@ -20,6 +21,13 @@ class MainTest(TestCase):
         self.assertEqual(response.status_code, 404)
 
     def setUp(self):
+        self.user = User.objects.create_user(
+            username="test@example.com",
+            password="test-password-123",
+            is_superuser=True,
+            first_name="Test User",
+        )
+        self.client.login(username="test@example.com", password="test-password-123")
         self.review = Reviews.objects.create(
             customer_name="Roko Rido",
             content="Logging meals takes seconds. Love it.",
@@ -63,7 +71,7 @@ class MainTest(TestCase):
         response = self.client.post(reverse("main:add_review_ajax"), payload)
         self.assertEqual(response.status_code, 201)
         self.assertEqual(response.json()["status"], "success")
-        self.assertTrue(Reviews.objects.filter(customer_name="Fachri").exists())
+        self.assertTrue(Reviews.objects.filter(customer_name="Test User").exists())
 
     def test_add_review_ajax_invalid(self):
         # customer_name kosong
@@ -75,3 +83,16 @@ class MainTest(TestCase):
         response = self.client.post(reverse("main:add_review_ajax"), payload)
         self.assertEqual(response.status_code, 400)
         self.assertEqual(response.json()["status"], "error")
+
+    def test_delete_review_ajax_success(self):
+        review_id = self.review.id
+        response = self.client.post(reverse("main:delete_review_ajax", kwargs={"id": review_id}))
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()["status"], "success")
+        self.assertFalse(Reviews.objects.filter(id=review_id).exists())
+
+    def test_delete_review_ajax_not_found(self):
+        import uuid
+        fake_id = uuid.uuid4()
+        response = self.client.post(reverse("main:delete_review_ajax", kwargs={"id": fake_id}))
+        self.assertEqual(response.status_code, 404)

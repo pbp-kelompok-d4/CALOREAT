@@ -136,6 +136,18 @@
   line-height: 1.4;
 }
 
+.form-group input[readonly], .form-control-readonly {
+  background-color: #f5eed6 !important;
+  color: var(--muted, #827345) !important;
+  cursor: not-allowed;
+  border-color: var(--line, #e6dfae);
+  user-select: none;
+}
+.form-group input[readonly]:focus {
+  box-shadow: none;
+  border-color: var(--line, #e6dfae);
+}
+
 /*Bottom button*/
 .modal-actions {
   display: flex;

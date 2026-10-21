@@ -5,6 +5,8 @@ from django.shortcuts import redirect, render, get_object_or_404
 from django.core import serializers
 from django.http import HttpResponse, JsonResponse
 from django.views.decorators.http import require_POST
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import user_passes_test
 
 from main.models import Reviews
 
@@ -35,10 +37,19 @@ def get_reviews_json(request):
 
 # Add new reviews using AJAX
 @require_POST
+@login_required(login_url="/login/")
 def add_review_ajax(request):
     form = ReviewsForm(request.POST)
     if form.is_valid():
         review = form.save()
+
+        if request.user.is_authenticated:
+            review.customer_name = request.user.first_name
+        else:
+            review.customer_name = "Guest"
+            
+        review.save()
+
         return JsonResponse({
             "status": "success",
             "message": "Review berhasil ditambahkan!",
@@ -55,6 +66,17 @@ def add_review_ajax(request):
         "status": "error",
         "errors": form.errors
     }, status=400)
+
+# Delete reviews
+@require_POST
+@user_passes_test(lambda user: user.is_superuser, login_url="/login/")
+def delete_review_ajax(request, id):
+    review = get_object_or_404(Reviews, id=id)
+    review.delete()
+    return JsonResponse({
+        "status": "success",
+        "message": "Review berhasil dihapus!"
+    })
 
 def _auth_context(active, login_form=None, register_form=None):
     if login_form is None:
