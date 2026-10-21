@@ -5,6 +5,7 @@ from django.shortcuts import redirect, render, get_object_or_404
 from django.core import serializers
 from django.http import HttpResponse, JsonResponse
 from django.views.decorators.http import require_POST
+from django.contrib.auth.decorators import login_required
 
 from main.models import Reviews
 
@@ -35,6 +36,7 @@ def get_reviews_json(request):
 
 # Add new reviews using AJAX
 @require_POST
+@login_required(login_url="/login/")
 def add_review_ajax(request):
     form = ReviewsForm(request.POST)
     if form.is_valid():

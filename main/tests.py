@@ -1,5 +1,6 @@
 from django.test import TestCase
 from django.urls import reverse
+from django.contrib.auth.models import User
 
 from main.models import Reviews
 
@@ -20,6 +21,11 @@ class MainTest(TestCase):
         self.assertEqual(response.status_code, 404)
 
     def setUp(self):
+        self.user = User.objects.create_user(
+            username="test@example.com",
+            password="test-password-123",
+        )
+        self.client.login(username="test@example.com", password="test-password-123")
         self.review = Reviews.objects.create(
             customer_name="Roko Rido",
             content="Logging meals takes seconds. Love it.",

@@ -95,6 +95,11 @@ document.addEventListener("DOMContentLoaded", function () {
 				body: formData,
 			});
 
+			if (response.redirected) {
+				window.location.href = response.url;
+				return;
+			}
+
 			if (response.ok) {
 				closeModal();
 				// asynchronous load
