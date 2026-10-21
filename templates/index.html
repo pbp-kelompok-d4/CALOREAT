@@ -53,27 +53,14 @@
         </button> 
       </div>
 
-      <div class="dashboard-review-box">
-        <div class="dashboard-review-comments">
-          {% for review in review_list %}
-            <div class="dashboard-review-card">
-              <img class="review-avatar" src="{{ review.profile_picture }}" alt="{{ review.customer_name }}'s profile picture" loading="lazy">
-              <div class="review-details">
-                <h3>{{ review.customer_name }}</h3>
-                <div class="review-stars">{{ review.star }}</div>
-                <div class="time">{{ review.date }}</div>
-                <p>{{ review.content }}</p>
-              </div>
-            </div>
-          {% empty %}
-            <div class="dashboard-review-empty">
-              <p>There are no reviews yet, add some!</p>
-            </div>
-          {% endfor %}
+    <div class="dashboard-review-box">
+      <div class="dashboard-review-comments" id="reviewCardsContainer" data-url="{% url 'main:get_reviews_json' %}">
+        <div class="dashboard-review-empty">
+          <p>Memuat review...</p>
         </div>
       </div>
     </div>
   </div>
   {% include "components/add_reviews_form.html" %}
-  <script src="{% static 'js/add_reviews_form.js' %}"></script>
+  <script src="{% static 'js/reviews.js' %}"></script>
 {% endblock content %}

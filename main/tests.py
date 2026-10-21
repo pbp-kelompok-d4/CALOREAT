@@ -19,13 +19,13 @@ class MainTest(TestCase):
         response = self.client.get("/nonexistent-page-12345/")
         self.assertEqual(response.status_code, 404)
 
-    #Review model test
     def setUp(self):
         self.review = Reviews.objects.create(
             customer_name="Roko Rido",
             content="Logging meals takes seconds. Love it.",
             star="★★★★★",
         )
+
     def test_review_model(self):
         self.assertEqual(str(self.review), "Roko Rido")
         self.assertEqual(self.review.star, "★★★★★")
@@ -35,11 +35,43 @@ class MainTest(TestCase):
         response = self.client.get(reverse("main:show_main"))
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, "index.html")
-        self.assertContains(response, self.review.customer_name)
-        self.assertContains(response, self.review.content)
-        self.assertContains(response, self.review.star)
+        self.assertContains(response, 'id="reviewCardsContainer"')
+
+    def test_get_reviews_json(self):
+        response = self.client.get(reverse("main:get_reviews_json"))
+        self.assertEqual(response.status_code, 200)
+        data = response.json()
+        self.assertIsInstance(data, list)
+        self.assertGreaterEqual(len(data), 1)
+        self.assertEqual(data[0]["customer_name"], self.review.customer_name)
+        self.assertEqual(data[0]["content"], self.review.content)
+        self.assertEqual(data[0]["star"], self.review.star)
 
     def test_empty_review_page(self):
         Reviews.objects.all().delete()
-        response = self.client.get(reverse("main:show_main"))
-        self.assertContains(response, "There are no reviews yet, add some!")
+        response = self.client.get(reverse("main:get_reviews_json"))
+        self.assertEqual(response.status_code, 200)
+        data = response.json()
+        self.assertEqual(data, [])
+
+    def test_add_review_ajax_success(self):
+        payload = {
+            "customer_name": "Fachri",
+            "star": "★★★★★",
+            "content": "Aplikasi sangat membantu!",
+        }
+        response = self.client.post(reverse("main:add_review_ajax"), payload)
+        self.assertEqual(response.status_code, 201)
+        self.assertEqual(response.json()["status"], "success")
+        self.assertTrue(Reviews.objects.filter(customer_name="Fachri").exists())
+
+    def test_add_review_ajax_invalid(self):
+        # customer_name kosong
+        payload = {
+            "customer_name": "",
+            "star": "★★★★★",
+            "content": "Aplikasi sangat membantu!",
+        }
+        response = self.client.post(reverse("main:add_review_ajax"), payload)
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json()["status"], "error")

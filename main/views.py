@@ -17,17 +17,23 @@ def show_main(request):
     }
     return render(request, "index.html", context)
 
-# get reviews json
+# get reviews json using AJAX
 def get_reviews_json(request):
-    customer_name_query = request.GET.get("customer_name", "").strip()
-    reviews = Reviews.objects.all()
+    reviews = Reviews.objects.order_by('-date')[:6]
+    data = [
+        {
+            "id": str(review.id),
+            "customer_name": review.customer_name,
+            "star": review.star,
+            "content": review.content,
+            "profile_picture": review.profile_picture,
+            "date": review.date.strftime("%d %b %Y"),
+        }
+        for review in reviews
+    ]
+    return JsonResponse(data, safe=False)
 
-    if customer_name_query:
-        reviews = reviews.filter(customer_name__icontains=customer_name_query)
-
-    reviews_json = serializers.serialize("json", reviews)
-    return HttpResponse(reviews_json, content_type="application/json")
-
+# Add new reviews using AJAX
 @require_POST
 def add_review_ajax(request):
     form = ReviewsForm(request.POST)
