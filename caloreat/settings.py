@@ -33,11 +33,6 @@ DEBUG = True
 
 ALLOWED_HOSTS = ["localhost", "127.0.0.1","muhammad-fachri54-caloreat.pws.cs.ui.ac.id"]
 
-CSRF_TRUSTED_ORIGINS = [
-    "https://muhammad-fachri54-caloreat.pws.cs.ui.ac.id",
-    "http://localhost:8000",
-    "http://127.0.0.1:8000",
-]
 PRODUCTION = os.getenv('PRODUCTION', 'False').lower() == 'true'
 
 # Application definition
@@ -152,4 +147,4 @@ USE_TZ = True
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-CSRF_TRUSTED_ORIGINS = ["<url_website_kamu>"]
+CSRF_TRUSTED_ORIGINS = ["https://muhammad-fachri54-caloreat.pws.cs.ui.ac.id"]
