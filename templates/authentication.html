@@ -1,0 +1,128 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/authentication_page.css' %}">
+
+<main class="auth-page" data-active="{{ active }}">
+
+  <!-- PANEL KIRI -->
+  <section class="auth-visual">
+    <div class="auth-slides">
+      <img class="auth-slide" src="{% static 'img/auth_page/indomie.svg' %}" alt="gambar mie rebus">
+      <img class="auth-slide" src="{% static 'img/auth_page/nasi-goreng.svg' %}" alt="gambar nasi goreng">
+      <img class="auth-slide" src="{% static 'img/auth_page/nasi-uduk.svg' %}" alt="gambar nasi uduk">
+    </div>
+
+    <h2 class="auth-tagline">Know your meal,<br>own your goal.</h2>
+
+    <ul class="auth-points">
+      <li>Look up calories for any food</li>
+      <li>Calculate your daily needs</li>
+      <li>Stay on track with your goal</li>
+    </ul>
+  </section>
+
+  <!-- PANEL KANAN -->
+  <section class="auth-panel">
+    <div class="auth-card">
+
+      
+      <div class="auth-stack">
+        <h1 class="auth-title {% if active == 'login' %}is-active{% endif %}" data-pane="login">Welcome back</h1>
+        <h1 class="auth-title {% if active == 'register' %}is-active{% endif %}" data-pane="register">Create your account</h1>
+      </div>
+
+      <!-- TOGGLE BUTTON  -->
+      <nav class="auth-toggle" aria-label="Pilih halaman">
+        <a href="{% url 'main:login' %}" data-target="login"
+           class="{% if active == 'login' %}is-active{% endif %}"
+           {% if active == 'login' %}aria-current="page"{% endif %}>Log in</a>
+        <a href="{% url 'main:register' %}" data-target="register"
+           class="{% if active == 'register' %}is-active{% endif %}"
+           {% if active == 'register' %}aria-current="page"{% endif %}>Sign up</a>
+      </nav>
+
+      <!-- FORM LOGIN DAN FORM SIGN UP-->
+      <div class="auth-stack">
+
+        <!-- FORM LOGIN -->
+        <div data-pane="login" class="{% if active == 'login' %}is-active{% endif %}">
+          <form class="auth-form" method="post" action="{% url 'main:login' %}">
+            {% csrf_token %}
+
+            {% for error in login_form.non_field_errors %}
+              <p class="auth-error">{{ error }}</p>
+            {% endfor %}
+
+            <div class="auth-field {% if login_form.username.errors %}has-error{% endif %}">
+              <label for="{{ login_form.username.id_for_label }}">Email</label>
+              {{ login_form.username }}
+              {% for error in login_form.username.errors %}
+                <p class="auth-error">{{ error }}</p>
+              {% endfor %}
+            </div>
+
+            <div class="auth-field {% if login_form.password.errors %}has-error{% endif %}">
+              <label for="{{ login_form.password.id_for_label }}">Password</label>
+              {{ login_form.password }}
+              {% for error in login_form.password.errors %}
+                <p class="auth-error">{{ error }}</p>
+              {% endfor %}
+            </div>
+
+            <div class="auth-remember">
+              {{ login_form.remember_me }}
+              <label for="{{ login_form.remember_me.id_for_label }}">Remember me</label>
+            </div>
+
+            <button type="submit" class="auth-submit">Log in</button>
+          </form>
+        </div>
+
+        <!-- FORM SIGN UP -->
+        <div data-pane="register" class="{% if active == 'register' %}is-active{% endif %}">
+          <form class="auth-form" method="post" action="{% url 'main:register' %}" novalidate>
+            {% csrf_token %}
+
+            {% for error in register_form.non_field_errors %}
+              <p class="auth-error">{{ error }}</p>
+            {% endfor %}
+
+            <div class="auth-field {% if register_form.full_name.errors %}has-error{% endif %}">
+              <label for="{{ register_form.full_name.id_for_label }}">Full name</label>
+              {{ register_form.full_name }}
+              {% for error in register_form.full_name.errors %}
+                <p class="auth-error">{{ error }}</p>
+              {% endfor %}
+            </div>
+
+            <div class="auth-field {% if register_form.email.errors %}has-error{% endif %}">
+              <label for="{{ register_form.email.id_for_label }}">Email</label>
+              {{ register_form.email }}
+              {% for error in register_form.email.errors %}
+                <p class="auth-error">{{ error }}</p>
+              {% endfor %}
+            </div>
+
+            <div class="auth-field {% if register_form.password.errors %}has-error{% endif %}">
+              <label for="{{ register_form.password.id_for_label }}">Password</label>
+              {{ register_form.password }}
+              <p class="auth-hint">At least 8 characters.</p>
+              {% for error in register_form.password.errors %}
+                <p class="auth-error">{{ error }}</p>
+              {% endfor %}
+            </div>
+
+            <button type="submit" class="auth-submit">Create account</button>
+          </form>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<script src="{% static 'js/auth.js' %}" defer></script>
+{% endblock %}
