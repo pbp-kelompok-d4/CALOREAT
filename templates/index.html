@@ -1,6 +1,8 @@
 {% extends 'base.html' %}
+{% load static %}
 {% block title %}Home{% endblock title %}
 {% block content %}
+  <link rel="stylesheet" href="{% static 'css/add_object_style.css' %}">
   <div class="main-content">
     <section class="hero">
       <div class="hero-text">
@@ -40,21 +42,25 @@
     </div>
 
     <div class="dashboard-reviews">
-      <h2 class="dashboard-reviews__title">What our Customers say?</h2>
-      <div class="dashboard-review-box">
-        <div class="dashboard-review-comments">
-          <div class="dashboard-review-card">
-            <div class="review-avatar" aria-hidden="true"></div>
-            <div class="review-details">
-              <h3>Prawowi Sudodo</h3>
-              <div class="review-stars" aria-label="5 out of 5 stars">★★★★★</div>
-              <time datetime="2026-10-04">October 4, 2026</time>
-              <p>Love it.</p>
-            </div>
-            </div>
-          </div>
+      <div class="dashboard-reviews-header">
+        <h2 class="dashboard-reviews__title">What our Customers say?</h2>
+        <button type="button" class="btn add-reviews-button">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
+            <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+            <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/>
+          </svg>
+          Write a Review
+        </button> 
+      </div>
+
+    <div class="dashboard-review-box">
+      <div class="dashboard-review-comments" id="reviewCardsContainer" data-url="{% url 'main:get_reviews_json' %}">
+        <div class="dashboard-review-empty">
+          <p>Memuat review...</p>
         </div>
       </div>
     </div>
   </div>
+  {% include "components/add_reviews_form.html" %}
+  <script src="{% static 'js/reviews.js' %}"></script>
 {% endblock content %}

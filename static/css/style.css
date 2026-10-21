@@ -245,7 +245,7 @@ h1 {
   margin: 0 0 12px;
   color: var(--ink);
   font-family: "Outfit", sans-serif;
-  font-size: clamp(35px, 4vw, 50px);
+  font-size: clamp(24px, 4vw, 50px);
   line-height: 1.1;
 }
 
@@ -255,6 +255,43 @@ h1 {
   background-color: var(--card);
   border: 3px solid var(--yellow-dark);
   border-radius: 32px;
+}
+
+.dashboard-reviews-header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 12px;
+  width: 100%;
+}
+
+.add-reviews-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+  white-space: nowrap;
+  background-color: var(--ink);
+  color: white;
+  font-size: 15px;
+  font-weight: 500;
+  font-family: "DM Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background-color .15s ease;
+}
+
+.add-reviews-button:hover {
+  background-color: #765108;
+}
+
+.add-reviews-button svg {
+  flex-shrink: 0;
+  color: var(--yellow);
 }
 
 .dashboard-content {
@@ -284,21 +321,22 @@ h1 {
 
 /* Customers reviews */
 .dashboard-reviews {
-  margin: 4% 5% 2%;
+  margin: 4% 5% 5%;
   width: 90%;
   align-self: center;
 }
 
 .dashboard-reviews__title {
-  margin: 0 0 12px;
+  margin: 0;
   color: var(--ink);
   font-family: "Outfit", sans-serif;
-  font-size: clamp(35px, 4vw, 50px);
+  font-size: clamp(24px, 4vw, 50px);
   line-height: 1.1;
+  text-align: left;
 }
 
 .dashboard-review-box {
-  padding: 28px;
+  padding: 32px 28px;
   background: var(--card);
   border: 3px solid var(--yellow-dark);
   border-radius: 32px;
@@ -307,7 +345,7 @@ h1 {
 
 .dashboard-review-comments {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(max(260px, calc((100% - 40px) / 3)), 1fr));
   gap: 20px;
 }
 
@@ -326,6 +364,8 @@ h1 {
   width: 56px;
   height: 56px;
   border-radius: 50%;
+  object-fit: cover;
+  background: #cbd0d6;
 }
 
 .review-details {
@@ -345,7 +385,7 @@ h1 {
   line-height: 1;
 }
 
-.review-details time {
+.review-details .time {
   display: block;
   margin-top: 7px;
   color: var(--muted);
@@ -358,6 +398,14 @@ h1 {
   line-height: 1.35;
 }
 
+.dashboard-review-empty {
+  display: grid;
+  grid-column: 1 / -1;
+  min-height: 190px;
+  place-items: center;
+  color: var(--muted);
+  text-align: center;
+}
 
 /* Footer */
 .footer {
@@ -387,6 +435,8 @@ h1 {
   .plate { width: 130px; }
   .plate::before { inset: 10px; }
   .plate span { font-size: 24px; }
+
+  /*Dashboard edukasi*/
   .dashboard-education {
     margin: 8% 20px 2%;
     width: calc(100% - 40px);
@@ -398,14 +448,47 @@ h1 {
   .dashboard-placeholder--main { grid-column: 1 / -1; grid-row: auto; }
   .dashboard-placeholder--top { grid-column: 1; }
   .dashboard-placeholder--bottom { grid-column: 2; }
+
+  /*Dashboard reviews*/
   .dashboard-reviews {
     margin: 8% 20px 2%;
     width: calc(100% - 40px);
+    background: var(--card);
+    border: 3px solid var(--yellow-dark);
+    border-radius: 28px;
+    padding: 24px 16px;
   }
-  .dashboard-review-box { padding: 12px; }
+  
+  .dashboard-review-box {
+    padding: 0;
+    border: none;
+    border-radius: 0;
+    background: transparent;
+  }
+  
   .dashboard-review-comments {
     grid-template-columns: 1fr;
-    gap: 10px;
+    gap: 12px;
   }
+
   .dashboard-review-card { min-height: 0; }
+  .dashboard-education__title,
+  .dashboard-reviews__title {
+    text-align: center;
+  }
+
+  .dashboard-reviews-header {
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    margin-bottom: 20px;
+    gap: 12px;
+  }
+
+  .add-reviews-button {
+    font-size: 14px;
+    padding: 10px 20px;
+    margin-right: 0;
+  }
 }
