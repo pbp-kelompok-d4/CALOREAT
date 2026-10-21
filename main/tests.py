@@ -24,6 +24,8 @@ class MainTest(TestCase):
         self.user = User.objects.create_user(
             username="test@example.com",
             password="test-password-123",
+            is_superuser=True,
+            first_name="Test User",
         )
         self.client.login(username="test@example.com", password="test-password-123")
         self.review = Reviews.objects.create(
@@ -69,7 +71,7 @@ class MainTest(TestCase):
         response = self.client.post(reverse("main:add_review_ajax"), payload)
         self.assertEqual(response.status_code, 201)
         self.assertEqual(response.json()["status"], "success")
-        self.assertTrue(Reviews.objects.filter(customer_name="Fachri").exists())
+        self.assertTrue(Reviews.objects.filter(customer_name="Test User").exists())
 
     def test_add_review_ajax_invalid(self):
         # customer_name kosong
