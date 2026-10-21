@@ -345,7 +345,7 @@ h1 {
 
 .dashboard-review-comments {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(max(260px, calc((100% - 40px) / 3)), 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(max(260px, calc((100% - 40px) / 3)), 1fr));
   gap: 20px;
 }
 
@@ -370,6 +370,46 @@ h1 {
 
 .review-details {
   min-width: 0;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.review-card-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: auto;
+  padding-top: 14px;
+}
+
+.btn-delete-review {
+  background-color: #dc3545;
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  width: 44px;
+  height: 38px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(220, 53, 69, 0.25);
+  transition: background-color 0.15s ease, transform 0.1s ease, box-shadow 0.15s ease;
+}
+
+.btn-delete-review:hover {
+  background-color: #bb2d3b;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(187, 45, 59, 0.35);
+}
+
+.btn-delete-review:active {
+  transform: translateY(0);
+}
+
+.btn-delete-review svg {
+  width: 17px;
+  height: 17px;
 }
 
 .review-details h3 {

@@ -56,6 +56,16 @@ def add_review_ajax(request):
         "errors": form.errors
     }, status=400)
 
+# Delete reviews
+@require_POST
+def delete_review_ajax(request, id):
+    review = get_object_or_404(Reviews, id=id)
+    review.delete()
+    return JsonResponse({
+        "status": "success",
+        "message": "Review berhasil dihapus!"
+    })
+
 def _auth_context(active, login_form=None, register_form=None):
     if login_form is None:
         login_form = LoginForm(auto_id="login_%s")

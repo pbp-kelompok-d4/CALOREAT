@@ -75,3 +75,16 @@ class MainTest(TestCase):
         response = self.client.post(reverse("main:add_review_ajax"), payload)
         self.assertEqual(response.status_code, 400)
         self.assertEqual(response.json()["status"], "error")
+
+    def test_delete_review_ajax_success(self):
+        review_id = self.review.id
+        response = self.client.post(reverse("main:delete_review_ajax", kwargs={"id": review_id}))
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()["status"], "success")
+        self.assertFalse(Reviews.objects.filter(id=review_id).exists())
+
+    def test_delete_review_ajax_not_found(self):
+        import uuid
+        fake_id = uuid.uuid4()
+        response = self.client.post(reverse("main:delete_review_ajax", kwargs={"id": fake_id}))
+        self.assertEqual(response.status_code, 404)
