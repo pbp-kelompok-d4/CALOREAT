@@ -47,3 +47,12 @@ Link Figma : https://www.figma.com/design/V68iKwXFe8rn1on5zE9wi6/Caloreat?node-i
 
 
 
+
+
+## Calorie Count
+
+The authenticated `/calorie-count/` page supports food search and barcode lookup through a server-side Open Food Facts client, personal calorie targets, daily meal entries, and a seven-day summary. Data is isolated by account.
+
+The JSON API is available at `/api/foods/search/`, `/api/foods/barcode/<code>/`, `/api/entries/`, `/api/entries/<id>/`, `/api/summary/`, `/api/summary/week/`, and `/api/profile/`. Mutating requests use the session cookie and Django CSRF token. Open Food Facts search responses are cached for 24 hours, and requests are throttled to stay within its search limits. The lookup credits [Open Food Facts](https://id.openfoodfacts.org/) under the ODbL.
+
+After updating, apply the database migration with `python manage.py migrate`. To use a non-default contact for the Open Food Facts User-Agent, update `USER_AGENT` in `main/off.py` before deployment.

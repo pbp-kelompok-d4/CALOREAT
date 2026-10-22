@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Calorie Count | CALOREAT{% endblock title %}
+{% block extra_head %}<link rel="stylesheet" href="{% static 'css/calorie_count.css' %}?v=prd-4">{% endblock extra_head %}
+{% block content %}
+<div class="calorie-page" id="calorie-app" data-today="{{ calorie_today }}" data-default-meal="{{ default_meal }}">
+  <header class="calorie-heading">
+    <div>
+      <p class="calorie-greeting">Good {{ greeting_period }}, {{ calorie_user_name }}!</p>
+      <p class="calorie-subtitle" id="daily-status">Your daily nutrition overview.</p>
+    </div>
+    <div class="calorie-date" aria-label="Choose day">
+      <button type="button" id="previous-day" aria-label="Previous day">‹</button>
+      <time id="selected-date" datetime="{{ calorie_today }}">{{ calorie_today }}</time>
+      <button type="button" id="next-day" aria-label="Next day" disabled>›</button>
+    </div>
+  </header>
+
+  <div class="calorie-top-grid">
+    <section class="calorie-panel calorie-summary" aria-labelledby="calories-title" id="summary-region" aria-busy="true">
+      <div class="calorie-panel__heading"><h2 id="calories-title">Today's calories</h2><span id="goal-label">Loading…</span></div>
+      <div class="calorie-summary__body" id="summary-content"><p class="region-state">Loading your summary…</p></div>
+    </section>
+
+    <section class="calorie-panel food-lookup" aria-labelledby="food-lookup-title" id="lookup-region">
+      <div class="calorie-panel__heading">
+        <h2 id="food-lookup-title">Look up a food</h2><span>Search products or enter a barcode</span>
+      </div>
+      <form class="food-lookup__form" id="food-search-form">
+        <label class="sr-only" for="food-search-input">Search food name or barcode</label>
+        <span class="food-lookup__sparkle" aria-hidden="true">✧</span>
+        <input id="food-search-input" name="q" type="search" placeholder="Search a food or scan its barcode" autocomplete="off" minlength="2" required>
+        <button type="submit">Search</button>
+      </form>
+      <div class="food-lookup__results" id="food-search-results" aria-live="polite" aria-busy="false">
+        <p class="region-state">Search by food name or barcode. Results appear here.</p>
+      </div>
+      <button type="button" class="lookup-manual-launch" id="manual-entry-launch">+ Add food manually</button>
+      <div class="food-lookup__attribution"><a href="https://id.openfoodfacts.org/" target="_blank" rel="noopener noreferrer">Data from Open Food Facts (ODbL)</a><span>Nutri-Score A–E</span></div>
+    </section>
+  </div>
+
+  <div class="calorie-bottom-grid">
+    <section class="calorie-panel meals-panel" aria-labelledby="meals-title" id="meals-region" aria-busy="true">
+      <div class="calorie-panel__heading"><h2 id="meals-title">Meals today</h2><span id="meals-total">Loading…</span></div>
+      <div id="meals-content" class="meals-content"><p class="region-state">Loading your meals…</p></div>
+    </section>
+    <section class="calorie-panel week-panel" aria-labelledby="week-title" id="week-region" aria-busy="true">
+      <div class="calorie-panel__heading"><h2 id="week-title">This week</h2><span id="week-goal">Daily goal —</span></div>
+      <div id="week-content"><p class="region-state">Loading your weekly summary…</p></div>
+    </section>
+    <section class="calorie-panel needs-panel" aria-labelledby="needs-title" id="needs-region" aria-busy="true">
+      <div class="calorie-panel__heading"><h2 id="needs-title">Your daily needs</h2></div>
+      <div id="needs-content"><p class="region-state">Loading your profile…</p></div>
+    </section>
+  </div>
+</div>
+
+<dialog class="calorie-dialog" id="profile-dialog" aria-labelledby="profile-dialog-title">
+  <form id="profile-form" method="dialog">
+    <div class="dialog-heading"><h2 id="profile-dialog-title">Your profile</h2><button type="button" class="icon-button" data-close-dialog aria-label="Close profile form">×</button></div>
+    <p class="dialog-intro">Your daily target is an estimate based on these details.</p>
+    <div class="form-grid">
+      <label>Sex<select name="sex" required><option value="">Choose…</option><option value="female">Female</option><option value="male">Male</option></select></label>
+      <label>Date of birth<input name="birth_date" type="date" required></label>
+      <label>Height (cm)<input name="height_cm" type="number" min="50" max="260" step="0.1" required></label>
+      <label>Weight (kg)<input name="weight_kg" type="number" min="20" max="500" step="0.1" required></label>
+      <label>Activity level<select name="activity_level" required><option value="">Choose…</option><option value="sedentary">Sedentary</option><option value="light">Lightly active</option><option value="moderate">Moderately active</option><option value="active">Active</option></select></label>
+      <label>Goal<select name="goal" required><option value="">Choose…</option><option value="lose_025">Lose 0.25 kg / week</option><option value="lose_05">Lose 0.5 kg / week</option><option value="maintain">Maintain weight</option><option value="gain_025">Gain 0.25 kg / week</option></select></label>
+    </div>
+    <p class="form-error" id="profile-error" role="alert" hidden></p>
+    <div class="dialog-actions"><button type="button" class="button-secondary" data-close-dialog>Cancel</button><button type="submit" class="button-primary">Save profile</button></div>
+  </form>
+</dialog>
+
+<dialog class="calorie-dialog" id="manual-dialog" aria-labelledby="manual-dialog-title">
+  <form id="manual-form" method="dialog">
+    <div class="dialog-heading"><h2 id="manual-dialog-title">Add food manually</h2><button type="button" class="icon-button" data-close-dialog aria-label="Close manual entry form">×</button></div>
+    <p class="dialog-intro">Nutrition is missing for this food. Add the values from its label.</p>
+    <input type="hidden" name="off_code"><input type="hidden" name="brand"><input type="hidden" name="nutriscore">
+    <div class="form-grid">
+      <label class="span-all">Food name<input name="name" maxlength="200" required></label>
+      <label>Calories / 100 g<input name="kcal_100g" type="number" min="0" max="900" step="0.1" required></label>
+      <label>Amount (g)<input name="grams" type="number" min="1" max="5000" step="1" value="100" required></label>
+      <label>Protein / 100 g (optional)<input name="protein_100g" type="number" min="0" max="100" step="0.1"></label>
+      <label>Carbs / 100 g (optional)<input name="carbs_100g" type="number" min="0" max="100" step="0.1"></label>
+      <label>Fat / 100 g (optional)<input name="fat_100g" type="number" min="0" max="100" step="0.1"></label>
+      <label>Meal<select name="meal"><option value="breakfast">Breakfast</option><option value="lunch">Lunch</option><option value="dinner">Dinner</option><option value="snack">Snacks</option></select></label>
+    </div>
+    <p class="form-error" id="manual-error" role="alert" hidden></p>
+    <div class="dialog-actions"><button type="button" class="button-secondary" data-close-dialog>Cancel</button><button type="submit" class="button-primary">Add food</button></div>
+  </form>
+</dialog>
+<div id="undo-toast" class="undo-toast" role="status" aria-live="polite" hidden><span id="undo-message"></span><button type="button" id="undo-action">Undo</button></div>
+<script src="{% static 'js/calorie_count.js' %}?v=prd-4" defer></script>
+{% endblock content %}

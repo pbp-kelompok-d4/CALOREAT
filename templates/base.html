@@ -9,14 +9,15 @@
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500&family=Outfit:wght@500;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/static/css/style.css">
   <link rel="stylesheet" href="/static/css/auth.css">
+  {% block extra_head %}{% endblock extra_head %}
   <title>{% block title %}CALOREAT{% endblock %}</title>
 </head>
 <body>
     <main class="card">
         <header class="nav">
             <nav class="nav-links" aria-label="Menu utama">
-            <a href="{% url 'main:show_main' %}">Home</a>
-            <a href="#description">Description</a>
+            <a href="{% url 'main:show_main' %}"{% if request.resolver_match.url_name == 'show_main' %} class="active" aria-current="page"{% endif %}>Home</a>
+            <a href="{% url 'main:calorie_count' %}"{% if request.resolver_match.url_name == 'calorie_count' %} class="active" aria-current="page"{% endif %}>Calorie Count</a>
             <a href="#licenses">...</a>
             <a href="#pricing">...</a>
             </nav>
@@ -26,13 +27,26 @@
             </a>
 
             {% if user.is_authenticated %}
-                <div class="nav-user">
+                {% if request.resolver_match.url_name == "calorie_count" %}
+                  <div class="nav-calorie-actions">
+                    <a class="nav-log-food" href="#food-search-input">+ Log food</a>
+                    <details class="nav-profile-menu">
+                      <summary aria-label="Account menu for {{ user.first_name|default:user.username }}">
+                        <span class="nav-avatar" aria-hidden="true">{{ user.first_name|default:user.username|first|upper }}</span>
+                        <span class="nav-user__name">{{ user.first_name|default:user.username }}</span>
+                      </summary>
+                      <div class="nav-profile-menu__panel">
+                        <button type="button" class="nav-profile-setup" id="nav-profile-setup">Set up profile</button>
+                        <form method="post" action="{% url 'main:logout' %}">{% csrf_token %}<button type="submit" class="nav-logout">Log out</button></form>
+                      </div>
+                    </details>
+                  </div>
+                {% else %}
+                  <div class="nav-user">
                     <span class="nav-user__name">{{ user.first_name|default:user.username }}</span>
-                    <form method="post" action="{% url 'main:logout' %}">
-                    {% csrf_token %}
-                    <button type="submit" class="nav-logout">Log out</button>
-                    </form>
-                </div>
+                    <form method="post" action="{% url 'main:logout' %}">{% csrf_token %}<button type="submit" class="nav-logout">Log out</button></form>
+                  </div>
+                {% endif %}
             {% else %}
                 <div class="nav-actions">
                 <a class="btn btn-soft" href="{% url 'main:login' %}">Login</a>
