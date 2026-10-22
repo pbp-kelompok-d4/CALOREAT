@@ -17,8 +17,8 @@
         <header class="nav">
             <nav class="nav-links" aria-label="Menu utama">
             <a href="{% url 'main:show_main' %}"{% if request.resolver_match.url_name == 'show_main' %} class="active" aria-current="page"{% endif %}>Home</a>
+            <a href="#about">About</a>
             <a href="{% url 'main:calorie_count' %}"{% if request.resolver_match.url_name == 'calorie_count' %} class="active" aria-current="page"{% endif %}>Calorie Count</a>
-            <a href="#licenses">...</a>
             <a href="#pricing">...</a>
             </nav>
 

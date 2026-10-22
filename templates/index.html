@@ -19,7 +19,11 @@
 
       <div class="search-option">
         <form method="get" class="food-search">
-          <span class="food-search__icon" aria-hidden="true">☰</span>
+          <span class="food-search__icon" aria-hidden="true">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+              <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
+            </svg>
+          </span>
           <input type="search"
                   name="title"
                   placeholder="Hamburger"
@@ -49,37 +53,54 @@
       {% endif %}
     </section>
 
-    <div class="dashboard-education">
-      <h2 class="dashboard-education__title">Why use Caloreat?</h2>
+    <section class="dashboard-education">
       <div class="dashboard-education-box">
-        <div class="dashboard-content">
-          <div class="dashboard-placeholder dashboard-placeholder--main"></div>
-          <div class="dashboard-placeholder dashboard-placeholder--top"></div>
-          <div class="dashboard-placeholder dashboard-placeholder--bottom"></div>
+        <div class="dashboard-education-header">
+          <h2 class="dashboard-education__title" id="education-title">Why use Caloreat?</h2>
+          <button class="features__toggle dashboard-education__toggle" type="button" aria-expanded="true" aria-controls="education-content" aria-label="Collapse education">
+            <span class="features__close" aria-hidden="true"></span>
+          </button>
+        </div>
+        <div class="dashboard-content" id="education-content">
+
+          <article class="edu-card edu-card--main">
+            <div class="edu-plate-wrapper">
+              <img src="{% static 'img/edu_plate.png' %}" alt="Porsi Ideal Isi Piringku" class="edu-plate-img">
+            </div>
+            <h3 class="edu-card__title text-center">The Ideal Portion</h3>
+            <p class="edu-card__lead">Pola makan sehat berfokus pada keseimbangan nutrisi makro &amp; mikro:</p>
+            <ul class="edu-card__list">
+              <li><strong>½ Piring:</strong> Sayuran &amp; buah kaya vitamin, mineral, dan serat.</li>
+              <li><strong>¼ Piring:</strong> Karbohidrat kompleks (nasi merah, kentang, oat) untuk energi.</li>
+              <li><strong>¼ Piring:</strong> Protein (ayam, ikan, telur, tahu, tempe) untuk otot &amp; imun.</li>
+            </ul>
+            <p class="edu-card__foot"><strong>Makan seimbang menjaga energi dan mencegah kalori berlebih.</strong></p>
+          </article>
+
+          <article class="edu-card edu-card--side">
+            <h3 class="edu-card__title text-center">Know Your Calories Needs (BMR &amp; TDEE)</h3>
+            <div class="edu-card__body">
+              <img src="{% static 'img/edu_bmr_calc.png' %}" alt="BMR Calculator" class="edu-icon">
+              <p class="edu-card__desc">
+                Setiap tubuh unik. Mengetahui kebutuhan kalori harian berdasarkan usia, aktivitas, dan target membantu Anda makan dengan porsi yang tepat tanpa diet ekstrem.
+              </p>
+              <img src="{% static 'img/edu_tdee_act.png' %}" alt="TDEE Activity" class="edu-icon">
+            </div>
+          </article>
+
+          <article class="edu-card edu-card--side">
+            <h3 class="edu-card__title text-center">Good Nutrition for You &amp; the Planet</h3>
+            <div class="edu-card__body">
+              <img src="{% static 'img/edu_earth_eco.png' %}" alt="Earth &amp; Nature" class="edu-icon">
+              <p class="edu-card__desc">
+                Mengatur porsi bukan hanya tentang berat badan, tapi juga mencegah sisa makanan (<em>food waste</em>) dan menekan jejak karbon. Hidup sehat yang berkelanjutan!
+              </p>
+              <img src="{% static 'img/edu_recycle_green.png' %}" alt="Recycle Eco" class="edu-icon">
+            </div>
+          </article>
         </div>
       </div>
-    </div>
-
-    <div class="dashboard-reviews">
-      <div class="dashboard-reviews-header">
-        <h2 class="dashboard-reviews__title">What our Customers say?</h2>
-        <button type="button" class="btn add-reviews-button">
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
-            <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
-            <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/>
-          </svg>
-          Write a Review
-        </button> 
-      </div>
-
-      <div class="dashboard-review-box">
-        <div class="dashboard-review-comments" id="reviewCardsContainer" data-url="{% url 'main:get_reviews_json' %}" data-is-authorized="{{ user.is_superuser|yesno:'true,false' }}">
-          <div class="dashboard-review-empty">
-            <p>Memuat review...</p>
-          </div>
-        </div>
-      </div>
-    </div>
+    </section>
 
     <section class="features">
       <div class="features__header">
@@ -107,8 +128,30 @@
         </article>
       </div>
     </section>
+
+    <section class="dashboard-reviews">
+      <div class="dashboard-review-box">
+        <div class="dashboard-reviews-header">
+          <h2 class="dashboard-reviews__title">What our Customers say?</h2>
+          <button type="button" class="btn add-reviews-button">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
+              <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+              <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/>
+            </svg>
+            Write a Review
+          </button>
+        </div>
+
+        <div class="dashboard-review-comments" id="reviewCardsContainer" data-url="{% url 'main:get_reviews_json' %}" data-is-authorized="{{ user.is_superuser|yesno:'true,false' }}">
+          <div class="dashboard-review-empty">
+            <p>Memuat review...</p>
+          </div>
+        </div>
+      </div>
+    </section>
   </div>
+  
   {% include "components/add_reviews_form.html" %}
   <script src="{% static 'js/reviews.js' %}"></script>
-  <script src="{% static 'js/features.js' %}"></script>
+  <script src="{% static 'js/collapse.js' %}"></script>
 {% endblock content %}
