@@ -30,6 +30,25 @@
       </div>
     </section>
 
+    <section class="life-highlight" aria-labelledby="life-highlight-title">
+      <p class="life-highlight__eyebrow">start using caloreat for</p>
+      <h2 class="life-highlight__title" id="life-highlight-title">
+        <span>BETTER</span>
+        <span class="life-highlight__word" aria-label="Life, days, goals, health">
+          <span class="life-highlight__track" aria-hidden="true">
+            <span>LIFE</span>
+            <span>DAYS</span>
+            <span>GOALS</span>
+            <span>HEALTH</span>
+            <span>LIFE</span>
+          </span>
+        </span>
+      </h2>
+      {% if not user.is_authenticated %}
+        <a class="life-highlight__signup" href="{% url 'main:register' %}">sign up</a>
+      {% endif %}
+    </section>
+
     <div class="dashboard-education">
       <h2 class="dashboard-education__title">Why use Caloreat?</h2>
       <div class="dashboard-education-box">
@@ -61,7 +80,35 @@
         </div>
       </div>
     </div>
+
+    <section class="features">
+      <div class="features__header">
+        <h2 id="features-title">Our Features</h2>
+        <button class="features__toggle" type="button" aria-expanded="true" aria-controls="features-list" aria-label="Collapse features">
+          <span class="features__close" aria-hidden="true"></span>
+        </button>
+      </div>
+      <div class="features__list" id="features-list">
+        <article class="features__item">
+          <h3>this is feature1</h3>
+          <p>Dorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vulputate libero et velit interdum, ac aliquet odio mattis.</p>
+        </article>
+        <article class="features__item">
+          <h3>this is feature2</h3>
+          <p>Dorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vulputate libero et velit interdum, ac aliquet odio mattis.</p>
+        </article>
+        <article class="features__item">
+          <h3>this is feature3</h3>
+          <p>Dorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vulputate libero et velit interdum, ac aliquet odio mattis.</p>
+        </article>
+        <article class="features__item">
+          <h3>this is feature4</h3>
+          <p>Dorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vulputate libero et velit interdum, ac aliquet odio mattis.</p>
+        </article>
+      </div>
+    </section>
   </div>
   {% include "components/add_reviews_form.html" %}
   <script src="{% static 'js/reviews.js' %}"></script>
+  <script src="{% static 'js/features.js' %}"></script>
 {% endblock content %}

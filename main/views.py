@@ -2,6 +2,7 @@ from django.contrib import messages
 from django.contrib.auth import login, logout
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.shortcuts import redirect, render, get_object_or_404
+from django.utils.http import url_has_allowed_host_and_scheme
 from django.core import serializers
 from django.http import HttpResponse, JsonResponse
 from django.views.decorators.http import require_POST
@@ -12,12 +13,14 @@ from main.models import Reviews
 
 from main.forms import RegisterForm, LoginForm, ReviewsForm
 
+
 # Menampilkan main.
 def show_main(request):
     context = {
         'review_list': Reviews.objects.order_by('-date')[:6],
     }
     return render(request, "index.html", context)
+
 
 # get reviews json using AJAX
 def get_reviews_json(request):
@@ -93,13 +96,18 @@ def _auth_context(active, login_form=None, register_form=None):
 def login_user(request):
     form = LoginForm(request, data=request.POST or None, auto_id="login_%s")
 
+    next_url = request.POST.get("next") or request.GET.get("next", "")
     if request.method == "POST" and form.is_valid():
         login(request, form.get_user())
         if not form.cleaned_data["remember_me"]:
             request.session.set_expiry(0)
+        if next_url and url_has_allowed_host_and_scheme(next_url, allowed_hosts={request.get_host()}, require_https=request.is_secure()):
+            return redirect(next_url)
         return redirect("main:show_main")
 
-    return render(request, "authentication.html", _auth_context("login", login_form=form))
+    context = _auth_context("login", login_form=form)
+    context["next"] = next_url
+    return render(request, "authentication.html", context)
 
 
 def register(request):

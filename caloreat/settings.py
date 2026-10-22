@@ -79,6 +79,16 @@ TEMPLATES = [
 STATIC_URL = 'static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
 
+# Shared SQL cache keeps search caching and global OFF throttling consistent
+# across users and Django worker processes.
+CACHES = {
+    "default": {
+        "BACKEND": "django.core.cache.backends.db.DatabaseCache",
+        "LOCATION": "caloreat_cache",
+        "TIMEOUT": 60 * 60 * 24,
+    }
+}
+
 WSGI_APPLICATION = 'caloreat.wsgi.application'
 
 
@@ -132,7 +142,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Jakarta'
 
 USE_I18N = True
 

@@ -50,6 +50,7 @@
         <div data-pane="login" class="{% if active == 'login' %}is-active{% endif %}">
           <form class="auth-form" method="post" action="{% url 'main:login' %}">
             {% csrf_token %}
+            {% if next %}<input type="hidden" name="next" value="{{ next }}">{% endif %}
 
             {% for error in login_form.non_field_errors %}
               <p class="auth-error">{{ error }}</p>
