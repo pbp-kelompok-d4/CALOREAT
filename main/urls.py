@@ -8,6 +8,13 @@ from main.calorie_views import (
     entry_detail_api, summary_api, week_summary_api, profile_api,
 )
 
+from main.portion_views import (
+    portion_guidance,
+    portion_create,
+    portion_edit,
+    portion_delete,
+)
+
 
 app_name = "main"
 
@@ -25,6 +32,10 @@ urlpatterns = [
     path("reviews/create-ajax/", add_review_ajax, name="add_review_ajax"),
     path("reviews/delete-ajax/<uuid:id>/", delete_review_ajax, name="delete_review_ajax"),
     path("api/reviews/", get_reviews_json, name="get_reviews_json"),
+    path("portion-guidance/", portion_guidance, name="portion_guidance"),
+    path("portion-guidance/create/", portion_create, name="portion_create"),
+    path("portion-guidance/<int:guide_id>/edit/", portion_edit, name="portion_edit"),
+    path("portion-guidance/<int:guide_id>/delete/", portion_delete, name="portion_delete"),
     
     path("register/", register, name="register"),
     path("login/", login_user, name="login"),

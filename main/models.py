@@ -89,3 +89,30 @@ class FoodEntry(models.Model):
 
     def __str__(self):
         return f"{self.name} ({self.grams} g) - {self.user}"
+
+class PortionGuide(models.Model):
+    MEAL_CHOICES = [
+        ("breakfast", "Breakfast"),
+        ("lunch", "Lunch"),
+        ("dinner", "Dinner"),
+        ("snack", "Snack"),
+    ]
+
+    title = models.CharField(max_length=120)
+    meal_type = models.CharField(
+        max_length=12,
+        choices=MEAL_CHOICES,
+    )
+    description = models.TextField()
+    vegetables = models.CharField(max_length=200)
+    protein = models.CharField(max_length=200)
+    carbohydrates = models.CharField(max_length=200)
+    image_url = models.URLField(blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ["meal_type", "title"]
+
+    def __str__(self):
+        return self.title

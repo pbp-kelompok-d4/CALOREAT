@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from main.models import CalorieProfile, FoodEntry, Reviews
+from main.models import CalorieProfile, FoodEntry, Reviews, PortionGuide
 
 
 @admin.register(Reviews)
@@ -24,3 +24,20 @@ class FoodEntryAdmin(admin.ModelAdmin):
     search_fields = ("name", "brand", "user__username")
     list_filter = ("date", "meal")
     date_hierarchy = "date"
+
+@admin.register(PortionGuide)
+class PortionGuideAdmin(admin.ModelAdmin):
+    list_display = (
+        "title",
+        "meal_type",
+        "updated_at",
+    )
+    list_filter = ("meal_type",)
+    search_fields = (
+        "title",
+        "description",
+        "vegetables",
+        "protein",
+        "carbohydrates",
+    )
+    readonly_fields = ("created_at", "updated_at")

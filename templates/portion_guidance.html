@@ -1,0 +1,95 @@
+
+{% extends "base.html" %}
+
+{% block content %}
+<section class="portion-guidance">
+    <h1>Healthy Portion Guidance</h1>
+    <p>Explore balanced meal portions to help plan your meals.</p>
+
+    {% if messages %}
+        {% for message in messages %}
+            <p>{{ message }}</p>
+        {% endfor %}
+    {% endif %}
+
+    <form method="GET" action="{% url 'main:portion_guidance' %}">
+        <label for="meal_type">Filter by meal:</label>
+        <select name="meal_type" id="meal_type">
+            <option value="">All meals</option>
+            {% for value, label in meal_choices %}
+                <option value="{{ value }}"
+                    {% if selected_meal == value %}selected{% endif %}>
+                    {{ label }}
+                </option>
+            {% endfor %}
+        </select>
+        <button type="submit">Filter</button>
+    </form>
+
+    {% if user.is_staff %}
+        <p>
+            <a href="{% url 'main:portion_create' %}">
+                Add Portion Guide
+            </a>
+        </p>
+    {% endif %}
+
+    {% if guides %}
+        <div class="portion-guide-list">
+            {% for guide in guides %}
+                <article class="portion-guide-card">
+                    {% if guide.image_url %}
+                        <img
+                            src="{{ guide.image_url }}"
+                            alt="{{ guide.title }}"
+                            loading="lazy"
+                            style="max-width: 100%; height: auto;"
+                        >
+                    {% endif %}
+
+                    <h2>{{ guide.title }}</h2>
+                    <p><strong>Meal:</strong> {{ guide.get_meal_type_display }}</p>
+                    <p>{{ guide.description }}</p>
+
+                    <h3>Recommended portions</h3>
+                    <ul>
+                        <li>
+                            <strong>Vegetables:</strong>
+                            {{ guide.vegetables }}
+                        </li>
+                        <li>
+                            <strong>Protein:</strong>
+                            {{ guide.protein }}
+                        </li>
+                        <li>
+                            <strong>Carbohydrates:</strong>
+                            {{ guide.carbohydrates }}
+                        </li>
+                    </ul>
+
+                    {% if user.is_staff %}
+                        <a href="{% url 'main:portion_edit' guide.id %}">
+                            Edit
+                        </a>
+
+                        <form
+                            method="POST"
+                            action="{% url 'main:portion_delete' guide.id %}"
+                        >
+                            {% csrf_token %}
+                            <button
+                                type="submit"
+                                onclick="return confirm('Delete this portion guide?');"
+                            >
+                                Delete
+                            </button>
+                        </form>
+                    {% endif %}
+                </article>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p>No portion guides found for this meal type.</p>
+    {% endif %}
+</section>
+{% endblock %}

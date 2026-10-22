@@ -2,7 +2,7 @@ from django.forms import ModelForm, TextInput, Form
 from django import forms
 from django.core.exceptions import ValidationError
 from django.utils.html import strip_tags
-from main.models import Reviews
+from main.models import Reviews, PortionGuide
 from django.contrib.auth.models import User
 from django.contrib.auth.password_validation import validate_password
 from django.contrib.auth.forms import AuthenticationForm
@@ -96,3 +96,37 @@ class ReviewsForm(ModelForm):
         if not title:
             raise ValidationError("Isi reviews tidak boleh hanya berisi tag HTML.")
         return title
+
+class PortionGuideForm(forms.ModelForm):
+    class Meta:
+        model = PortionGuide
+        fields = [
+            "title",
+            "meal_type",
+            "description",
+            "vegetables",
+            "protein",
+            "carbohydrates",
+            "image_url",
+        ]
+        widgets = {
+            "title": forms.TextInput(attrs={
+                "placeholder": "e.g. Balanced Lunch Plate",
+            }),
+            "description": forms.Textarea(attrs={
+                "placeholder": "Describe the purpose of this portion guide",
+                "rows": 4,
+            }),
+            "vegetables": forms.TextInput(attrs={
+                "placeholder": "e.g. Half the plate",
+            }),
+            "protein": forms.TextInput(attrs={
+                "placeholder": "e.g. A quarter of the plate",
+            }),
+            "carbohydrates": forms.TextInput(attrs={
+                "placeholder": "e.g. A quarter of the plate",
+            }),
+            "image_url": forms.URLInput(attrs={
+                "placeholder": "Optional image URL",
+            }),
+        }
