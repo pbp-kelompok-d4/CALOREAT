@@ -198,3 +198,43 @@ class PortionGuideTests(TestCase):
         self.assertTrue(
             PortionGuide.objects.filter(pk=guide_id).exists()
         )
+
+    
+    def test_ajax_request_returns_only_guide_list_partial(self):
+        self.client.force_login(self.user)
+
+        response = self.client.get(
+            reverse("main:portion_guidance"),
+            {"meal_type": "lunch"},
+            HTTP_X_REQUESTED_WITH="XMLHttpRequest",
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(
+            response,
+            "components/portion_guide_list.html",
+        )
+        self.assertContains(response, "Balanced Lunch")
+        self.assertNotContains(response, "Healthy Portion Guidance")
+
+    def test_ajax_filter_returns_matching_guides_only(self):
+        PortionGuide.objects.create(
+            title="Healthy Breakfast",
+            meal_type="breakfast",
+            description="A balanced breakfast.",
+            vegetables="Fruit",
+            protein="Eggs",
+            carbohydrates="Whole-grain bread",
+        )
+        self.client.force_login(self.user)
+
+        response = self.client.get(
+            reverse("main:portion_guidance"),
+            {"meal_type": "breakfast"},
+            HTTP_X_REQUESTED_WITH="XMLHttpRequest",
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Healthy Breakfast")
+        self.assertNotContains(response, "Balanced Lunch")
+

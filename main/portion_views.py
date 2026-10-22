@@ -13,15 +13,27 @@ from main.models import PortionGuide
 def portion_guidance(request):
     guides = PortionGuide.objects.all()
 
-    meal_type = request.GET.get("meal_type")
+    meal_type = request.GET.get("meal_type", "")
     if meal_type in dict(PortionGuide.MEAL_CHOICES):
         guides = guides.filter(meal_type=meal_type)
 
     context = {
         "guides": guides,
         "meal_choices": PortionGuide.MEAL_CHOICES,
-        "selected_meal": meal_type or "",
+        "selected_meal": (
+            meal_type
+            if meal_type in dict(PortionGuide.MEAL_CHOICES)
+            else ""
+        ),
     }
+
+    if request.headers.get("X-Requested-With") == "XMLHttpRequest":
+        return render(
+            request,
+            "components/portion_guide_list.html",
+            context,
+        )
+
     return render(request, "portion_guidance.html", context)
 
 
