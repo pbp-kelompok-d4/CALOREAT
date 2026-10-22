@@ -1,0 +1,450 @@
+
+/* Healthy Portion Guidance */
+
+.portion-guidance,
+.portion-guidance-form {
+    width: min(100% - 32px, 1100px);
+    margin: 32px auto 56px;
+    color: var(--ink);
+}
+
+.portion-guidance__header {
+    padding: clamp(28px, 5vw, 52px);
+    border-radius: 28px;
+    background: linear-gradient(135deg, var(--hero-top), var(--hero-bottom));
+}
+
+.portion-guidance__eyebrow {
+    margin-bottom: 10px;
+    color: var(--muted);
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+}
+
+.portion-guidance__title,
+.portion-guidance-form h1 {
+    font-family: "Outfit", sans-serif;
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    line-height: 1.1;
+}
+
+.portion-guidance__intro {
+    max-width: 620px;
+    margin-top: 14px;
+    line-height: 1.7;
+}
+
+.portion-guidance__toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: end;
+    justify-content: space-between;
+    gap: 16px;
+    margin: 28px 0;
+}
+
+.portion-guidance__filter {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: end;
+    gap: 10px;
+}
+
+.portion-guidance__filter label,
+.portion-guidance-form .form-field label {
+    display: block;
+    margin-bottom: 7px;
+    font-size: 0.9rem;
+    font-weight: 700;
+}
+
+.portion-guidance__filter select,
+.portion-guidance-form input,
+.portion-guidance-form select,
+.portion-guidance-form textarea {
+    width: 100%;
+    min-height: 44px;
+    padding: 10px 12px;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    background: var(--card);
+    color: var(--ink);
+    font: inherit;
+}
+
+.portion-guidance__filter select {
+    min-width: 180px;
+}
+
+.portion-guidance__button,
+.portion-guidance-form button,
+.portion-guidance-card__button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 44px;
+    padding: 10px 18px;
+    border: 1px solid var(--yellow);
+    border-radius: 999px;
+    background: var(--yellow);
+    color: var(--ink);
+    font: inherit;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.15s ease, transform 0.15s ease;
+}
+
+.portion-guidance__button:hover,
+.portion-guidance-form button:hover,
+.portion-guidance-card__button:hover {
+    background: var(--yellow-dark);
+}
+
+.portion-guidance__button:active,
+.portion-guidance-form button:active,
+.portion-guidance-card__button:active {
+    transform: translateY(1px);
+}
+
+.portion-guidance__link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 44px;
+    padding: 10px 18px;
+    border: 1px solid var(--ink);
+    border-radius: 999px;
+    font-weight: 700;
+}
+
+.portion-guidance__link:hover {
+    background: var(--ink);
+    color: var(--card);
+}
+
+.portion-guidance__messages {
+    display: grid;
+    gap: 8px;
+    margin: 16px 0;
+}
+
+.portion-guidance__message {
+    padding: 12px 16px;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    background: var(--plate);
+}
+
+.portion-guide-list {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px;
+}
+
+.portion-guidance-card {
+    min-width: 0;
+    overflow: hidden;
+    border: 1px solid var(--line);
+    border-radius: 22px;
+    background: var(--card);
+    box-shadow: 0 8px 24px rgba(42, 33, 8, 0.06);
+}
+
+.portion-guidance-card__image {
+    display: block;
+    width: 100%;
+    max-height: 260px;
+    object-fit: cover;
+    background: var(--plate);
+}
+
+.portion-guidance-card__body {
+    padding: 22px;
+}
+
+.portion-guidance-card__meal {
+    display: inline-block;
+    margin-bottom: 10px;
+    padding: 5px 10px;
+    border-radius: 999px;
+    background: var(--hero-bottom);
+    color: var(--ink);
+    font-size: 0.78rem;
+    font-weight: 700;
+}
+
+.portion-guidance-card h2 {
+    margin-bottom: 10px;
+    font-family: "Outfit", sans-serif;
+    font-size: 1.5rem;
+    line-height: 1.2;
+}
+
+.portion-guidance-card__description {
+    margin-bottom: 20px;
+    line-height: 1.65;
+}
+
+.portion-guidance-card h3 {
+    margin-bottom: 12px;
+    font-family: "Outfit", sans-serif;
+    font-size: 1.05rem;
+}
+
+.portion-guidance-card__portions {
+    display: grid;
+    gap: 10px;
+    padding: 0;
+    list-style: none;
+}
+
+.portion-guidance-card__portions li {
+    padding: 12px 14px;
+    border-radius: 12px;
+    background: var(--plate);
+    line-height: 1.5;
+}
+
+.portion-guidance-card__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.portion-guidance-card__delete {
+    display: inline;
+}
+
+.portion-guidance-card__button--secondary {
+    border-color: var(--line);
+    background: transparent;
+}
+
+.portion-guidance-card__button--danger {
+    border-color: #b3261e;
+    background: #fff5f4;
+    color: #8f1d18;
+}
+
+.portion-guidance-card__button--danger:hover {
+    background: #ffe3e0;
+}
+
+.portion-guidance__empty {
+    padding: 36px 20px;
+    border: 1px dashed var(--line);
+    border-radius: 20px;
+    background: var(--plate);
+    text-align: center;
+}
+
+.portion-guidance__empty h2 {
+    margin-bottom: 8px;
+    font-family: "Outfit", sans-serif;
+}
+
+.portion-guidance-form {
+    max-width: 760px;
+    padding: clamp(22px, 5vw, 40px);
+    border: 1px solid var(--line);
+    border-radius: 24px;
+    background: var(--plate);
+}
+
+.portion-guidance-form h1 {
+    margin-bottom: 24px;
+}
+
+.portion-guidance-form form {
+    display: grid;
+    gap: 20px;
+}
+
+.portion-guidance-form .form-field {
+    min-width: 0;
+}
+
+.portion-guidance-form textarea {
+    min-height: 120px;
+    resize: vertical;
+}
+
+.portion-guidance-form input:focus-visible,
+.portion-guidance-form select:focus-visible,
+.portion-guidance-form textarea:focus-visible,
+.portion-guidance__filter select:focus-visible {
+    border-color: var(--yellow-dark);
+    outline: 2px solid var(--yellow-dark);
+    outline-offset: 2px;
+}
+
+.portion-guidance-form .form-errors,
+.portion-guidance-form .form-error {
+    color: #b3261e;
+    font-size: 0.88rem;
+}
+
+.portion-guidance-form .form-errors {
+    margin-bottom: 16px;
+}
+
+.portion-guidance-form .form-error {
+    margin-top: 6px;
+}
+
+.portion-guidance-form small {
+    display: block;
+    margin-top: 6px;
+    color: var(--muted);
+}
+
+.portion-guidance-form__actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px;
+}
+
+@media (max-width: 680px) {
+    .portion-guide-list {
+        grid-template-columns: 1fr;
+    }
+
+    .portion-guidance__toolbar {
+        align-items: stretch;
+    }
+
+    .portion-guidance__filter {
+        align-items: stretch;
+        width: 100%;
+    }
+
+    .portion-guidance__filter > div {
+        flex: 1;
+    }
+
+    .portion-guidance__filter select {
+        min-width: 0;
+    }
+
+    .portion-guidance__filter button,
+    .portion-guidance__toolbar > a {
+        width: 100%;
+    }
+}
+
+
+/* Portion guide form refinements */
+
+.portion-guidance-form__back {
+    display: inline-block;
+    margin-bottom: 24px;
+    color: var(--muted);
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.portion-guidance-form__back:hover {
+    color: var(--ink);
+}
+
+.portion-guidance-form__header {
+    margin-bottom: 28px;
+}
+
+.portion-guidance-form__header h1 {
+    margin-bottom: 12px;
+}
+
+.portion-guidance-form__header > p:last-child {
+    max-width: 560px;
+    color: var(--muted);
+    line-height: 1.7;
+}
+
+.portion-guidance-form__eyebrow {
+    margin-bottom: 8px;
+    color: var(--muted);
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+}
+
+.portion-guidance-form__fields {
+    padding-top: 24px;
+    border-top: 1px solid var(--line);
+}
+
+.portion-guidance-form__field label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 700;
+}
+
+.portion-guidance-form__required {
+    color: #b3261e;
+}
+
+.portion-guidance-form__optional {
+    color: var(--muted);
+    font-size: 0.8rem;
+    font-weight: 400;
+}
+
+.portion-guidance-form__hint {
+    margin: -2px 0 8px;
+    color: var(--muted);
+    font-size: 0.88rem;
+    line-height: 1.5;
+}
+
+.portion-guidance-form__errors {
+    margin-bottom: 20px;
+    padding: 12px 16px;
+    border: 1px solid #b3261e;
+    border-radius: 12px;
+    color: #8f1d18;
+}
+
+.portion-guidance-form__error {
+    margin-top: 7px;
+    color: #b3261e;
+    font-size: 0.88rem;
+}
+
+.portion-guidance-form__actions {
+    padding-top: 8px;
+}
+
+.portion-guidance-form__actions a {
+    display: inline-flex;
+    min-height: 44px;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 18px;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    color: var(--ink);
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.portion-guidance-form__actions a:hover {
+    background: var(--card);
+}
+
+@media (max-width: 480px) {
+    .portion-guidance-form__actions {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .portion-guidance-form__actions button,
+    .portion-guidance-form__actions a {
+        width: 100%;
+    }
+}

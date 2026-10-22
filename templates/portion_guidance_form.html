@@ -1,24 +1,52 @@
 
 {% extends "base.html" %}
+{% load static %}
 
 {% block content %}
 <section class="portion-guidance-form">
-    <h1>{{ page_title }}</h1>
+    <a
+        class="portion-guidance-form__back"
+        href="{% url 'main:portion_guidance' %}"
+    >
+        &larr; Back to Portion Guides
+    </a>
+
+    <header class="portion-guidance-form__header">
+        <p class="portion-guidance-form__eyebrow">Healthy Portion Guidance</p>
+        <h1>{{ page_title }}</h1>
+        <p>
+            Create a balanced meal guide by describing the recommended
+            portions for vegetables, protein, and carbohydrates.
+        </p>
+    </header>
 
     {% if form.non_field_errors %}
-        <div class="form-errors">
+        <div class="portion-guidance-form__errors">
             {{ form.non_field_errors }}
         </div>
     {% endif %}
 
-    <form method="POST">
+    <form method="POST" class="portion-guidance-form__fields">
         {% csrf_token %}
 
         {% for field in form %}
-            <div class="form-field">
+            <div class="portion-guidance-form__field">
                 <label for="{{ field.id_for_label }}">
                     {{ field.label }}
+                    {% if field.field.required %}
+                        <span class="portion-guidance-form__required">*</span>
+                    {% else %}
+                        <span class="portion-guidance-form__optional">
+                            (optional)
+                        </span>
+                    {% endif %}
                 </label>
+
+                {% if field.name == "vegetables" or field.name == "protein" or field.name == "carbohydrates" %}
+                    <p class="portion-guidance-form__hint">
+                        Describe the suggested portion for this food group.
+                    </p>
+                {% endif %}
 
                 {{ field }}
 
@@ -27,13 +55,29 @@
                 {% endif %}
 
                 {% for error in field.errors %}
-                    <p class="form-error">{{ error }}</p>
+                    <p class="portion-guidance-form__error">
+                        {{ error }}
+                    </p>
                 {% endfor %}
             </div>
         {% endfor %}
 
-        <button type="submit">{{ submit_label }}</button>
-        <a href="{% url 'main:portion_guidance' %}">Cancel</a>
+        <div class="portion-guidance-form__actions">
+            <button type="submit">
+                {{ submit_label }}
+            </button>
+
+            <a href="{% url 'main:portion_guidance' %}">
+                Cancel
+            </a>
+        </div>
     </form>
 </section>
 {% endblock %}
+
+{% block extra_head %}
+<link
+    rel="stylesheet"
+    href="{% static 'css/portion_guidance.css' %}"
+>
+{% endblock extra_head %}
