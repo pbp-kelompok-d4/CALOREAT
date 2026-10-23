@@ -7,8 +7,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500&family=Outfit:wght@500;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/static/css/style.css">
-  <link rel="stylesheet" href="/static/css/auth.css">
+  <link rel="stylesheet" href="{% static 'css/style.css' %}?v=nav-4">
+  <link rel="stylesheet" href="{% static 'css/auth.css' %}">
   {% block extra_head %}{% endblock extra_head %}
   <title>{% block title %}CALOREAT{% endblock %}</title>
 </head>
@@ -17,12 +17,12 @@
         <header class="nav">
             <nav class="nav-links" aria-label="Menu utama">
             <a href="{% url 'main:show_main' %}"{% if request.resolver_match.url_name == 'show_main' %} class="active" aria-current="page"{% endif %}>Home</a>
-            <a href="#about">About</a>
+            <a href="">About</a>
             <a href="{% url 'main:calorie_count' %}"{% if request.resolver_match.url_name == 'calorie_count' %} class="active" aria-current="page"{% endif %}>Calorie Count</a>
             <a href="{% url 'main:portion_guidance' %}"{% if request.resolver_match.url_name == 'portion_guidance' %} class="active" aria-current="page"{% endif %}>Portion Guidance</a>
             </nav>
 
-            <a class="logo" href="#" aria-label="Beranda">
+            <a class="logo" href="{% url 'main:show_main' %}" aria-label="Beranda">
             <img src="/static/img/logo_caloreat.png" alt="Logo CALOREAT" height="64">
             </a>
 
@@ -53,7 +53,47 @@
                 <a class="btn btn-outline" href="{% url 'main:register' %}">Sign Up</a>
                 </div>
             {% endif %}
-            
+
+            <button class="nav-toggle" id="nav-toggle" type="button" aria-expanded="false" aria-controls="nav-mobile-drawer" aria-label="Toggle navigation menu">
+              <div id="nav-icon4" aria-hidden="true">
+                <span></span>
+                <span></span>
+                <span></span>
+              </div>
+            </button>
+
+            <div class="nav-mobile-drawer" id="nav-mobile-drawer" aria-hidden="true">
+              <nav class="nav-mobile-links" aria-label="Menu mobile">
+                <a href="{% url 'main:show_main' %}"{% if request.resolver_match.url_name == 'show_main' %} class="active" aria-current="page"{% endif %}>Home</a>
+                <a href="">About</a>
+                <a href="{% url 'main:calorie_count' %}"{% if request.resolver_match.url_name == 'calorie_count' %} class="active" aria-current="page"{% endif %}>Calorie Count</a>
+                <a href="{% url 'main:portion_guidance' %}"{% if request.resolver_match.url_name == 'portion_guidance' %} class="active" aria-current="page"{% endif %}>Portion Guidance</a>
+              </nav>
+
+              <div class="nav-mobile-footer">
+                {% if user.is_authenticated %}
+                  <div class="nav-mobile-user">
+                    <span class="nav-mobile-avatar" aria-hidden="true">{{ user.first_name|default:user.username|first|upper }}</span>
+                    <span class="nav-user__name">{{ user.first_name|default:user.username }}</span>
+                  </div>
+                  {% if request.resolver_match.url_name == "calorie_count" %}
+                    <div class="nav-mobile-actions">
+                      <a class="btn btn-yellow" href="#food-search-input" data-close-mobile-nav>+ Log food</a>
+                      <button type="button" class="btn btn-soft" id="nav-profile-setup-mobile">Set up profile</button>
+                    </div>
+                  {% endif %}
+                  <form method="post" action="{% url 'main:logout' %}">
+                    {% csrf_token %}
+                    <button type="submit" class="nav-logout nav-mobile-logout">Log out</button>
+                  </form>
+                {% else %}
+                  <div class="nav-mobile-actions">
+                    <a class="btn btn-soft" href="{% url 'main:login' %}">Sign in</a>
+                    <a class="btn btn-yellow" href="{% url 'main:register' %}">Get Started</a>
+                  </div>
+                {% endif %}
+              </div>
+            </div>
         </header>
         {% block content %} {% endblock content %}
         <footer class="footer">
@@ -62,5 +102,6 @@
             </div>
         </footer>
     </main>
+<script src="{% static 'js/navbar.js' %}"></script>
 </body>
 </html>
