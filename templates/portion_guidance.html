@@ -1,0 +1,73 @@
+
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<section class="portion-guidance">
+    <header class="portion-guidance__header">
+        <p class="portion-guidance__eyebrow">Eat well, feel well</p>
+        <h1 class="portion-guidance__title">Healthy Portion Guidance</h1>
+        <p class="portion-guidance__intro">
+            Build balanced meals with practical guidance on vegetables,
+            protein, and carbohydrates.
+        </p>
+    </header>
+
+    {% if messages %}
+        <div class="portion-guidance__messages">
+            {% for message in messages %}
+                <p class="portion-guidance__message">{{ message }}</p>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <div class="portion-guidance__toolbar">
+        <form
+            id="portion-guidance-filter"
+            class="portion-guidance__filter"
+            method="GET"
+            action="{% url 'main:portion_guidance' %}"
+        >
+            <div>
+                <label for="meal_type">Filter by meal</label>
+                <select name="meal_type" id="meal_type">
+                    <option value="">All meals</option>
+                    {% for value, label in meal_choices %}
+                        <option
+                            value="{{ value }}"
+                            {% if selected_meal == value %}selected{% endif %}
+                        >
+                            {{ label }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <button
+                class="portion-guidance__button"
+                type="submit"
+            >
+                Filter
+            </button>
+        </form>
+
+        {% if user.is_staff %}
+            <a
+                class="portion-guidance__link"
+                href="{% url 'main:portion_create' %}"
+            >
+                + Add Portion Guide
+            </a>
+        {% endif %}
+    </div>
+
+    <div id="portion-guidance-results" aria-live="polite">
+        {% include "components/portion_guide_list.html" %}
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="{% static 'css/portion_guidance.css' %}">
+<script src="{% static 'js/portion_guidance.js' %}" defer></script>
+{% endblock extra_head %}

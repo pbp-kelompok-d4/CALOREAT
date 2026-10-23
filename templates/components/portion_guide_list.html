@@ -1,0 +1,83 @@
+
+{% if guides %}
+    <div class="portion-guide-list">
+        {% for guide in guides %}
+            <article class="portion-guidance-card">
+                {% if guide.image_url %}
+                    <img
+                        class="portion-guidance-card__image"
+                        src="{{ guide.image_url }}"
+                        alt="{{ guide.title }}"
+                        loading="lazy"
+                    >
+                {% endif %}
+
+                <div class="portion-guidance-card__body">
+                    <span class="portion-guidance-card__meal">
+                        {{ guide.get_meal_type_display }}
+                    </span>
+
+                    <h2>{{ guide.title }}</h2>
+
+                    <p class="portion-guidance-card__description">
+                        {{ guide.description }}
+                    </p>
+
+                    <h3>Recommended portions</h3>
+
+                    <ul class="portion-guidance-card__portions">
+                        <li>
+                            <strong>Vegetables</strong><br>
+                            {{ guide.vegetables }}
+                        </li>
+                        <li>
+                            <strong>Protein</strong><br>
+                            {{ guide.protein }}
+                        </li>
+                        <li>
+                            <strong>Carbohydrates</strong><br>
+                            {{ guide.carbohydrates }}
+                        </li>
+                    </ul>
+
+                    {% if user.is_staff %}
+                        <div class="portion-guidance-card__actions">
+                            <a
+                                class="portion-guidance-card__button portion-guidance-card__button--secondary"
+                                href="{% url 'main:portion_edit' guide.id %}"
+                            >
+                                Edit
+                            </a>
+
+                            <form
+                                class="portion-guidance-card__delete"
+                                method="POST"
+                                action="{% url 'main:portion_delete' guide.id %}"
+                            >
+                                {% csrf_token %}
+                                <button
+                                    class="portion-guidance-card__button portion-guidance-card__button--danger"
+                                    type="submit"
+                                    onclick="return confirm('Delete this portion guide?');"
+                                >
+                                    Delete
+                                </button>
+                            </form>
+                        </div>
+                    {% endif %}
+                </div>
+            </article>
+        {% endfor %}
+    </div>
+{% else %}
+    <div class="portion-guidance__empty">
+        <h2>No portion guides yet</h2>
+        <p>
+            {% if selected_meal %}
+                There are no guides for this meal type yet.
+            {% else %}
+                Portion guides will appear here once they have been added.
+            {% endif %}
+        </p>
+    </div>
+{% endif %}
