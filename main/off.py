@@ -11,6 +11,7 @@ from django.core.cache import cache
 
 logger = logging.getLogger(__name__)
 BASE_URL = "https://world.openfoodfacts.org"
+SEARCH_URL = "https://search.openfoodfacts.org/search"
 USER_AGENT = "Caloreat/0.1 (contact: orrickhatmoko@gmail.com)"
 FIELDS = "code,product_name,brands,image_front_small_url,serving_size,serving_quantity,nutriscore_grade,nutriments"
 TIMEOUT = 6
@@ -40,7 +41,10 @@ def normalize(product):
         kj = _number(nutriments.get("energy-kj_100g"))
         kcal = round(kj / 4.184, 1) if kj is not None else None
     grade = (product.get("nutriscore_grade") or "").lower()
-    brand = (product.get("brands") or "").split(",")[0].strip()
+    brands = product.get("brands") or ""
+    if isinstance(brands, list):
+        brands = ", ".join(str(b) for b in brands)
+    brand = str(brands).split(",")[0].strip()
     return {
         "code": str(product.get("code") or ""),
         "name": name,
@@ -80,16 +84,14 @@ def search_products(query, page=1):
     if cached is not None:
         return cached
     params = urlencode({
-        "search_terms": query,
-        "search_simple": 1,
-        "action": "process",
-        "json": 1,
+        "q": query,
         "page": page,
         "page_size": 10,
         "fields": FIELDS,
     })
-    data = _get_json(f"{BASE_URL}/cgi/search.pl?{params}", query)
-    results = [item for item in (normalize(product) for product in data.get("products", [])) if item]
+    data = _get_json(f"{SEARCH_URL}?{params}", query)
+    products = data.get("hits") if "hits" in data else data.get("products", [])
+    results = [item for item in (normalize(product) for product in products) if item]
     cache.set(key, results, 60 * 60 * 24)
     return results
 

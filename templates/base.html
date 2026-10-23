@@ -19,7 +19,7 @@
             <a href="{% url 'main:show_main' %}"{% if request.resolver_match.url_name == 'show_main' %} class="active" aria-current="page"{% endif %}>Home</a>
             <a href="#about">About</a>
             <a href="{% url 'main:calorie_count' %}"{% if request.resolver_match.url_name == 'calorie_count' %} class="active" aria-current="page"{% endif %}>Calorie Count</a>
-            <a href="#pricing">...</a>
+            <a href="{% url 'main:portion_guidance' %}"{% if request.resolver_match.url_name == 'portion_guidance' %} class="active" aria-current="page"{% endif %}>Portion Guidance</a>
             </nav>
 
             <a class="logo" href="#" aria-label="Beranda">
