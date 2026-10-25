@@ -1,5 +1,3 @@
-/* Halaman Food Catalog: jendela detail makro dan huruf Nutri-Score.
-   Data makanan dikirim dari Django lewat <script id="foods-data"> di catalog.html */
 (function () {
   var dataEl = document.getElementById('foods-data');
   if (!dataEl) return;

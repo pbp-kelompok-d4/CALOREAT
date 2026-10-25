@@ -81,8 +81,6 @@ def food_catalog(request):
         data = {"count": 0, "products": []}
         error = True
 
-    # API kadang mengirim jumlah makanan sebagai teks ("9120"), bukan angka.
-    # Jadi diubah dulu ke angka supaya tidak error.
     try:
         total = int(data.get("count", 0))
     except (TypeError, ValueError):
