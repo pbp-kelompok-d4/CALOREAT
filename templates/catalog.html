@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Food Catalog | CALOREAT{% endblock title %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="{% static 'css/catalog.css' %}?v=4">
+{% endblock extra_head %}
+
+{% block content %}
+<section class="cat-page">
+  <header class="cat-hero">
+    <h1>Food nutrition catalog</h1>
+    <p>Search foods and drinks, then explore their protein, carbohydrates, fat, vitamins, and minerals.</p>
+  </header>
+
+  <form class="cat-tools" method="get">
+    <input type="search" name="q" value="{{ q }}" placeholder="Search noodles, milk, bread" aria-label="Search foods">
+    <button class="cat-btn" type="submit">Search</button>
+  </form>
+  <div class="cat-count">{{ total }} makanan</div>
+
+  <div class="cat-grid">
+    {% for f in foods %}
+    <article class="cat-card">
+      <div class="cat-img">
+        {% if f.gambar %}<img src="{{ f.gambar }}" alt="{{ f.nama }}" loading="lazy">{% else %}{{ f.nama|slice:":1" }}{% endif %}
+      </div>
+      <h3>{{ f.nama }}</h3>
+      <p class="cat-sub">{{ f.merek }}</p>
+      <div class="cat-macros">
+        <div class="m-p"><b>{{ f.protein|default_if_none:"-"|floatformat:"-1" }}</b>Protein</div>
+        <div class="m-c"><b>{{ f.karbo|default_if_none:"-"|floatformat:"-1" }}</b>Karbo</div>
+        <div class="m-f"><b>{{ f.lemak|default_if_none:"-"|floatformat:"-1" }}</b>Lemak</div>
+      </div>
+      <div class="cat-bot">
+        <span class="cat-kcal">{{ f.kcal|default_if_none:"-"|floatformat:0 }} <small>kcal</small></span>
+        {% if f.nutriscore %}<div class="cat-ns" aria-label="Nutri-Score {{ f.nutriscore }}" data-grade="{{ f.nutriscore }}"></div>{% endif %}
+      </div>
+      <button class="cat-btn cat-btn--ghost" type="button" data-i="{{ forloop.counter0 }}">Lihat makro detail</button>
+    </article>
+    {% empty %}
+    <div class="cat-empty">
+      {% if error %}Data belum bisa diambil dari Open Food Facts. Coba muat ulang beberapa saat lagi.
+      {% else %}Makanan tidak ditemukan. Coba kata kunci lain.{% endif %}
+    </div>
+    {% endfor %}
+  </div>
+
+  {% if page_obj.paginator.count %}
+  <div class="cat-pg" role="navigation" aria-label="Halaman katalog">
+    <span>Halaman:</span>
+    {% for p in page_range %}
+      {% if p == page_obj.paginator.ELLIPSIS %}<span>…</span>
+      {% elif p == page_obj.number %}<span class="cur" aria-current="page">{{ p }}</span>
+      {% else %}<a href="?page={{ p }}&q={{ q|urlencode }}">{{ p }}</a>{% endif %}
+    {% endfor %}
+    {% if page_obj.has_next %}<a href="?page={{ page_obj.next_page_number }}&q={{ q|urlencode }}">Selanjutnya</a>{% endif %}
+    <span class="sp">(12 makanan per halaman)</span>
+  </div>
+  {% endif %}
+
+  <p class="cat-note">Nilai gizi per 100 g atau 100 ml. Bukan saran medis. Data dari Open Food Facts (ODbL).</p>
+
+  <dialog class="cat-dlg" id="cat-dlg" aria-labelledby="cat-dt">
+    <div class="cat-dh">
+      <div><h2 id="cat-dt"></h2><p id="cat-ds"></p></div>
+      <button class="cat-x" type="button" id="cat-cl" aria-label="Tutup">&times;</button>
+    </div>
+    <div class="cat-db" id="cat-db"></div>
+  </dialog>
+</section>
+
+{{ foods|json_script:"foods-data" }}
+<script src="{% static 'js/catalog.js' %}?v=2"></script>
+{% endblock content %}
