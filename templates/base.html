@@ -20,6 +20,7 @@
             <a href="">About</a>
             <a href="{% url 'main:calorie_count' %}"{% if request.resolver_match.url_name == 'calorie_count' %} class="active" aria-current="page"{% endif %}>Calorie Count</a>
             <a href="{% url 'main:portion_guidance' %}"{% if request.resolver_match.url_name == 'portion_guidance' %} class="active" aria-current="page"{% endif %}>Portion Guidance</a>
+            <a href="{% url 'main:food_catalog' %}"{% if request.resolver_match.url_name == 'food_catalog' %} class="active" aria-current="page"{% endif %}>Food Catalog</a>
             </nav>
 
             <a class="logo" href="{% url 'main:show_main' %}" aria-label="Beranda">
