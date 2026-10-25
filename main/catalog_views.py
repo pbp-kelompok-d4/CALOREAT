@@ -63,7 +63,7 @@ def ambil_dari_api(q, page):
         )
         resp.raise_for_status()
         data = resp.json()
-        cache.set(key, data, 60 * 60)
+        cache.set(key, data, 60 * 60 * 24)
     return data
 
 
