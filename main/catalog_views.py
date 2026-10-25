@@ -81,8 +81,15 @@ def food_catalog(request):
         data = {"count": 0, "products": []}
         error = True
 
+    # API kadang mengirim jumlah makanan sebagai teks ("9120"), bukan angka.
+    # Jadi diubah dulu ke angka supaya tidak error.
+    try:
+        total = int(data.get("count", 0))
+    except (TypeError, ValueError):
+        total = 0
+
     # Paginator hanya dipakai untuk menghitung nomor halaman (1 2 3 ... 181 182 183).
-    paginator = Paginator(range(data.get("count", 0)), PER_PAGE)
+    paginator = Paginator(range(total), PER_PAGE)
     page_obj = paginator.get_page(page)
     page_range = paginator.get_elided_page_range(
         page_obj.number, on_each_side=1, on_ends=3
@@ -93,7 +100,7 @@ def food_catalog(request):
         nama = p.get("product_name")
         if not nama:
             continue  # lewati produk yang belum punya nama
-        n = p.get("nutriments", {})
+        n = p.get("nutriments") or {}
         foods.append({
             "nama": nama,
             "merek": ", ".join(filter(None, [p.get("brands"), p.get("quantity")])),
@@ -113,7 +120,7 @@ def food_catalog(request):
         "foods": foods,
         "page_obj": page_obj,
         "page_range": page_range,
-        "total": data.get("count", 0),
+        "total": total,
         "q": q,
         "error": error,
     })
