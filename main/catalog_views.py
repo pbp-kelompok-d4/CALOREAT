@@ -1,9 +1,11 @@
+import hashlib
 import requests
 from django.core.cache import cache
 from django.core.paginator import Paginator
 from django.shortcuts import render
 
-API_URL = "https://id.openfoodfacts.org/cgi/search.pl"
+API_URL = "https://search.openfoodfacts.org/search"
+USER_AGENT = "Caloreat/0.1 (contact: orrickhatmoko@gmail.com)"
 PER_PAGE = 12
 
 # Daftar vitamin dan mineral yang mau ditampilkan di panel detail.
@@ -44,21 +46,28 @@ def mikro(nutriments, daftar):
 
 
 def ambil_dari_api(q, page):
-    """Panggil API, dan simpan hasilnya 1 jam supaya tidak kena batas 10 permintaan/menit."""
-    key = f"off:{q}:{page}"
+    """Panggil Search-a-licious API Open Food Facts dan simpan hasilnya di cache selama 24 jam."""
+    normalized_q = q.casefold().strip()
+    query_hash = hashlib.sha256(normalized_q.encode("utf-8")).hexdigest()
+    key = f"off:catalog:{query_hash}:{page}"
     data = cache.get(key)
     if data is None:
+        search_query = q if q else 'countries_tags:"en:indonesia"'
         resp = requests.get(
             API_URL,
             params={
-                "search_terms": q,
+                "q": search_query,
                 "page": page,
                 "page_size": PER_PAGE,
-                "json": 1,
-                "fields": "code,product_name,brands,quantity,"
-                          "image_front_small_url,nutriscore_grade,nutriments",
+                "fields": (
+                    "code,product_name,brands,quantity,"
+                    "image_front_small_url,nutriscore_grade,nutriments"
+                ),
             },
-            headers={"User-Agent": "CALOREAT/1.0 (ganti-dengan-email-kamu@email.com)"},
+            headers={
+                "Accept": "application/json",
+                "User-Agent": USER_AGENT,
+            },
             timeout=10,
         )
         resp.raise_for_status()
@@ -78,7 +87,7 @@ def food_catalog(request):
     try:
         data = ambil_dari_api(q, page)
     except requests.RequestException:
-        data = {"count": 0, "products": []}
+        data = {"count": 0, "hits": []}
         error = True
 
     try:
@@ -93,18 +102,28 @@ def food_catalog(request):
         page_obj.number, on_each_side=1, on_ends=3
     )
 
+    products = data.get("hits") if "hits" in data else data.get("products", [])
     foods = []
-    for p in data.get("products", []):
-        nama = p.get("product_name")
+    for p in products:
+        nama = (p.get("product_name") or "").strip()
         if not nama:
             continue  # lewati produk yang belum punya nama
         n = p.get("nutriments") or {}
+        brands = p.get("brands")
+        if isinstance(brands, list):
+            brands = ", ".join(str(b) for b in brands if b)
+        grade = (p.get("nutriscore_grade") or "").upper()
+        kcal = angka(n, "energy-kcal_100g")
+        if kcal is None:
+            kj = angka(n, "energy-kj_100g")
+            kcal = round(kj / 4.184, 1) if kj is not None else None
+
         foods.append({
             "nama": nama,
-            "merek": ", ".join(filter(None, [p.get("brands"), p.get("quantity")])),
+            "merek": ", ".join(filter(None, [brands, p.get("quantity")])),
             "gambar": p.get("image_front_small_url"),
-            "nutriscore": (p.get("nutriscore_grade") or "").upper(),
-            "kcal": angka(n, "energy-kcal_100g"),
+            "nutriscore": grade if grade in {"A", "B", "C", "D", "E"} else "",
+            "kcal": kcal,
             "protein": angka(n, "proteins_100g"),
             "karbo": angka(n, "carbohydrates_100g"),
             "lemak": angka(n, "fat_100g"),
