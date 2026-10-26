@@ -4,9 +4,11 @@ from datetime import date, timedelta
 from decimal import Decimal, InvalidOperation
 
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.views import redirect_to_login
 from django.core.cache import cache
 from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404
+from django.urls import reverse
 from django.utils import timezone
 from django.views.decorators.http import require_GET, require_http_methods
 
@@ -192,6 +194,7 @@ def calorie_count(request):
         "calorie_user_name": request.user.first_name or request.user.username,
         "calorie_today": _today().isoformat(),
         "default_meal": _default_meal(),
+        "profile_complete": _needs(profile)["complete"],
         "greeting_period": "morning" if timezone.localtime().hour < 12 else ("afternoon" if timezone.localtime().hour < 18 else "evening"),
         "profile": profile,
     })
@@ -263,11 +266,20 @@ def entries_api(request):
     })
 
 
-@login_required(login_url="main:login")
 @require_http_methods(["GET", "POST"])
 def entries_collection_api(request):
+    if not request.user.is_authenticated:
+        if request.method == "GET":
+            return redirect_to_login(request.get_full_path(), login_url="main:login")
+        return _error(
+            "authentication_required", 401,
+            login_url=reverse("main:login"),
+            next_url=f"{reverse('main:calorie_count')}?setup_profile=1",
+        )
     if request.method == "GET":
         return entries_api(request)
+    if not _needs(_profile_for(request.user))["complete"]:
+        return _error("profile_required", 403)
     data = _json_body(request)
     if data is None:
         return _error("invalid_json")

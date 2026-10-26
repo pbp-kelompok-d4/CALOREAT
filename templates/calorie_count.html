@@ -3,7 +3,7 @@
 {% block title %}Calorie Count | CALOREAT{% endblock title %}
 {% block extra_head %}<link rel="stylesheet" href="{% static 'css/calorie_count.css' %}?v=prd-4">{% endblock extra_head %}
 {% block content %}
-<div class="calorie-page" id="calorie-app" data-today="{{ calorie_today }}" data-default-meal="{{ default_meal }}">
+<div class="calorie-page" id="calorie-app" data-today="{{ calorie_today }}" data-default-meal="{{ default_meal }}" data-profile-complete="{{ profile_complete|yesno:'true,false' }}">
   <header class="calorie-heading">
     <div>
       <p class="calorie-greeting">Good {{ greeting_period }}, {{ calorie_user_name }}!</p>
@@ -92,5 +92,5 @@
   </form>
 </dialog>
 <div id="undo-toast" class="undo-toast" role="status" aria-live="polite" hidden><span id="undo-message"></span><button type="button" id="undo-action">Undo</button></div>
-<script src="{% static 'js/calorie_count.js' %}?v=prd-4" defer></script>
+<script src="{% static 'js/calorie_count.js' %}?v=prd-5" defer></script>
 {% endblock content %}
