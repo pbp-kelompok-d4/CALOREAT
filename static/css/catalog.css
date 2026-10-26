@@ -1,0 +1,216 @@
+
+.cat-page {
+  /* Isi dibatasi lebarnya dan ditaruh di tengah, seperti Portion Guidance.
+     Mau lebih lebar atau sempit? Ubah angka 1140px. */
+  max-width: 1140px;
+  margin: 0 auto;
+  padding: 0 20px;
+
+  --c-hero: #F6E7AE;
+  --c-card: #FFFEF6;
+  --c-line: #EADFA9;
+  --c-ink: #2B2108;
+  --c-mute: #6B5E2E;
+  --c-yel: #F2B705;
+  --c-yel2: #E0A800;
+  --c-chip: #F6E7AE;
+  --c-track: #EFE5B8;
+  color: var(--c-ink);
+}
+.cat-page * { box-sizing: border-box; }
+
+/* ---------- Banner (rata tengah) ---------- */
+.cat-hero {
+  background: var(--c-hero);
+  border-radius: 28px;
+  padding: 44px 40px;
+  text-align: center;
+}
+.cat-hero h1 {
+  font-family: "Outfit", "DM Sans", sans-serif;
+  font-size: clamp(30px, 5vw, 46px);
+  line-height: 1.1;
+  margin: 0 0 12px;
+}
+.cat-hero p { margin: 0 auto; max-width: 520px; }
+
+/* ---------- Pencarian ---------- */
+.cat-tools { display: flex; gap: 10px; margin: 24px 0 12px; }
+.cat-tools input {
+  flex: 1;
+  min-width: 0;
+  height: 44px;
+  border-radius: 999px;
+  border: 1px solid var(--c-yel);
+  background: var(--c-card);
+  color: var(--c-ink);
+  padding: 0 18px;
+  font: inherit;
+}
+.cat-count { color: var(--c-mute); font-size: 14px; margin-bottom: 14px; }
+
+/* ---------- Tombol ---------- */
+.cat-btn {
+  background: var(--c-yel);
+  color: #2B2108;
+  border: 0;
+  border-radius: 999px;
+  padding: 9px 18px;
+  font: inherit;
+  font-weight: 700;
+  font-size: 14px;
+  cursor: pointer;
+}
+.cat-btn:hover { background: var(--c-yel2); }
+.cat-btn--ghost {
+  background: transparent;
+  border: 1px solid var(--c-yel2);
+  color: var(--c-ink);
+}
+.cat-btn--ghost:hover { background: var(--c-chip); }
+
+/* ---------- Kartu makanan (4 kolom) ---------- */
+.cat-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+}
+.cat-card {
+  background: var(--c-card);
+  border: 1px solid var(--c-line);
+  border-radius: 18px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+}
+.cat-img {
+  height: 110px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--c-chip);
+  font-family: "Outfit", sans-serif;
+  font-size: 40px;
+  font-weight: 700;
+  margin-bottom: 12px;
+  overflow: hidden;
+}
+.cat-img img { width: 100%; height: 100%; object-fit: contain; background: #fff; }
+.cat-card h3 {
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0;
+  line-height: 1.3;
+  min-height: 41px;
+}
+.cat-sub { font-size: 13px; color: var(--c-mute); margin: 2px 0 10px; min-height: 20px; }
+.cat-card .cat-btn { width: 100%; padding: 8px; }
+
+/* Makro singkat: protein, karbo, lemak */
+.cat-macros { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-bottom: 10px; }
+.cat-macros div {
+  border-radius: 8px;
+  padding: 5px 4px;
+  text-align: center;
+  font-size: 11px;
+  line-height: 1.25;
+}
+.cat-macros b { display: block; font-size: 14px; }
+.m-p { background: #E3EED8; color: #2F4A1A; }
+.m-c { background: #FBEBB8; color: #6B4A00; }
+.m-f { background: #FBDAD5; color: #7A2418; }
+
+/* Kalori dan Nutri-Score */
+.cat-bot { display: flex; justify-content: space-between; align-items: center; margin: auto 0 10px; }
+.cat-kcal { font-weight: 700; }
+.cat-kcal small { font-weight: 400; color: var(--c-mute); }
+.cat-ns { display: flex; border-radius: 5px; overflow: hidden; font-size: 10px; line-height: 16px; }
+.cat-ns b { width: 14px; text-align: center; font-weight: 400; color: #fff; opacity: .35; }
+.cat-ns b.on { opacity: 1; width: 20px; font-weight: 700; }
+
+/* ---------- Nomor halaman ---------- */
+.cat-pg {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  border-top: 1px solid var(--c-line);
+  margin-top: 28px;
+  padding: 18px 0 4px;
+  font-size: 14px;
+}
+.cat-pg a,
+.cat-pg .cur {
+  min-width: 36px;
+  height: 36px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 10px;
+  color: var(--c-ink);
+  text-decoration: none;
+}
+.cat-pg a:hover { background: var(--c-chip); }
+.cat-pg .cur { background: var(--c-yel); font-weight: 700; }
+.cat-pg .sp { margin-left: auto; color: var(--c-mute); }
+
+/* ---------- Kosong dan catatan ---------- */
+.cat-empty {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 40px;
+  color: var(--c-mute);
+  border: 1px dashed var(--c-line);
+  border-radius: 18px;
+}
+.cat-note { color: var(--c-mute); font-size: 13px; margin-top: 10px; }
+
+/* ---------- Jendela detail makro ---------- */
+dialog.cat-dlg {
+  position: fixed;
+  inset: 0;
+  margin: auto;
+  max-height: calc(100% - 32px);
+  border: 1px solid var(--c-yel);
+  border-radius: 22px;
+  background: var(--c-card, #FFFEF6);
+  color: #2B2108;
+  padding: 0;
+  width: min(560px, calc(100% - 32px));
+}
+dialog.cat-dlg::backdrop { background: rgba(43, 33, 8, .45); }
+.cat-dh {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 20px 22px 0;
+}
+.cat-dh h2 { margin: 0; font-size: 22px; font-family: "Outfit", sans-serif; }
+.cat-dh p { margin: 2px 0 0; color: #6B5E2E; font-size: 14px; }
+.cat-x { border: 0; background: transparent; font-size: 26px; line-height: 1; color: #6B5E2E; cursor: pointer; }
+.cat-db { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; padding: 16px 22px 22px; }
+.cat-db h4 { margin: 0 0 8px; font-size: 14px; color: #6B5E2E; }
+.cat-bar { margin-bottom: 10px; font-size: 13px; }
+.cat-bar div:first-child { display: flex; justify-content: space-between; margin-bottom: 3px; }
+.cat-tr { height: 7px; background: #EFE5B8; border-radius: 4px; }
+.cat-tr i { display: block; height: 7px; border-radius: 4px; }
+.cat-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 14px; }
+.cat-tg { background: #F6E7AE; border-radius: 999px; padding: 3px 11px; font-size: 13px; }
+
+/* ---------- Layar yang lebih kecil ---------- */
+@media (max-width: 900px) {
+  .cat-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+@media (max-width: 680px) {
+  .cat-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 520px) {
+  .cat-db { grid-template-columns: 1fr; }
+  .cat-hero { padding: 30px 22px; }
+}
+@media (max-width: 400px) {
+  .cat-grid { grid-template-columns: 1fr; }
+}
