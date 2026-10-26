@@ -3,7 +3,10 @@
   if (!app) return;
 
   const today = app.dataset.today;
-  const defaultMeal = app.dataset.defaultMeal;
+  let defaultMeal = app.dataset.defaultMeal;
+  let profileComplete = app.dataset.profileComplete === "true";
+  let currentProfile = null;
+  const profileSetupRequested = new URLSearchParams(window.location.search).get("setup_profile") === "1";
   let selectedDate = today;
   let searchPage = 1;
   let lastSearchQuery = "";
@@ -40,6 +43,12 @@
       };
       const error = new Error(messages[data.error] || data.error || `Request failed (HTTP ${response.status}).`);
       error.code = data.error;
+      if (data.error === "authentication_required" && data.login_url && data.next_url) {
+        window.location.assign(`${data.login_url}?next=${encodeURIComponent(data.next_url)}`);
+      } else if (data.error === "profile_required") {
+        requireProfile();
+        error.message = "Set up your profile before adding food.";
+      }
       error.status = response.status;
       throw error;
     }
@@ -153,7 +162,14 @@
       if (!items.length) {
         const empty = el("button", "empty-meal-action", `+ Add ${meal === "snack" ? "snack" : meal}`);
         empty.type = "button";
-        empty.addEventListener("click", () => { $("#food-search-input").focus(); window.scrollTo({ top: 0, behavior: "smooth" }); });
+        empty.addEventListener("click", () => {
+          if (!requireProfile()) return;
+          defaultMeal = meal;
+          app.dataset.defaultMeal = meal;
+          document.querySelectorAll(".product-add__meal").forEach((select) => { select.value = meal; });
+          $("#food-search-input").focus();
+          window.scrollTo({ top: 0, behavior: "smooth" });
+        });
         group.append(empty);
       } else {
         for (const entry of items) group.append(renderEntry(entry));
@@ -255,11 +271,16 @@
     const panel = $("#needs-region");
     busy(panel, true);
     state($("#needs-content"), "Loading your profile…");
-    try { renderNeeds(await api("/api/profile/")); }
-    catch (error) { state($("#needs-content"), `${error.message} Select to retry.`, true); }
+    try {
+      const profile = await api("/api/profile/");
+      renderNeeds(profile);
+      if (profileSetupRequested && !profile.complete) openProfile(profile);
+    } catch (error) { state($("#needs-content"), `${error.message} Select to retry.`, true); }
     finally { busy(panel, false); }
   }
   function renderNeeds(profile) {
+    currentProfile = profile;
+    profileComplete = Boolean(profile.complete);
     const region = $("#needs-content");
     if (!profile.complete) {
       const box = el("div", "needs-empty");
@@ -329,7 +350,7 @@
     if (!product.has_nutrition) {
       const manual = el("button", "manual-add-button", "Add manually");
       manual.type = "button";
-      manual.addEventListener("click", () => openManual(product));
+      manual.addEventListener("click", () => { if (requireProfile()) openManual(product); });
       card.append(manual);
       return card;
     }
@@ -349,6 +370,7 @@
     sync();
     amountLabel.append(minus, amount, plus);
     submit.addEventListener("click", async () => {
+      if (!requireProfile()) return;
       submit.disabled = true;
       try {
         const payload = productPayload(product, Number(amount.value), meal.value);
@@ -422,7 +444,14 @@
     const form = $("#profile-form");
     ["sex", "birth_date", "height_cm", "weight_kg", "activity_level", "goal"].forEach((key) => { form.elements[key].value = profile[key] ?? ""; });
     $("#profile-error").hidden = true;
-    $("#profile-dialog").showModal();
+    const dialog = $("#profile-dialog");
+    if (!dialog.open) dialog.showModal();
+  }
+  function requireProfile() {
+    if (profileComplete) return true;
+    if (currentProfile) openProfile(currentProfile);
+    else loadNeeds().then(() => { if (currentProfile && !$("#profile-dialog").open) openProfile(currentProfile); });
+    return false;
   }
   $("#nav-profile-setup")?.addEventListener("click", async () => {
     $("#nav-profile-setup").closest("details").open = false;
@@ -442,7 +471,7 @@
     } catch (error) { errorBox.textContent = error.message; errorBox.hidden = false; }
     finally { submit.disabled = false; }
   });
-  $("#manual-entry-launch").addEventListener("click", () => openManual());
+  $("#manual-entry-launch").addEventListener("click", () => { if (requireProfile()) openManual(); });
   function openManual(product = {}) {
     const form = $("#manual-form");
     form.elements.name.value = product.name || "";
@@ -460,6 +489,7 @@
   }
   $("#manual-form").addEventListener("submit", async (event) => {
     event.preventDefault();
+    if (!requireProfile()) return;
     const form = event.currentTarget;
     const submit = form.querySelector("button[type='submit']");
     const errorBox = $("#manual-error"); submit.disabled = true; errorBox.hidden = true;
