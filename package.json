@@ -1,0 +1,26 @@
+{
+  "name": "caloreat",
+  "version": "1.0.0",
+  "description": "caloreat",
+  "main": "index.js",
+  "scripts": {
+    "dev": "tailwindcss -i ./static/css/input.css -o ./static/css/output.css --watch",
+    "build": "tailwindcss -i ./static/css/input.css -o ./static/css/output.css --minify"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pbp-kelompok-d4/CALOREAT.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/pbp-kelompok-d4/CALOREAT/issues"
+  },
+  "homepage": "https://github.com/pbp-kelompok-d4/CALOREAT#readme",
+  "devDependencies": {
+    "@tailwindcss/cli": "^4.3.3",
+    "tailwindcss": "^4.3.3"
+  }
+}

@@ -16,6 +16,10 @@
 
     toggle.addEventListener("click", () => setOpen(!isOpen));
 
+    drawer.querySelectorAll("a").forEach((link) => {
+        link.addEventListener("click", () => setOpen(false));
+    });
+
     document.getElementById("nav-profile-setup-mobile")?.addEventListener("click", () => {
         setOpen(false);
         document.getElementById("nav-profile-setup")?.click();
