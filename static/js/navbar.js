@@ -17,24 +17,7 @@
     toggle.addEventListener("click", () => setOpen(!isOpen));
 
     drawer.querySelectorAll("a").forEach((link) => {
-        link.addEventListener("click", (e) => {
-            if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
-            const url = new URL(link.href, window.location.origin);
-            const samePage = url.origin === window.location.origin && url.pathname === window.location.pathname;
-
-            setOpen(false);
-
-            if (samePage) {
-                if (url.hash) {
-                    e.preventDefault();
-                    const target = document.querySelector(url.hash);
-                    target?.scrollIntoView({ behavior: "smooth" });
-                    history.replaceState(null, "", url.hash);
-                } else {
-                    e.preventDefault();
-                }
-            }
-        });
+        link.addEventListener("click", () => setOpen(false));
     });
 
     document.getElementById("nav-profile-setup-mobile")?.addEventListener("click", () => {
@@ -48,4 +31,26 @@
     window.addEventListener("resize", () => {
         if (window.innerWidth > 768 && isOpen) setOpen(false);
     });
+
+    // Close navbar when scrolling down
+    const nav = document.querySelector(".nav");
+    let lastScrollY = window.scrollY;
+
+    window.addEventListener("scroll", () => {
+        if (!nav || isOpen) return;
+        const currentScrollY = window.scrollY;
+        const delta = currentScrollY - lastScrollY;
+
+        if (currentScrollY <= 60) {
+            // Always show when near the very top of the page
+            nav.classList.remove("nav--hidden");
+        } else if (delta > 6) {
+            // Scrolling down
+            nav.classList.add("nav--hidden");
+        } else if (delta < -6) {
+            // Scrolling up
+            nav.classList.remove("nav--hidden");
+        }
+        lastScrollY = currentScrollY;
+    }, { passive: true });
 })();
