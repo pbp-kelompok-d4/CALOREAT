@@ -40,6 +40,34 @@ def portion_guidance(request):
         meal_targets["snack"] = (
             goal_kcal - sum(meal_targets.values())
         )
+    guides = list(guides)
+
+    for guide in guides:
+        guide.personalized_portions = None
+
+        target_kcal = meal_targets.get(guide.meal_type)
+
+        if (
+            target_kcal
+            and guide.reference_kcal > 0
+            and guide.vegetables_grams > 0
+            and guide.protein_grams > 0
+            and guide.carbohydrates_grams > 0
+        ):
+            scale = target_kcal / guide.reference_kcal
+
+            guide.personalized_portions = {
+                "target_kcal": target_kcal,
+                "vegetables_grams": round(
+                    guide.vegetables_grams * scale
+                ),
+                "protein_grams": round(
+                    guide.protein_grams * scale
+                ),
+                "carbohydrates_grams": round(
+                    guide.carbohydrates_grams * scale
+                ),
+            }
 
     context = {
         "guides": guides,

@@ -74,6 +74,10 @@ class PortionGuideTests(TestCase):
                 "protein": "Fish",
                 "carbohydrates": "Potatoes",
                 "image_url": "",
+                "reference_kcal": 600,
+                "vegetables_grams": 200,
+                "protein_grams": 150,
+                "carbohydrates_grams": 180,
             },
         )
 
@@ -119,6 +123,10 @@ class PortionGuideTests(TestCase):
                 "protein": "Tempeh",
                 "carbohydrates": "Brown rice",
                 "image_url": "",
+                "reference_kcal": 600,
+                "vegetables_grams": 200,
+                "protein_grams": 150,
+                "carbohydrates_grams": 180,
             },
         )
 
@@ -277,3 +285,84 @@ class PortionGuideTests(TestCase):
         self.assertFalse(response.context["nutrition_needs"]["complete"])
         self.assertEqual(response.context["meal_targets"], {})
         self.assertContains(response, "Personalize Your Portion Guidance")
+
+    def test_complete_profile_calculates_personalized_food_portions(self):
+        CalorieProfile.objects.create(
+            user=self.user,
+            sex="female",
+            birth_date=date(2000, 1, 1),
+            height_cm=160,
+            weight_kg=55,
+            activity_level="moderate",
+            goal="maintain",
+        )
+
+        self.guide.reference_kcal = 600
+        self.guide.vegetables_grams = 200
+        self.guide.protein_grams = 150
+        self.guide.carbohydrates_grams = 180
+        self.guide.save()
+
+        self.client.force_login(self.user)
+
+        response = self.client.get(
+            reverse("main:portion_guidance")
+        )
+
+        self.assertEqual(response.status_code, 200)
+
+        guide = next(
+            guide
+            for guide in response.context["guides"]
+            if guide.pk == self.guide.pk
+        )
+
+        portions = guide.personalized_portions
+        target_kcal = response.context["meal_targets"]["lunch"]
+        scale = target_kcal / 600
+
+        self.assertIsNotNone(portions)
+        self.assertEqual(portions["target_kcal"], target_kcal)
+        self.assertEqual(
+            portions["vegetables_grams"],
+            round(200 * scale),
+        )
+        self.assertEqual(
+            portions["protein_grams"],
+            round(150 * scale),
+        )
+        self.assertEqual(
+            portions["carbohydrates_grams"],
+            round(180 * scale),
+        )
+
+    def test_missing_reference_portions_do_not_generate_estimates(self):
+        CalorieProfile.objects.create(
+            user=self.user,
+            sex="female",
+            birth_date=date(2000, 1, 1),
+            height_cm=160,
+            weight_kg=55,
+            activity_level="moderate",
+            goal="maintain",
+        )
+
+        self.client.force_login(self.user)
+
+        response = self.client.get(
+            reverse("main:portion_guidance")
+        )
+
+        self.assertEqual(response.status_code, 200)
+
+        guide = next(
+            guide
+            for guide in response.context["guides"]
+            if guide.pk == self.guide.pk
+        )
+
+        self.assertIsNone(guide.personalized_portions)
+        self.assertContains(
+            response,
+            "Personalized quantities aren't available for this guide yet.",
+        )
