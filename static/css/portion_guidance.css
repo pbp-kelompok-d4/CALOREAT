@@ -448,3 +448,265 @@
         width: 100%;
     }
 }
+
+/* Personalized nutrition summary */
+
+.portion-guidance__nutrition {
+    margin: 24px 0;
+    padding: clamp(22px, 4vw, 32px);
+    border: 1px solid var(--line);
+    border-radius: 22px;
+    background: var(--card);
+    box-shadow: 0 8px 24px rgba(42, 33, 8, 0.05);
+}
+
+.portion-guidance__nutrition h2 {
+    margin: 0 0 12px;
+    font-family: "Outfit", sans-serif;
+    font-size: clamp(1.35rem, 3vw, 1.8rem);
+    line-height: 1.25;
+}
+
+.portion-guidance__nutrition h3 {
+    margin: 24px 0 12px;
+    font-family: "Outfit", sans-serif;
+    font-size: 1.1rem;
+}
+
+.portion-guidance__nutrition p {
+    margin: 8px 0;
+    color: var(--muted);
+    line-height: 1.65;
+}
+
+.portion-guidance__nutrition p strong {
+    color: var(--ink);
+    font-size: 1.15rem;
+}
+
+.portion-guidance__nutrition ul {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 12px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.portion-guidance__nutrition li {
+    padding: 16px;
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    background: var(--plate);
+    line-height: 1.5;
+}
+
+.portion-guidance__nutrition li strong {
+    display: block;
+    margin-bottom: 6px;
+    font-family: "Outfit", sans-serif;
+    font-size: 0.95rem;
+    text-transform: capitalize;
+}
+
+.portion-guidance__nutrition > a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 44px;
+    margin-top: 14px;
+    padding: 10px 18px;
+    border: 1px solid var(--yellow);
+    border-radius: 999px;
+    background: var(--yellow);
+    color: var(--ink);
+    font-weight: 700;
+    text-decoration: none;
+    transition: background 0.15s ease;
+}
+
+.portion-guidance__nutrition > a:hover {
+    background: var(--yellow-dark);
+}
+
+.portion-guidance__nutrition > a:focus-visible {
+    outline: 2px solid var(--yellow-dark);
+    outline-offset: 3px;
+}
+
+@media (max-width: 800px) {
+    .portion-guidance__nutrition ul {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 480px) {
+    .portion-guidance__nutrition ul {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Delete confirmation modal */
+
+.portion-delete-modal {
+    position: fixed;
+    inset: 0;
+    margin: auto;
+
+    width: min(100% - 32px, 460px);
+    max-width: 460px;
+    padding: 0;
+    overflow: hidden;
+    border: 1px solid var(--line);
+    border-radius: 24px;
+    background: var(--card);
+    color: var(--ink);
+    box-shadow: 0 24px 80px rgba(42, 33, 8, 0.22);
+}
+
+.portion-delete-modal::backdrop {
+    background: rgba(35, 29, 13, 0.48);
+    backdrop-filter: blur(3px);
+}
+
+.portion-delete-modal[open] {
+    animation: portion-modal-enter 0.18s ease-out;
+}
+
+.portion-delete-modal__content {
+    padding: 30px;
+}
+
+.portion-delete-modal__icon {
+    display: grid;
+    width: 44px;
+    height: 44px;
+    margin-bottom: 20px;
+    place-items: center;
+    border-radius: 50%;
+    background: #fff0dd;
+    color: #963b20;
+    font-size: 1.4rem;
+    font-weight: 800;
+}
+
+.portion-delete-modal__eyebrow {
+    margin-bottom: 8px;
+    color: var(--muted);
+    font-size: 0.76rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+}
+
+.portion-delete-modal__content h2 {
+    margin: 0 0 10px;
+    font-family: "Outfit", sans-serif;
+    font-size: 1.8rem;
+    line-height: 1.2;
+}
+
+.portion-delete-modal__content > p {
+    line-height: 1.6;
+}
+
+.portion-delete-modal__guide {
+    margin-top: 18px;
+    padding: 12px 14px;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    background: var(--plate);
+    font-weight: 700;
+    overflow-wrap: anywhere;
+}
+
+.portion-delete-modal__actions {
+    display: flex;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 26px;
+}
+
+.portion-delete-modal__actions form {
+    margin: 0;
+}
+
+.portion-delete-modal__button {
+    display: inline-flex;
+    min-height: 44px;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 18px;
+    border: 1px solid transparent;
+    border-radius: 999px;
+    font: inherit;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.15s ease, transform 0.15s ease;
+}
+
+.portion-delete-modal__button:active {
+    transform: translateY(1px);
+}
+
+.portion-delete-modal__button:focus-visible {
+    outline: 2px solid var(--yellow-dark);
+    outline-offset: 3px;
+}
+
+.portion-delete-modal__button--cancel {
+    border-color: var(--line);
+    background: transparent;
+    color: var(--ink);
+}
+
+.portion-delete-modal__button--cancel:hover {
+    background: var(--plate);
+}
+
+.portion-delete-modal__button--confirm {
+    background: #a52b23;
+    color: #fff;
+}
+
+.portion-delete-modal__button--confirm:hover {
+    background: #842019;
+}
+
+@keyframes portion-modal-enter {
+    from {
+        opacity: 0;
+        transform: translateY(8px) scale(0.98);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+@media (max-width: 480px) {
+    .portion-delete-modal__content {
+        padding: 24px;
+    }
+
+    .portion-delete-modal__actions {
+        flex-direction: column-reverse;
+    }
+
+    .portion-delete-modal__actions form,
+    .portion-delete-modal__button {
+        width: 100%;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .portion-delete-modal[open] {
+        animation: none;
+    }
+
+    .portion-delete-modal__button {
+        transition: none;
+    }
+}
