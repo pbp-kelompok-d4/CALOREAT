@@ -98,6 +98,33 @@ class ReviewsForm(ModelForm):
         return title
 
 class PortionGuideForm(forms.ModelForm):
+    reference_kcal = forms.IntegerField(
+        min_value=1,
+        max_value=2000,
+        label="Reference Meal Calories (kcal)",
+        help_text="Calories represented by the reference portions.",
+    )
+
+    vegetables_grams = forms.IntegerField(
+        min_value=1,
+        max_value=2000,
+        label="Vegetables (grams)",
+        help_text="Reference serving size for vegetables.",
+    )
+
+    protein_grams = forms.IntegerField(
+        min_value=1,
+        max_value=2000,
+        label="Protein Food (grams)",
+        help_text="Reference serving size for protein.",
+    )
+
+    carbohydrates_grams = forms.IntegerField(
+        min_value=1,
+        max_value=2000,
+        label="Carbohydrate Food (grams)",
+        help_text="Reference serving size for carbohydrates.",
+    )
     class Meta:
         model = PortionGuide
         fields = [
@@ -105,8 +132,12 @@ class PortionGuideForm(forms.ModelForm):
             "meal_type",
             "description",
             "vegetables",
+            "vegetables_grams",
             "protein",
+            "protein_grams",
             "carbohydrates",
+            "carbohydrates_grams",
+            "reference_kcal",
             "image_url",
         ]
         widgets = {

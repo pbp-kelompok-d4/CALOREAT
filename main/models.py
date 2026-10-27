@@ -1,5 +1,6 @@
 from django.db import models
 import uuid
+from django.core.validators import MinValueValidator, MaxValueValidator
 
 DEFAULT_PROFILE_PICTURE = (
     "https://drive.google.com/thumbnail?"
@@ -107,6 +108,38 @@ class PortionGuide(models.Model):
     vegetables = models.CharField(max_length=200)
     protein = models.CharField(max_length=200)
     carbohydrates = models.CharField(max_length=200)
+    reference_kcal = models.PositiveSmallIntegerField(
+        default=0,
+        validators=[
+            MinValueValidator(1),
+            MaxValueValidator(2000),
+        ],
+        help_text="Calories represented by the reference portions.",
+    )
+    vegetables_grams = models.PositiveSmallIntegerField(
+        default=0,
+        validators=[
+            MinValueValidator(1),
+            MaxValueValidator(2000),
+        ],
+        help_text="Reference serving of vegetables in grams.",
+    )
+    protein_grams = models.PositiveSmallIntegerField(
+        default=0,
+        validators=[
+            MinValueValidator(1),
+            MaxValueValidator(2000),
+        ],
+        help_text="Reference serving of protein food in grams.",
+    )
+    carbohydrates_grams = models.PositiveSmallIntegerField(
+        default=0,
+        validators=[
+            MinValueValidator(1),
+            MaxValueValidator(2000),
+        ],
+        help_text="Reference serving of carbohydrate food in grams.",
+    )
     image_url = models.URLField(blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

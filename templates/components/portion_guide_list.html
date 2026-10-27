@@ -39,6 +39,48 @@
                         </li>
                     </ul>
 
+                    {% if guide.personalized_portions %}
+                        <section class="portion-guidance-card__personalized">
+                            <h3>Your Estimated Portions</h3>
+
+                            <p>
+                                Based on a meal target of
+                                {{ guide.personalized_portions.target_kcal }} kcal.
+                            </p>
+
+                            <ul>
+                                <li>
+                                    Vegetables:
+                                    <strong>
+                                        {{ guide.personalized_portions.vegetables_grams }} g
+                                    </strong>
+                                </li>
+                                <li>
+                                    Protein:
+                                    <strong>
+                                        {{ guide.personalized_portions.protein_grams }} g
+                                    </strong>
+                                </li>
+                                <li>
+                                    Carbohydrates:
+                                    <strong>
+                                        {{ guide.personalized_portions.carbohydrates_grams }} g
+                                    </strong>
+                                </li>
+                            </ul>
+                        </section>
+                    {% elif not nutrition_needs.complete %}
+                        <p class="portion-guidance-card__personalized-hint">
+                            Complete your calorie profile to see estimated
+                            portion quantities.
+                        </p>
+                    {% else %}
+                        <p class="portion-guidance-card__personalized-hint">
+                            Personalized quantities aren't available for this guide yet.
+                            Please check back later.
+                        </p>
+                    {% endif %}
+
                     {% if user.is_staff %}
                         <div class="portion-guidance-card__actions">
                             <a
