@@ -96,3 +96,58 @@ class MainTest(TestCase):
         fake_id = uuid.uuid4()
         response = self.client.post(reverse("main:delete_review_ajax", kwargs={"id": fake_id}))
         self.assertEqual(response.status_code, 404)
+
+    # Navbar test
+    def test_navbar_renders_all_links_and_mobile_drawer(self):
+        response = self.client.get(reverse("main:show_main"))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, "header.html")
+        self.assertContains(response, reverse("main:show_main"))
+        self.assertContains(response, reverse("main:food_catalog"))
+        self.assertContains(response, reverse("main:calorie_count"))
+        self.assertContains(response, reverse("main:portion_guidance"))
+        self.assertContains(response, 'id="nav-toggle"')
+        self.assertContains(response, 'id="nav-icon4"')
+        self.assertContains(response, 'id="nav-mobile-drawer"')
+
+    def test_navbar_authenticated_state_shows_user_and_logout(self):
+        response = self.client.get(reverse("main:show_main"))
+        self.assertContains(response, "Test User")
+        self.assertContains(response, reverse("main:logout"))
+        self.assertNotContains(response, 'class="nav-actions')
+        self.assertNotContains(response, 'class="life-highlight__signup"')
+
+    def test_navbar_anonymous_state_shows_login_and_signup(self):
+        self.client.logout()
+        response = self.client.get(reverse("main:show_main"))
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, reverse("main:login"))
+        self.assertContains(response, reverse("main:register"))
+        self.assertContains(response, 'class="life-highlight__signup"')
+        self.assertNotContains(response, "Log out")
+
+    def test_main_page_search_form_points_to_food_catalog(self):
+        response = self.client.get(reverse("main:show_main"))
+        self.assertContains(response, f'action="{reverse("main:food_catalog")}"')
+        self.assertContains(response, 'name="q"')
+        self.assertContains(response, "js/food_search.js")
+
+    def test_non_superuser_cannot_delete_review(self):
+        regular_user = User.objects.create_user(
+            username="regular@example.com",
+            password="test-password-123",
+            is_superuser=False,
+        )
+        self.client.force_login(regular_user)
+        response = self.client.post(
+            reverse("main:delete_review_ajax", kwargs={"id": self.review.id})
+        )
+        self.assertEqual(response.status_code, 302)
+        self.assertTrue(Reviews.objects.filter(id=self.review.id).exists())
+
+    def test_navbar_marks_home_link_active_on_main_page(self):
+        response = self.client.get(reverse("main:show_main"))
+        self.assertContains(
+            response,
+            f'href="{reverse("main:show_main")}" class="hover:text-ink active font-bold text-ink" aria-current="page"',
+        )
