@@ -1,4 +1,3 @@
-
 {% extends "base.html" %}
 {% load static %}
 
@@ -12,6 +11,39 @@
             protein, and carbohydrates.
         </p>
     </header>
+
+    {% if nutrition_needs.complete %}
+        <section class="portion-guidance__nutrition">
+            <h2>Your Daily Nutrition Target</h2>
+            <p>
+                Estimated daily calories:
+                <strong>{{ nutrition_needs.goal_kcal }} kcal</strong>
+            </p>
+            <p>
+                These meal allocations are suggestions, not strict limits.
+            </p>
+
+            <h3>Suggested Calories by Meal</h3>
+            <ul>
+                {% for meal, calories in meal_targets.items %}
+                    <li>
+                        <strong>{{ meal|title }}</strong>: {{ calories }} kcal
+                    </li>
+                {% endfor %}
+            </ul>
+        </section>
+    {% else %}
+        <section class="portion-guidance__nutrition">
+            <h2>Personalize Your Portion Guidance</h2>
+            <p>
+                Complete your calorie profile to see estimated daily
+                calorie needs and suggested calories for each meal.
+            </p>
+            <a href="{% url 'main:calorie_count' %}">
+                Complete your calorie profile
+            </a>
+        </section>
+    {% endif %}
 
     {% if messages %}
         <div class="portion-guidance__messages">
@@ -64,10 +96,71 @@
     <div id="portion-guidance-results" aria-live="polite">
         {% include "components/portion_guide_list.html" %}
     </div>
+
+    {% if user.is_staff %}
+        <dialog
+            class="portion-delete-modal"
+            id="portion-delete-modal"
+            aria-labelledby="portion-delete-title"
+            aria-describedby="portion-delete-description"
+        >
+            <div class="portion-delete-modal__content">
+                <div class="portion-delete-modal__icon" aria-hidden="true">
+                    !
+                </div>
+
+                <p class="portion-delete-modal__eyebrow">
+                    Delete portion guide
+                </p>
+
+                <h2 id="portion-delete-title">Are you sure?</h2>
+
+                <p id="portion-delete-description">
+                    This action cannot be undone.
+                </p>
+
+                <p
+                    class="portion-delete-modal__guide"
+                    id="portion-delete-guide"
+                ></p>
+
+                <div class="portion-delete-modal__actions">
+                    <button
+                        class="portion-delete-modal__button portion-delete-modal__button--cancel"
+                        type="button"
+                        data-delete-cancel
+                    >
+                        Cancel
+                    </button>
+
+                    <form
+                        id="portion-delete-form"
+                        method="POST"
+                        action=""
+                    >
+                        {% csrf_token %}
+                        <button
+                            class="portion-delete-modal__button portion-delete-modal__button--confirm"
+                            type="submit"
+                        >
+                            Delete guide
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </dialog>
+    {% endif %}
+
 </section>
 {% endblock %}
 
 {% block extra_head %}
-<link rel="stylesheet" href="{% static 'css/portion_guidance.css' %}">
-<script src="{% static 'js/portion_guidance.js' %}" defer></script>
+<link
+    rel="stylesheet"
+    href="{% static 'css/portion_guidance.css' %}"
+>
+<script
+    src="{% static 'js/portion_guidance.js' %}"
+    defer
+></script>
 {% endblock extra_head %}

@@ -2,8 +2,8 @@
 from django.contrib.auth.models import User
 from django.test import TestCase
 from django.urls import reverse
-
-from main.models import PortionGuide
+from datetime import date
+from main.models import CalorieProfile, PortionGuide
 
 
 class PortionGuideTests(TestCase):
@@ -238,3 +238,42 @@ class PortionGuideTests(TestCase):
         self.assertContains(response, "Healthy Breakfast")
         self.assertNotContains(response, "Balanced Lunch")
 
+    def test_complete_profile_displays_personalized_meal_targets(self):
+        CalorieProfile.objects.create(
+            user=self.user,
+            sex="female",
+            birth_date=date(2000, 1, 1),
+            height_cm=160,
+            weight_kg=55,
+            activity_level="moderate",
+            goal="maintain",
+        )
+        self.client.force_login(self.user)
+
+        response = self.client.get(reverse("main:portion_guidance"))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(response.context["nutrition_needs"]["complete"])
+        self.assertContains(response, "Your Daily Nutrition Target")
+
+        goal_kcal = response.context["nutrition_needs"]["goal_kcal"]
+        meal_targets = response.context["meal_targets"]
+
+        self.assertEqual(
+            sum(meal_targets.values()),
+            goal_kcal,
+        )
+        self.assertEqual(
+            set(meal_targets),
+            {"breakfast", "lunch", "dinner", "snack"},
+        )
+
+    def test_incomplete_profile_displays_completion_prompt(self):
+        self.client.force_login(self.user)
+
+        response = self.client.get(reverse("main:portion_guidance"))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertFalse(response.context["nutrition_needs"]["complete"])
+        self.assertEqual(response.context["meal_targets"], {})
+        self.assertContains(response, "Personalize Your Portion Guidance")

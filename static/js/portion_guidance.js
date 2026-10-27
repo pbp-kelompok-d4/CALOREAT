@@ -62,4 +62,42 @@ document.addEventListener("DOMContentLoaded", () => {
         event.preventDefault();
         filterPortionGuides();
     });
+
+    const deleteModal = document.getElementById("portion-delete-modal");
+    const deleteForm = document.getElementById("portion-delete-form");
+    const deleteGuideTitle = document.getElementById("portion-delete-guide");
+    const cancelDeleteButton = document.querySelector("[data-delete-cancel]");
+
+    if (deleteModal && deleteForm && deleteGuideTitle && cancelDeleteButton) {
+        let lastDeleteTrigger = null;
+
+        resultsContainer.addEventListener("click", (event) => {
+            const trigger = event.target.closest("[data-delete-trigger]");
+
+            if (!trigger) {
+                return;
+            }
+
+            lastDeleteTrigger = trigger;
+            deleteForm.action = trigger.dataset.deleteUrl;
+            deleteGuideTitle.textContent = trigger.dataset.guideTitle;
+            deleteModal.showModal();
+        });
+
+        cancelDeleteButton.addEventListener("click", () => {
+            deleteModal.close();
+        });
+
+        deleteModal.addEventListener("close", () => {
+            if (lastDeleteTrigger && lastDeleteTrigger.isConnected) {
+                lastDeleteTrigger.focus();
+            }
+        });
+
+        deleteModal.addEventListener("click", (event) => {
+            if (event.target === deleteModal) {
+                deleteModal.close();
+            }
+        });
+    }
 });

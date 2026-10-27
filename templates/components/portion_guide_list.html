@@ -1,4 +1,3 @@
-
 {% if guides %}
     <div class="portion-guide-list">
         {% for guide in guides %}
@@ -49,20 +48,15 @@
                                 Edit
                             </a>
 
-                            <form
-                                class="portion-guidance-card__delete"
-                                method="POST"
-                                action="{% url 'main:portion_delete' guide.id %}"
+                            <button
+                                class="portion-guidance-card__button portion-guidance-card__button--danger"
+                                type="button"
+                                data-delete-url="{% url 'main:portion_delete' guide.id %}"
+                                data-guide-title="{{ guide.title }}"
+                                data-delete-trigger
                             >
-                                {% csrf_token %}
-                                <button
-                                    class="portion-guidance-card__button portion-guidance-card__button--danger"
-                                    type="submit"
-                                    onclick="return confirm('Delete this portion guide?');"
-                                >
-                                    Delete
-                                </button>
-                            </form>
+                                Delete
+                            </button>
                         </div>
                     {% endif %}
                 </div>
