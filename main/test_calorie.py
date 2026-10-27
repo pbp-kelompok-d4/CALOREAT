@@ -182,6 +182,16 @@ class CaloriePageTests(TestCase):
         self.assertEqual(response.json()["error"], "slow_down")
 
     def test_entry_create_validates_range_and_returns_summary(self):
+        CalorieProfile.objects.create(
+            user=self.user,
+            sex="female",
+            birth_date=date(2000, 1, 1),
+            height_cm=160,
+            weight_kg=55,
+            activity_level="moderate",
+            goal="maintain",
+        )
+
         payload = {
             "date": "2026-10-22", "meal": "lunch", "name": "Rice", "grams": 250,
             "kcal_100g": 152, "protein_100g": 4.1, "carbs_100g": 24, "fat_100g": 4.5,
