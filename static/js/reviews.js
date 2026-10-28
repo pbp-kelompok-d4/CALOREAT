@@ -4,6 +4,8 @@ document.addEventListener("DOMContentLoaded", function () {
 	const closeBtn = document.getElementById("closeModalBtn");
 	const cancelBtn = document.getElementById("cancelModalBtn");
 	const form = document.getElementById("reviewForm");
+	const modalTitle = modal.querySelector(".modal-header h3");
+	const submitBtn = document.getElementById("submitBtn");
 	const container = document.getElementById("reviewCardsContainer");
 	const IS_AUTHORIZE = container.dataset.isAuthorized === "true";
 	const maxReviewsShown = 6;
@@ -76,6 +78,9 @@ document.addEventListener("DOMContentLoaded", function () {
 	function closeModal() {
 		modal.style.display = "none";
 		form.reset();
+		form.dataset.url = form.dataset.addUrl;
+		modalTitle.textContent = "Tulis Review Baru";
+		submitBtn.textContent = "Kirim Review";
 	}
 
 	closeBtn.addEventListener("click", closeModal);
@@ -85,13 +90,13 @@ document.addEventListener("DOMContentLoaded", function () {
 		if (e.target === modal) closeModal();
 	});
 
-	// Add new review
+	// Add or edit a review
 	form.addEventListener("submit", async function (e) {
 		e.preventDefault();
 		const formData = new FormData(form);
 
 		try {
-			const response = await fetch(form.dataset.url, {
+			const response = await fetch(form.dataset.url || form.dataset.addUrl, {
 				method: "POST",
 				body: formData,
 			});
@@ -103,10 +108,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
 			if (response.ok) {
 				closeModal();
-				// asynchronous load
 				await refreshReviews();
 			} else {
-				alert("Gagal menambahkan review.");
+				const data = await response.json();
+				alert(data.errors ? "Periksa kembali data review." : "Gagal menyimpan review.");
 			}
 		} catch (err) {
 			console.error(err);
@@ -130,8 +135,31 @@ document.addEventListener("DOMContentLoaded", function () {
 		return cookieValue;
 	}
 
-	// Delete review via AJAX
+	// Edit or delete review via AJAX
 	container.addEventListener("click", async (e) => {
+		const editBtn = e.target.closest(".btn-update-review");
+		if (editBtn) {
+			const reviewId = editBtn.dataset.id;
+			const review = (await fetch(container.dataset.url).then((response) => response.json()))
+				.find((item) => item.id === reviewId);
+			if (!review) {
+				alert("Review tidak ditemukan.");
+				return;
+			}
+
+			form.elements.customer_name.value = review.customer_name;
+			form.elements.star.value = review.star;
+			form.elements.content.value = review.content;
+			form.dataset.url = form.dataset.editUrlTemplate.replace(
+				"00000000-0000-0000-0000-000000000000",
+				reviewId
+			);
+			modalTitle.textContent = "Update Review";
+			submitBtn.textContent = "Simpan Perubahan";
+			modal.style.display = "flex";
+			return;
+		}
+
 		const deleteBtn = e.target.closest(".btn-delete-review");
 		if (!deleteBtn) return;
 

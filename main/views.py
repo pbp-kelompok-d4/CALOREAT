@@ -5,7 +5,7 @@ from django.shortcuts import redirect, render, get_object_or_404
 from django.utils.http import url_has_allowed_host_and_scheme
 from django.core import serializers
 from django.http import HttpResponse, JsonResponse
-from django.views.decorators.http import require_POST
+from django.views.decorators.http import require_POST, require_http_methods
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.decorators import user_passes_test
 
@@ -80,6 +80,41 @@ def delete_review_ajax(request, id):
         "status": "success",
         "message": "Review berhasil dihapus!"
     })
+
+# Edit reviews using AJAX
+@require_http_methods(["GET", "POST"])
+@user_passes_test(lambda user: user.is_superuser, login_url="/login/")
+def edit_review(request, reviews_id):
+    review = get_object_or_404(Reviews, pk=reviews_id)
+
+    if request.method == "GET":
+        return JsonResponse({
+            "id": str(review.id),
+            "customer_name": review.customer_name,
+            "star": review.star,
+            "content": review.content,
+        })
+
+    form = ReviewsForm(request.POST, instance=review)
+    if form.is_valid():
+        review = form.save()
+        return JsonResponse({
+            "status": "success",
+            "message": "Review berhasil diupdate!",
+            "review": {
+                "id": str(review.id),
+                "customer_name": review.customer_name,
+                "star": review.star,
+                "content": review.content,
+                "profile_picture": review.profile_picture,
+                "date": review.date.strftime("%d %b %Y"),
+            },
+        })
+
+    return JsonResponse({
+        "status": "error",
+        "errors": form.errors,
+    }, status=400)
 
 def _auth_context(active, login_form=None, register_form=None):
     if login_form is None:

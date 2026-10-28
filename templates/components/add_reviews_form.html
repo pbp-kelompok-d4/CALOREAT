@@ -5,7 +5,9 @@
       <button type="button" class="modal-close-btn" id="closeModalBtn">&times;</button>
     </div>
 
-    <form id="reviewForm" method="POST" data-url="{% url 'main:add_review_ajax' %}">
+    <form id="reviewForm" method="POST"
+          data-add-url="{% url 'main:add_review_ajax' %}"
+          data-edit-url-template="{% url 'main:edit_review' reviews_id='00000000-0000-0000-0000-000000000000' %}">
       {% csrf_token %}
       <div class="form-group">
         <label for="customer_name">Your Name</label>

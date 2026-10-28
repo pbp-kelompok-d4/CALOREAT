@@ -563,7 +563,9 @@ h1 {
 
 .review-card-actions {
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
+  align-self: flex-end;
+  min-width: 110px;;
   margin-top: auto;
   padding-top: 14px;
 }
