@@ -47,7 +47,7 @@ def add_review_ajax(request):
         review = form.save()
 
         if request.user.is_authenticated:
-            review.customer_name = request.user.first_name
+            review.customer_name = request.user.first_name or "Admin"
         else:
             review.customer_name = "Guest"
             
@@ -55,7 +55,7 @@ def add_review_ajax(request):
 
         return JsonResponse({
             "status": "success",
-            "message": "Review berhasil ditambahkan!",
+            "message": "Review added successfully!",
             "review": {
                 "customer_name": review.customer_name,
                 "star": review.star,
@@ -78,7 +78,7 @@ def delete_review_ajax(request, id):
     review.delete()
     return JsonResponse({
         "status": "success",
-        "message": "Review berhasil dihapus!"
+        "message": "Review deleted successfully!"
     })
 
 # Edit reviews using AJAX
@@ -100,7 +100,7 @@ def edit_review(request, reviews_id):
         review = form.save()
         return JsonResponse({
             "status": "success",
-            "message": "Review berhasil diupdate!",
+            "message": "Review updated successfully!",
             "review": {
                 "id": str(review.id),
                 "customer_name": review.customer_name,

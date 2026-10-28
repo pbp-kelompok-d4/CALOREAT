@@ -73,6 +73,20 @@ class MainTest(TestCase):
         self.assertEqual(response.json()["status"], "success")
         self.assertTrue(Reviews.objects.filter(customer_name="Test User").exists())
 
+    def test_add_review_uses_admin_when_user_has_no_first_name(self):
+        self.user.first_name = ""
+        self.user.save()
+
+        payload = {
+            "customer_name": "Admin",
+            "star": "★★★★★",
+            "content": "Aplikasi sangat membantu!",
+        }
+        response = self.client.post(reverse("main:add_review_ajax"), payload)
+
+        self.assertEqual(response.status_code, 201)
+        self.assertTrue(Reviews.objects.filter(customer_name="Admin").exists())
+
     def test_add_review_ajax_invalid(self):
         # customer_name kosong
         payload = {

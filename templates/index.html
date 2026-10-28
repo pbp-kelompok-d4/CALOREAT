@@ -109,7 +109,7 @@
       </div>
       <div class="features__list" id="features-list">
         <article class="features__item">
-          <a class="features__link" href="test.com">this is feature1</a>
+          <a class="features__link" href="{% url 'main:food_catalog' %}">this is feature1</a>
           <p class="features__description">Dorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vulputate libero et velit interdum, ac aliquet odio mattis.</p>
         </article>
         <article class="features__item">
@@ -142,7 +142,7 @@
 
         <div class="dashboard-review-comments" id="reviewCardsContainer" data-url="{% url 'main:get_reviews_json' %}" data-is-authorized="{{ user.is_superuser|yesno:'true,false' }}">
           <div class="dashboard-review-empty">
-            <p>Memuat review...</p>
+            <p>Loading reviews...</p>
           </div>
         </div>
       </div>
