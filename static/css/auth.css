@@ -11,7 +11,7 @@ body:has(.auth-page) {
   --auth-green: #e8efd9;
   --auth-green-dark: #d3e2bd;
   --auth-field: #fffef7;
-  --auth-radius: 28px;
+  --auth-radius: 32px; /* sama dengan .main-content di style.css */
 
   flex: 1;
   min-height: 560px;
@@ -20,7 +20,7 @@ body:has(.auth-page) {
   display: grid;
   grid-template-columns: 1.2fr 1fr;
   gap: 8px;
-  padding: 8px;
+  padding: 0; /* tepi luar sejajar dengan .main-content landing page */
   background: var(--card);
   color: var(--ink);
   font-family: "DM Sans", system-ui, sans-serif;
@@ -324,3 +324,112 @@ body:has(.auth-page) {
   }
 }
 
+
+/* MOBILE (<= 768px) */ 
+
+@media (max-width: 768px) {
+
+  .auth-page {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    min-height: 0;        
+    padding: 0;
+    overflow-x: hidden;
+  }
+
+  /* ---- PANEL ATAS: ilustrasi + tagline ---- */
+  .auth-visual {
+    flex: none;
+    justify-content: flex-start;
+    padding: 16px 20px 56px; 
+  }
+
+  .auth-slides {
+    width: 100%;
+    max-width: 260px;
+    height: 150px;
+  }
+
+  .auth-tagline {
+    margin: 8px 0 0;
+    font-size: 1.5rem;
+  }
+
+  .auth-points {
+    display: none;
+  }
+
+  .auth-panel {
+    position: relative;
+    flex: 1;
+    align-items: flex-start;
+    margin-top: -28px;       
+    padding: 28px 20px 32px;
+    box-shadow: 0 -6px 20px rgba(42, 26, 5, 0.08);
+  }
+
+  .auth-card {
+    max-width: none;
+  }
+
+  .auth-title {
+    margin-bottom: 16px;
+    font-size: 1.75rem;
+  }
+
+  .auth-toggle {
+    margin-bottom: 20px;
+  }
+
+  .auth-toggle a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 44px;
+    padding: 0;
+    font-size: 1rem;
+  }
+
+  .auth-form {
+    gap: 16px;
+  }
+
+  .auth-field label {
+    font-size: 0.875rem;
+  }
+
+  .auth-field input {
+    height: 52px;
+    padding: 0 16px;
+    border-radius: 14px;
+    font-size: 1rem;         
+  }
+
+  .auth-hint {
+    font-size: 0.8rem;
+  }
+
+  .auth-error {
+    font-size: 0.85rem;
+  }
+
+  .auth-remember {
+    gap: 12px;
+    min-height: 44px;
+    margin-top: 0;
+    font-size: 0.95rem;
+  }
+
+  .auth-remember input {
+    width: 22px;
+    height: 22px;
+  }
+
+  .auth-submit {
+    height: 54px;
+    padding: 0;
+    border-radius: 16px;
+    font-size: 1.05rem;
+  }
+}
