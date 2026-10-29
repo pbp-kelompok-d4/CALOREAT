@@ -17,6 +17,13 @@ class Reviews(models.Model):
         ('☆☆☆☆☆', '☆☆☆☆☆'),
     ]
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    created_by = models.ForeignKey(
+        "auth.User",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="reviews",
+    )
     profile_picture = models.URLField(default=DEFAULT_PROFILE_PICTURE, editable=False)
     customer_name = models.CharField(max_length=25)
     content = models.TextField()

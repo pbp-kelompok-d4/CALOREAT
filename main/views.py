@@ -7,7 +7,6 @@ from django.core import serializers
 from django.http import HttpResponse, JsonResponse
 from django.views.decorators.http import require_POST, require_http_methods
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.decorators import user_passes_test
 
 from main.models import Reviews
 
@@ -33,6 +32,8 @@ def get_reviews_json(request):
             "content": review.content,
             "profile_picture": review.profile_picture,
             "date": review.date.strftime("%d %b %Y"),
+            "can_edit": request.user.is_authenticated
+            and (request.user.is_superuser or review.created_by_id == request.user.id),
         }
         for review in reviews
     ]
@@ -44,13 +45,10 @@ def get_reviews_json(request):
 def add_review_ajax(request):
     form = ReviewsForm(request.POST)
     if form.is_valid():
-        review = form.save()
+        review = form.save(commit=False)
+        review.created_by = request.user
 
-        if request.user.is_authenticated:
-            review.customer_name = request.user.first_name or "Admin"
-        else:
-            review.customer_name = "Guest"
-            
+        review.customer_name = request.user.first_name or "Admin"
         review.save()
 
         return JsonResponse({
@@ -72,9 +70,11 @@ def add_review_ajax(request):
 
 # Delete reviews
 @require_POST
-@user_passes_test(lambda user: user.is_superuser, login_url="/login/")
+@login_required(login_url="/login/")
 def delete_review_ajax(request, id):
     review = get_object_or_404(Reviews, id=id)
+    if not (request.user.is_superuser or review.created_by_id == request.user.id):
+        return redirect("main:login")
     review.delete()
     return JsonResponse({
         "status": "success",
@@ -83,9 +83,11 @@ def delete_review_ajax(request, id):
 
 # Edit reviews using AJAX
 @require_http_methods(["GET", "POST"])
-@user_passes_test(lambda user: user.is_superuser, login_url="/login/")
+@login_required(login_url="/login/")
 def edit_review(request, reviews_id):
     review = get_object_or_404(Reviews, pk=reviews_id)
+    if not (request.user.is_superuser or review.created_by_id == request.user.id):
+        return redirect("main:login")
 
     if request.method == "GET":
         return JsonResponse({

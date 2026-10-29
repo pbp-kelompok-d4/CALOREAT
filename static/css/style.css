@@ -595,7 +595,32 @@ h1 {
   transform: translateY(0);
 }
 
-.btn-delete-review svg {
+.btn-update-review {
+  background-color: #2546cb;
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  width: 44px;
+  height: 38px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(53, 81, 220, 0.25);
+  transition: background-color 0.15s ease, transform 0.1s ease, box-shadow 0.15s ease;
+}
+
+.btn-update-review:hover {
+  background-color: #1d38a6;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(55, 66, 223, 0.35);
+}
+
+.btn-update-review:active {
+  transform: translateY(0);
+}
+
+.btn-delete-review svg, .btn-update-review svg {
   width: 17px;
   height: 17px;
 }

@@ -5,9 +5,9 @@ from main.models import CalorieProfile, FoodEntry, Reviews, PortionGuide
 
 @admin.register(Reviews)
 class ReviewsAdmin(admin.ModelAdmin):
-    list_display = ("customer_name", "star", "date")
+    list_display = ("customer_name", "created_by", "star", "date")
     list_filter = ("star", "date")
-    search_fields = ("customer_name", "content")
+    search_fields = ("customer_name", "content", "created_by__username")
     readonly_fields = ("id", "profile_picture", "date")
 
 

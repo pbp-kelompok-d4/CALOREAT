@@ -111,6 +111,67 @@ class MainTest(TestCase):
         response = self.client.post(reverse("main:delete_review_ajax", kwargs={"id": fake_id}))
         self.assertEqual(response.status_code, 404)
 
+    def test_review_creator_can_edit_and_delete_review(self):
+        owner = User.objects.create_user(
+            username="owner@example.com",
+            password="owner-password",
+            first_name="Review Owner",
+        )
+        review = Reviews.objects.create(
+            created_by=owner,
+            customer_name="Review Owner",
+            content="Original review",
+            star="★★★★★",
+        )
+        self.client.force_login(owner)
+
+        edit_response = self.client.post(
+            reverse("main:edit_review", kwargs={"reviews_id": review.id}),
+            {
+                "customer_name": "Review Owner",
+                "star": "★★★★☆",
+                "content": "Updated review",
+            },
+        )
+        self.assertEqual(edit_response.status_code, 200)
+        review.refresh_from_db()
+        self.assertEqual(review.content, "Updated review")
+
+        delete_response = self.client.post(
+            reverse("main:delete_review_ajax", kwargs={"id": review.id})
+        )
+        self.assertEqual(delete_response.status_code, 200)
+        self.assertFalse(Reviews.objects.filter(id=review.id).exists())
+
+    def test_non_creator_cannot_edit_review(self):
+        owner = User.objects.create_user(
+            username="owner@example.com",
+            password="owner-password",
+        )
+        other_user = User.objects.create_user(
+            username="other@example.com",
+            password="other-password",
+        )
+        review = Reviews.objects.create(
+            created_by=owner,
+            customer_name="Review Owner",
+            content="Original review",
+            star="★★★★★",
+        )
+        self.client.force_login(other_user)
+
+        response = self.client.post(
+            reverse("main:edit_review", kwargs={"reviews_id": review.id}),
+            {
+                "customer_name": "Other User",
+                "star": "★☆☆☆☆",
+                "content": "Unauthorized edit",
+            },
+        )
+        self.assertEqual(response.status_code, 302)
+        review.refresh_from_db()
+        self.assertEqual(review.content, "Original review")
+
     # Navbar test
     def test_navbar_renders_all_links_and_mobile_drawer(self):
         response = self.client.get(reverse("main:show_main"))
