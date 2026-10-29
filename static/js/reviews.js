@@ -98,6 +98,7 @@ document.addEventListener("DOMContentLoaded", function () {
 	form.addEventListener("submit", async function (e) {
 		e.preventDefault();
 		const formData = new FormData(form);
+		const isEdit = Boolean(form.dataset.url && form.dataset.url !== form.dataset.addUrl);
 
 		try {
 			const response = await fetch(form.dataset.url || form.dataset.addUrl, {
@@ -113,13 +114,14 @@ document.addEventListener("DOMContentLoaded", function () {
 			if (response.ok) {
 				closeModal();
 				await refreshReviews();
+				showToast(isEdit ? "Review updated!" : "Review added!", "success");
 			} else {
 				const data = await response.json();
-				alert(data.errors ? "Please check your review details." : "Failed to save the review.");
+				showToast(data.errors ? "Please check your review details." : "Failed to save the review.", "error");
 			}
 		} catch (err) {
 			console.error(err);
-			alert("An error occurred.");
+			showToast("An error occurred.", "error");
 		}
 	});
 	
@@ -147,7 +149,7 @@ document.addEventListener("DOMContentLoaded", function () {
 			const review = (await fetch(container.dataset.url).then((response) => response.json()))
 				.find((item) => item.id === reviewId);
 			if (!review) {
-				alert("Review not found.");
+				showToast("Review not found.", "error");
 				return;
 			}
 
@@ -190,12 +192,13 @@ document.addEventListener("DOMContentLoaded", function () {
 
 			if (response.ok) {
 				await refreshReviews();
+				showToast("Review deleted!", "success");
 			} else {
-				alert("Failed to delete the review.");
+				showToast("Failed to delete the review.", "error");
 			}
 		} catch (err) {
 			console.error("Error deleting review:", err);
-			alert("An error occurred while deleting the review.");
+			showToast("An error occurred while deleting the review.", "error");
 		}
 	});
 });

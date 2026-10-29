@@ -45,6 +45,18 @@ class MainTest(TestCase):
         self.assertTemplateUsed(response, "index.html")
         self.assertContains(response, 'id="reviewCardsContainer"')
 
+    def test_review_page_includes_toast_assets_in_order(self):
+        response = self.client.get(reverse("main:show_main"))
+        content = response.content.decode()
+
+        self.assertContains(response, 'href="/static/css/toast.css"')
+        self.assertContains(response, 'src="/static/js/toast.js"')
+        self.assertContains(response, 'src="/static/js/reviews.js"')
+        self.assertLess(
+            content.index('src="/static/js/toast.js"'),
+            content.index('src="/static/js/reviews.js"'),
+        )
+
     def test_get_reviews_json(self):
         response = self.client.get(reverse("main:get_reviews_json"))
         self.assertEqual(response.status_code, 200)
