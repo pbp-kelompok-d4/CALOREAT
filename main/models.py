@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models import Q
 import uuid
 from django.core.validators import MinValueValidator, MaxValueValidator
 
@@ -15,14 +16,39 @@ class Reviews(models.Model):
         ('★★★☆☆', '★★★☆☆'),
         ('★★☆☆☆', '★★☆☆☆'),
         ('★☆☆☆☆', '★☆☆☆☆'),
-        ('☆☆☆☆☆', '☆☆☆☆☆'),
     ]
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    created_by = models.ForeignKey(
+        "auth.User",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="reviews",
+    )
     profile_picture = models.URLField(default=DEFAULT_PROFILE_PICTURE, editable=False)
     customer_name = models.CharField(max_length=25)
-    content = models.TextField()
+    content = models.TextField(max_length=500)
     date = models.DateTimeField(auto_now_add=True, editable=False)
     star = models.CharField(max_length=5, choices=STAR_CHOICES, default='★★★★★')
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=["created_by"],
+                condition=Q(created_by__isnull=False),
+                name="one_review_per_user",
+            ),
+            models.CheckConstraint(
+                condition=Q(star__in=[
+                    "★☆☆☆☆",
+                    "★★☆☆☆",
+                    "★★★☆☆",
+                    "★★★★☆",
+                    "★★★★★",
+                ]),
+                name="review_star_at_least_one",
+            ),
+        ]
 
     def save(self, *args, **kwargs):
         self.profile_picture = DEFAULT_PROFILE_PICTURE

@@ -1,7 +1,7 @@
 from django.urls import path
 from main.views import (
-    show_main, add_review_ajax, delete_review_ajax, get_reviews_json,
-    register, login_user, logout_user,
+    show_main, add_review_ajax, delete_review_ajax, bulk_delete_reviews_ajax,
+    get_reviews_json, register, login_user, logout_user, edit_review
 )
 from main.calorie_views import (
     calorie_count, search_food, barcode_food, entries_collection_api,
@@ -33,6 +33,8 @@ urlpatterns = [
     path("api/profile/", profile_api, name="profile"),
     path("reviews/create-ajax/", add_review_ajax, name="add_review_ajax"),
     path("reviews/delete-ajax/<uuid:id>/", delete_review_ajax, name="delete_review_ajax"),
+    path("reviews/bulk-delete-ajax/", bulk_delete_reviews_ajax, name="bulk_delete_reviews_ajax"),
+    path("reviews/<uuid:reviews_id>/edit/", edit_review, name="edit_review"),
     path("api/reviews/", get_reviews_json, name="get_reviews_json"),
     path("portion-guidance/", portion_guidance, name="portion_guidance"),
     path("portion-guidance/create/", portion_create, name="portion_create"),

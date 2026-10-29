@@ -109,8 +109,8 @@
       </div>
       <div class="features__list" id="features-list">
         <article class="features__item">
-          <h3>this is feature1</h3>
-          <p>Dorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vulputate libero et velit interdum, ac aliquet odio mattis.</p>
+          <a class="features__link" href="{% url 'main:food_catalog' %}">this is feature1</a>
+          <p class="features__description">Dorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vulputate libero et velit interdum, ac aliquet odio mattis.</p>
         </article>
         <article class="features__item">
           <h3>this is feature2</h3>
@@ -130,19 +130,59 @@
     <section class="dashboard-reviews">
       <div class="dashboard-review-box">
         <div class="dashboard-reviews-header">
-          <h2 class="dashboard-reviews__title">What our Customers say?</h2>
-          <button type="button" class="btn add-reviews-button">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
-              <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
-              <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/>
-            </svg>
-            Write a Review
-          </button>
+          <h2 class="dashboard-reviews__title" id="reviews-title">What our Customers say?</h2>
+          <div class="dashboard-reviews-header__actions">
+            <button type="button" class="btn add-reviews-button">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
+                <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+                <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/>
+              </svg>
+              Write a Review
+            </button>
+            <button class="features__toggle dashboard-reviews__toggle" type="button" aria-expanded="true" aria-controls="reviews-content" aria-label="Collapse reviews">
+              <span class="features__close" aria-hidden="true"></span>
+            </button>
+          </div>
         </div>
 
-        <div class="dashboard-review-comments" id="reviewCardsContainer" data-url="{% url 'main:get_reviews_json' %}" data-is-authorized="{{ user.is_superuser|yesno:'true,false' }}">
-          <div class="dashboard-review-empty">
-            <p>Memuat review...</p>
+        <div class="dashboard-reviews-body" id="reviews-content">
+          <div class="dashboard-reviews-toolbar">
+            <div class="dashboard-reviews-filters" id="reviewStarFilters" role="group" aria-label="Filter reviews">
+              <button type="button" class="review-filter-btn active" data-star="">All</button>
+              {% if user.is_authenticated %}
+                <button type="button" class="review-filter-btn" data-mine="1">My Review</button>
+              {% endif %}
+              <button type="button" class="review-filter-btn" data-star="★★★★★">5 ★</button>
+              <button type="button" class="review-filter-btn" data-star="★★★★☆">4 ★</button>
+              <button type="button" class="review-filter-btn" data-star="★★★☆☆">3 ★</button>
+              <button type="button" class="review-filter-btn" data-star="★★☆☆☆">2 ★</button>
+              <button type="button" class="review-filter-btn" data-star="★☆☆☆☆">1 ★</button>
+            </div>
+
+            {% if user.is_superuser %}
+              <div class="dashboard-reviews-bulk-actions" id="reviewBulkActions">
+                <button type="button" class="review-select-all-btn" id="selectAllReviewsBtn">Select All</button>
+                <button type="button" class="bulk-delete-reviews-btn" id="bulkDeleteReviewsBtn" style="display: none;">
+                  Delete Selected (0)
+                </button>
+              </div>
+            {% endif %}
+          </div>
+
+          <div class="dashboard-review-comments"
+               id="reviewCardsContainer"
+               data-url="{% url 'main:get_reviews_json' %}"
+               data-bulk-delete-url="{% url 'main:bulk_delete_reviews_ajax' %}"
+               data-is-superuser="{% if user.is_superuser %}true{% else %}false{% endif %}">
+            <div class="dashboard-review-empty">
+              <p>Loading reviews...</p>
+            </div>
+          </div>
+
+          <div class="dashboard-reviews-footer" id="loadMoreReviewsWrapper" style="display: none;">
+            <button type="button" class="btn load-more-reviews-button" id="loadMoreReviewsBtn">
+              Load More Reviews
+            </button>
           </div>
         </div>
       </div>
@@ -150,6 +190,7 @@
   </div>
   
   {% include "components/add_reviews_form.html" %}
+  <script src="{% static 'js/toast.js' %}"></script>
   <script src="{% static 'js/reviews.js' %}"></script>
   <script src="{% static 'js/collapse.js' %}"></script>
   <script src="{% static 'js/food_search.js' %}"></script>

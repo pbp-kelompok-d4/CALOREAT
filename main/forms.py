@@ -68,15 +68,15 @@ class ReviewsForm(ModelForm):
         ]
 
         labels = {
-            "customer_name": "Masukkan nama kamu",
+            "customer_name": "Enter your name",
             "star": "★★★★★",
-            "content": "Isi review"
+            "content": "Review"
         }
 
         widgets = {
             "customer_name": TextInput(
                 attrs={
-                    "placeholder": "Nama",
+                    "placeholder": "Name",
                 }
             ),
             "star": TextInput(
@@ -86,7 +86,7 @@ class ReviewsForm(ModelForm):
             ),
             "content": TextInput(
                 attrs={
-                    "placeholder": "Isi review",
+                    "placeholder": "Write your review",
                 }
             ),
         }
@@ -94,7 +94,7 @@ class ReviewsForm(ModelForm):
     def clean_title(self):
         title = strip_tags(self.cleaned_data["content"]).strip()
         if not title:
-            raise ValidationError("Isi reviews tidak boleh hanya berisi tag HTML.")
+            raise ValidationError("The review cannot contain only HTML tags.")
         return title
 
 class PortionGuideForm(forms.ModelForm):
