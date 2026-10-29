@@ -174,3 +174,95 @@
   transform: translateY(-1px);
   box-shadow: 0 6px 16px rgba(242, 183, 5, 0.4);
 }
+
+.dashboard-reviews-header__actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.dashboard-reviews-body {
+  max-height: var(--reviews-content-height, 2000px);
+  opacity: 1;
+  overflow: hidden;
+  transition: max-height .6s cubic-bezier(.65, 0, .35, 1),
+              padding .6s cubic-bezier(.65, 0, .35, 1),
+              opacity .35s ease-in-out;
+}
+
+.dashboard-reviews.is-collapsed .features__close {
+  transform: rotate(45deg);
+}
+
+.dashboard-reviews.is-collapsed .dashboard-reviews-body {
+  max-height: 0;
+  padding-top: 0;
+  padding-bottom: 0;
+  opacity: 0;
+}
+
+.dashboard-reviews-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 18px 24px 0;
+}
+
+.review-filter-btn {
+  background: #ffffff;
+  color: var(--ink, #2a2108);
+  border: 1.5px solid var(--yellow-dark, #dba500);
+  border-radius: 999px;
+  padding: 6px 16px;
+  font-family: "DM Sans", system-ui, sans-serif;
+  font-size: 13.5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease, transform 0.15s ease;
+}
+
+.review-filter-btn:hover {
+  background: rgba(242, 183, 5, 0.18);
+  transform: translateY(-1px);
+}
+
+.review-filter-btn.active {
+  background: var(--ink, #2a2108);
+  color: #ffffff;
+  border-color: var(--ink, #2a2108);
+}
+
+.dashboard-reviews-footer {
+  display: flex;
+  justify-content: center;
+  padding: 0 24px 24px;
+}
+
+.load-more-reviews-button {
+  background-color: var(--ink, #2a2108);
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 600;
+  font-family: "DM Sans", system-ui, -apple-system, sans-serif;
+  padding: 10px 24px;
+  border: none;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background-color 0.15s ease, transform 0.15s ease;
+}
+
+.load-more-reviews-button:hover {
+  background-color: #765108;
+  transform: translateY(-1px);
+}
+
+@media (max-width: 640px) {
+  .dashboard-reviews-header__actions {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .dashboard-reviews-filters {
+    padding: 14px 16px 0;
+  }
+}

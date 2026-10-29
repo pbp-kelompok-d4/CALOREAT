@@ -22,3 +22,6 @@ htmlcov/
 # Test and build caches
 .pytest_cache/
 staticfiles/
+
+# Local management commands
+main/management/

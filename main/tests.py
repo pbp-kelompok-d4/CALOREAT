@@ -88,6 +88,64 @@ class MainTest(TestCase):
         self.assertEqual(data[0]["content"], self.review.content)
         self.assertEqual(data[0]["star"], self.review.star)
 
+    def test_get_reviews_json_filters_by_star(self):
+        Reviews.objects.all().delete()
+        Reviews.objects.create(
+            customer_name="Five Star",
+            content="Excellent",
+            star="★★★★★",
+        )
+        Reviews.objects.create(
+            customer_name="Three Star",
+            content="Good",
+            star="★★★☆☆",
+        )
+        Reviews.objects.create(
+            customer_name="One Star",
+            content="Needs improvement",
+            star="★☆☆☆☆",
+        )
+
+        response = self.client.get(
+            reverse("main:get_reviews_json"),
+            {"star": "★★★☆☆"},
+        )
+        self.assertEqual(response.status_code, 200)
+        data = response.json()
+        self.assertEqual(len(data), 1)
+        self.assertEqual(data[0]["customer_name"], "Three Star")
+        self.assertEqual(data[0]["star"], "★★★☆☆")
+
+    def test_get_reviews_json_supports_numeric_star_filter(self):
+        Reviews.objects.all().delete()
+        Reviews.objects.create(
+            customer_name="Four Star",
+            content="Very good",
+            star="★★★★☆",
+        )
+        Reviews.objects.create(
+            customer_name="Two Star",
+            content="Could improve",
+            star="★★☆☆☆",
+        )
+
+        response = self.client.get(
+            reverse("main:get_reviews_json"),
+            {"star": "4"},
+        )
+        self.assertEqual(response.status_code, 200)
+        data = response.json()
+        self.assertEqual(len(data), 1)
+        self.assertEqual(data[0]["star"], "★★★★☆")
+
+    def test_get_reviews_json_unknown_star_filter_returns_no_reviews(self):
+        response = self.client.get(
+            reverse("main:get_reviews_json"),
+            {"star": "invalid"},
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json(), [])
+
     def test_empty_review_page(self):
         Reviews.objects.all().delete()
         response = self.client.get(reverse("main:get_reviews_json"))

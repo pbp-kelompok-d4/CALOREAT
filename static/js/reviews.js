@@ -7,7 +7,12 @@ document.addEventListener("DOMContentLoaded", function () {
 	const modalTitle = modal.querySelector(".modal-header h3");
 	const submitBtn = document.getElementById("submitBtn");
 	const container = document.getElementById("reviewCardsContainer");
-	const maxReviewsShown = 6;
+	const loadMoreWrapper = document.getElementById("loadMoreReviewsWrapper");
+	const loadMoreBtn = document.getElementById("loadMoreReviewsBtn");
+	const starFiltersContainer = document.getElementById("reviewStarFilters");
+	let visibleReviewsCount = 6;
+	const reviewsIncrement = 3;
+	let selectedStar = "";
 
 	// XSS protection
 	function escapeHtml(value) {
@@ -19,25 +24,39 @@ document.addEventListener("DOMContentLoaded", function () {
 			.replaceAll("'", '&#39;');
 	}
 
+	function buildReviewsUrl() {
+		const url = new URL(container.dataset.url, window.location.origin);
+		if (selectedStar) {
+			url.searchParams.set("star", selectedStar);
+		}
+		return url.toString();
+	}
+
     // get reviews
 	async function refreshReviews() {
 		try {
-			const response = await fetch(container.dataset.url);
+			const response = await fetch(buildReviewsUrl());
 			const reviews = await response.json();
 
 			// If 0 reviews
 			if (reviews.length === 0) {
+				const emptyMessage = selectedStar
+					? "No reviews found for this star rating."
+					: "There are no reviews yet, add some!";
 				container.innerHTML = `
 					<div class="dashboard-review-empty">
-						<p>There are no reviews yet, add some!</p>
+						<p>${emptyMessage}</p>
 					</div>
 				`;
+				if (loadMoreWrapper) {
+					loadMoreWrapper.style.display = "none";
+				}
 				return;
 			}
 
 			// Render card for each review
 			let htmlString = "";
-			reviews.slice(0, maxReviewsShown).forEach((review) => {
+			reviews.slice(0, visibleReviewsCount).forEach((review) => {
 				htmlString += `
 					<div class="dashboard-review-card">
 						<img class="review-avatar" src="${escapeHtml(review.profile_picture)}" alt="${escapeHtml(review.customer_name)}'s profile picture" loading="lazy">
@@ -65,10 +84,40 @@ document.addEventListener("DOMContentLoaded", function () {
 			});
 
 			container.innerHTML = htmlString;
+
+			if (loadMoreWrapper) {
+				loadMoreWrapper.style.display = reviews.length > visibleReviewsCount ? "flex" : "none";
+			}
 		} catch (error) {
 			console.error("Error:", error);
 			container.innerHTML = `<div class="dashboard-review-empty"><p>Failed to load reviews.</p></div>`;
+			if (loadMoreWrapper) {
+				loadMoreWrapper.style.display = "none";
+			}
 		}
+	}
+
+	if (starFiltersContainer) {
+		starFiltersContainer.addEventListener("click", (e) => {
+			const filterBtn = e.target.closest(".review-filter-btn");
+			if (!filterBtn) return;
+
+			selectedStar = filterBtn.dataset.star || "";
+			visibleReviewsCount = 6;
+
+			starFiltersContainer.querySelectorAll(".review-filter-btn").forEach((btn) => {
+				btn.classList.toggle("active", btn === filterBtn);
+			});
+
+			refreshReviews();
+		});
+	}
+
+	if (loadMoreBtn) {
+		loadMoreBtn.addEventListener("click", () => {
+			visibleReviewsCount += reviewsIncrement;
+			refreshReviews();
+		});
 	}
 
 	// call every time page started

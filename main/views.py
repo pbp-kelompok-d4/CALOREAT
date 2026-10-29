@@ -23,7 +23,19 @@ def show_main(request):
 
 # get reviews json using AJAX
 def get_reviews_json(request):
-    reviews = Reviews.objects.order_by('-date')[:6]
+    reviews = Reviews.objects.order_by('-date')
+    star_filter = request.GET.get("star", "").strip()
+    star_map = {
+        "5": "★★★★★",
+        "4": "★★★★☆",
+        "3": "★★★☆☆",
+        "2": "★★☆☆☆",
+        "1": "★☆☆☆☆",
+        "0": "☆☆☆☆☆",
+    }
+    if star_filter:
+        reviews = reviews.filter(star=star_map.get(star_filter, star_filter))
+
     data = [
         {
             "id": str(review.id),
