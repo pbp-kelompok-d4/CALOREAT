@@ -78,6 +78,15 @@ class MainTest(TestCase):
         self.assertFalse(form.is_valid())
         self.assertIn("content", form.errors)
 
+    def test_review_form_rejects_zero_star_rating(self):
+        form = ReviewsForm(data={
+            "customer_name": "Test User",
+            "star": "☆☆☆☆☆",
+            "content": "Review content",
+        })
+        self.assertFalse(form.is_valid())
+        self.assertIn("star", form.errors)
+
     def test_get_reviews_json(self):
         response = self.client.get(reverse("main:get_reviews_json"))
         self.assertEqual(response.status_code, 200)

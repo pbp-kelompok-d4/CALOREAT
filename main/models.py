@@ -15,7 +15,6 @@ class Reviews(models.Model):
         ('★★★☆☆', '★★★☆☆'),
         ('★★☆☆☆', '★★☆☆☆'),
         ('★☆☆☆☆', '★☆☆☆☆'),
-        ('☆☆☆☆☆', '☆☆☆☆☆'),
     ]
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     created_by = models.ForeignKey(
@@ -37,6 +36,16 @@ class Reviews(models.Model):
                 fields=["created_by"],
                 condition=Q(created_by__isnull=False),
                 name="one_review_per_user",
+            ),
+            models.CheckConstraint(
+                condition=Q(star__in=[
+                    "★☆☆☆☆",
+                    "★★☆☆☆",
+                    "★★★☆☆",
+                    "★★★★☆",
+                    "★★★★★",
+                ]),
+                name="review_star_at_least_one",
             ),
         ]
 

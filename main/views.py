@@ -31,7 +31,6 @@ def get_reviews_json(request):
         "3": "★★★☆☆",
         "2": "★★☆☆☆",
         "1": "★☆☆☆☆",
-        "0": "☆☆☆☆☆",
     }
     if star_filter:
         reviews = reviews.filter(star=star_map.get(star_filter, star_filter))

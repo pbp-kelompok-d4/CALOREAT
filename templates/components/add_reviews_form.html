@@ -20,14 +20,15 @@
       </div>
 
       <div class="form-group">
-        <label for="star">Rating</label>
-        <select id="star" name="star" required>
-          <option value="★★★★★">★★★★★</option>
-          <option value="★★★★☆">★★★★☆</option>
-          <option value="★★★☆☆">★★★☆☆</option>
-          <option value="★★☆☆☆">★★☆☆☆</option>
-          <option value="★☆☆☆☆">★☆☆☆☆</option>
-        </select>
+        <label id="starRatingLabel">Rating</label>
+        <input type="hidden" id="star" name="star" value="★★★★★" required>
+        <div class="star-rating-picker" id="starRatingPicker" role="radiogroup" aria-labelledby="starRatingLabel">
+          <button type="button" class="star-rating-btn is-filled" data-rating="1" data-value="★☆☆☆☆" aria-label="1 star">★</button>
+          <button type="button" class="star-rating-btn is-filled" data-rating="2" data-value="★★☆☆☆" aria-label="2 stars">★</button>
+          <button type="button" class="star-rating-btn is-filled" data-rating="3" data-value="★★★☆☆" aria-label="3 stars">★</button>
+          <button type="button" class="star-rating-btn is-filled" data-rating="4" data-value="★★★★☆" aria-label="4 stars">★</button>
+          <button type="button" class="star-rating-btn is-filled" data-rating="5" data-value="★★★★★" aria-label="5 stars">★</button>
+        </div>
       </div>
 
       <div class="form-group">

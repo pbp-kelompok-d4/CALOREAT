@@ -130,6 +130,37 @@
   padding-right: 40px;
 }
 
+/*Star rating*/
+.star-rating-picker {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #ffffff;
+  border: 1.5px solid var(--line, #e6dfae);
+  border-radius: 14px;
+  padding: 8px 14px;
+  width: fit-content;
+}
+
+.star-rating-btn {
+  background: transparent;
+  border: none;
+  padding: 2px 4px;
+  font-size: 28px;
+  line-height: 1;
+  color: #e2dac0;
+  cursor: pointer;
+  transition: color 0.15s ease, transform 0.12s ease;
+}
+
+.star-rating-btn.is-filled {
+  color: var(--yellow, #f2b705);
+}
+
+.star-rating-btn:hover {
+  transform: scale(1.15);
+}
+
 .form-group textarea {
   resize: vertical;
   min-height: 85px;

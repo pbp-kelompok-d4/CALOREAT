@@ -10,9 +10,50 @@ document.addEventListener("DOMContentLoaded", function () {
 	const loadMoreWrapper = document.getElementById("loadMoreReviewsWrapper");
 	const loadMoreBtn = document.getElementById("loadMoreReviewsBtn");
 	const starFiltersContainer = document.getElementById("reviewStarFilters");
+	const starPicker = document.getElementById("starRatingPicker");
 	let visibleReviewsCount = 6;
 	const reviewsIncrement = 3;
 	let selectedStar = "";
+
+	function countFilledStars(starString) {
+		return (String(starString || "★★★★★").match(/★/g) || []).length || 5;
+	}
+
+	function renderStarPicker(count) {
+		if (!starPicker) return;
+		starPicker.querySelectorAll(".star-rating-btn").forEach((btn) => {
+			const rating = Number(btn.dataset.rating);
+			btn.classList.toggle("is-filled", rating <= count);
+			btn.setAttribute("aria-checked", String(rating === count));
+		});
+	}
+
+	function setStarRating(starValue) {
+		const normalized = starValue || "★★★★★";
+		if (form && form.elements.star) {
+			form.elements.star.value = normalized;
+		}
+		renderStarPicker(countFilledStars(normalized));
+	}
+
+	if (starPicker) {
+		starPicker.addEventListener("click", (e) => {
+			const starBtn = e.target.closest(".star-rating-btn");
+			if (!starBtn) return;
+			setStarRating(starBtn.dataset.value);
+		});
+
+		starPicker.addEventListener("mouseover", (e) => {
+			const starBtn = e.target.closest(".star-rating-btn");
+			if (!starBtn) return;
+			renderStarPicker(Number(starBtn.dataset.rating));
+		});
+
+		starPicker.addEventListener("mouseleave", () => {
+			const currentVal = form && form.elements.star ? form.elements.star.value : "★★★★★";
+			renderStarPicker(countFilledStars(currentVal));
+		});
+	}
 
 	// XSS protection
 	function escapeHtml(value) {
@@ -125,12 +166,14 @@ document.addEventListener("DOMContentLoaded", function () {
 
 	// Popup modal
 	openBtn.addEventListener("click", () => {
+		setStarRating("★★★★★");
 		modal.style.display = "flex";
 	});
 
 	function closeModal() {
 		modal.style.display = "none";
 		form.reset();
+		setStarRating("★★★★★");
 		form.dataset.url = form.dataset.addUrl;
 		modalTitle.textContent = "Write a New Review";
 		submitBtn.textContent = "Submit Review";
@@ -206,7 +249,7 @@ document.addEventListener("DOMContentLoaded", function () {
 			}
 
 			form.elements.customer_name.value = review.customer_name;
-			form.elements.star.value = review.star;
+			setStarRating(review.star);
 			form.elements.content.value = review.content;
 			form.dataset.url = form.dataset.editUrlTemplate.replace(
 				"00000000-0000-0000-0000-000000000000",
