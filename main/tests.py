@@ -515,6 +515,18 @@ class MainTest(TestCase):
         self.assertContains(response, 'name="q"')
         self.assertContains(response, "js/food_search.js")
 
+    def test_feature_dashboard_links_to_feature_pages(self):
+        response = self.client.get(reverse("main:show_main"))
+
+        self.assertContains(response, f'href="{reverse("main:calorie_count")}"')
+        self.assertContains(response, f'href="{reverse("main:portion_guidance")}"')
+        self.assertContains(response, f'href="{reverse("main:food_catalog")}"')
+        self.assertContains(response, "Feature 1: Smart Calorie Counter")
+        self.assertContains(response, "Feature 2: Visual Portion Control")
+        self.assertContains(response, "Feature 3: Food &amp; Nutrition Database")
+        self.assertContains(response, "Daily Calorie &amp; Macro Tracker")
+        self.assertNotContains(response, "this is feature")
+
     def test_non_superuser_cannot_delete_review(self):
         regular_user = User.objects.create_user(
             username="regular@example.com",
