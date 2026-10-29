@@ -1,4 +1,5 @@
 import json
+from functools import wraps
 from uuid import UUID
 from django.contrib import messages
 from django.contrib.auth import login, logout
@@ -9,18 +10,30 @@ from django.core import serializers
 from django.http import HttpResponse, JsonResponse
 from django.views.decorators.http import require_POST, require_http_methods
 from django.contrib.auth.decorators import login_required
+from django.db import IntegrityError
 
 from main.models import Reviews
 
 from main.forms import RegisterForm, LoginForm, ReviewsForm
 
+# Custom decorator
+def superuser_required(view_func):
+    @wraps(view_func)
+    def _wrapped_view(request, *args, **kwargs):
+        if not request.user.is_superuser:
+            return JsonResponse(
+                {
+                    "status": "error",
+                    "message": "Superuser access required.",
+                },
+                status=403,
+            )
+        return view_func(request, *args, **kwargs)
+    return _wrapped_view
 
 # Menampilkan main.
 def show_main(request):
-    context = {
-        'review_list': Reviews.objects.order_by('-date')[:6],
-    }
-    return render(request, "index.html", context)
+    return render(request, "index.html")
 
 
 # get reviews json using AJAX
@@ -73,8 +86,14 @@ def add_review_ajax(request):
         review = form.save(commit=False)
         review.created_by = request.user
 
-        review.customer_name = request.user.first_name or "Admin"
-        review.save()
+        review.customer_name = (request.user.first_name or "Admin")[:25]
+        try:
+            review.save()
+        except IntegrityError:
+            return JsonResponse({
+                "status": "error",
+                "message": "You already have a review. Please delete it before adding another.",
+            }, status=409)
 
         return JsonResponse({
             "status": "success",
@@ -109,10 +128,8 @@ def delete_review_ajax(request, id):
 # Bulk delete reviews for admin
 @require_POST
 @login_required(login_url="/login/")
+@superuser_required
 def bulk_delete_reviews_ajax(request):
-    if not request.user.is_superuser:
-        return redirect("main:login")
-
     ids = request.POST.getlist("ids")
     if not ids and request.content_type == "application/json":
         try:
@@ -158,9 +175,12 @@ def edit_review(request, reviews_id):
             "content": review.content,
         })
 
+    original_customer_name = review.customer_name
     form = ReviewsForm(request.POST, instance=review)
     if form.is_valid():
-        review = form.save()
+        review = form.save(commit=False)
+        review.customer_name = original_customer_name
+        review.save()
         return JsonResponse({
             "status": "success",
             "message": "Review updated successfully!",

@@ -14,7 +14,8 @@
         <input type="text" 
               id="customer_name" 
               name="customer_name" 
-              value="{% if user.is_authenticated %}{{ user.first_name|default:'Admin' }}{% else %}Guest{% endif %}" 
+              maxlength="25"
+              value="{% if user.is_authenticated %}{{ user.first_name|default:'Admin'|slice:':25' }}{% else %}Guest{% endif %}" 
               readonly 
               class="form-control-readonly">
       </div>
