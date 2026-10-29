@@ -154,13 +154,6 @@ h1 {
   box-shadow: 0 14px 34px rgba(80, 70, 10, 0.12), inset 0 0 0 1px #fefcf8;
   position: relative;
 }
-.plate::before {
-  content: "";
-  position: absolute;
-  inset: 20px;
-  border-radius: 50%;
-  border: 1px solid #fefcf8;
-}
 .plate span {
   font-family: "Outfit", sans-serif;
   font-weight: 700;
@@ -774,7 +767,6 @@ h1 {
   .hero { border-radius: 22px; }
   .deco-left, .deco-right { width: 80px; margin: 0; }
   .plate { width: 130px; }
-  .plate::before { inset: 10px; }
   .plate span { font-size: 24px; }
 
   .life-highlight { margin: 8% 20px 2%; gap: 18px; }

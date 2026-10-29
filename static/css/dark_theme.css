@@ -1,0 +1,399 @@
+/* DARK MODE TOGGLE & THEME OVERRIDES */
+:root[data-theme="dark"] {
+  --card: #17140d;
+  --hero-top: #231e12;
+  --hero-bottom: #1a160d;
+  --ink: #f7f1dc;
+  --muted: #b9ab82;
+  --yellow: #f2b705;
+  --yellow-dark: #dba500;
+  --line: #3a321e;
+  --plate: #221d12;
+  --color-card: #17140d;
+  --color-ink: #f7f1dc;
+  --color-muted: #b9ab82;
+  --color-line: #3a321e;
+  color-scheme: dark;
+}
+
+.theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border: 1.5px solid var(--line);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--ink);
+  cursor: pointer;
+  transition: background-color 0.18s ease, border-color 0.18s ease, color 0.18s ease, transform 0.18s ease;
+}
+
+.theme-toggle:hover {
+  border-color: var(--yellow);
+  background: rgba(242, 183, 5, 0.12);
+}
+
+.theme-toggle:active {
+  transform: scale(0.95);
+}
+
+.theme-toggle__sun {
+  display: none;
+}
+
+.theme-toggle__moon {
+  display: block;
+}
+
+:root[data-theme="dark"] .theme-toggle__sun {
+  display: block;
+  color: var(--yellow);
+}
+
+:root[data-theme="dark"] .theme-toggle__moon {
+  display: none;
+}
+
+/* Navbar & Global Buttons in Dark Mode */
+:root[data-theme="dark"] .btn-outline {
+  border-color: var(--ink);
+}
+
+:root[data-theme="dark"] .btn-outline:hover {
+  background: var(--ink);
+  color: var(--card);
+}
+
+:root[data-theme="dark"] .btn-yellow {
+  color: #2a2108;
+}
+
+:root[data-theme="dark"] .nav-avatar,
+:root[data-theme="dark"] .nav-mobile-avatar {
+  background: #2e2615;
+  color: var(--ink);
+}
+
+/* Landing Page Dark Mode */
+:root[data-theme="dark"] .hero {
+  background-image:
+    linear-gradient(
+      180deg,
+      rgb(35, 30, 18) 0%,
+      rgba(35, 30, 18, 0.96) 22%,
+      rgba(35, 30, 18, 0.85) 38%,
+      rgba(23, 20, 13, 0.52) 58%,
+      rgba(23, 20, 13, 0.32) 80%,
+      rgba(23, 20, 13, 0.65) 100%
+    ),
+    url("/static/img/healthy-foods.jpg");
+}
+
+:root[data-theme="dark"] .plate {
+  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.45), inset 0 0 0 1px rgba(247, 241, 220, 0.14);
+}
+
+:root[data-theme="dark"] .food-search {
+  background: rgba(28, 24, 15, 0.72);
+  border-color: rgba(247, 241, 220, 0.22);
+  box-shadow: 0 16px 38px rgba(0, 0, 0, 0.5);
+}
+
+:root[data-theme="dark"] .food-search__input::placeholder {
+  color: rgba(247, 241, 220, 0.68);
+}
+
+:root[data-theme="dark"] .food-search__button {
+  background: var(--yellow);
+  color: #2a2108;
+}
+
+:root[data-theme="dark"] .food-search__button:hover {
+  background: var(--yellow-dark);
+}
+
+:root[data-theme="dark"] .life-highlight__eyebrow {
+  color: var(--yellow);
+}
+
+:root[data-theme="dark"] .dashboard-education-box,
+:root[data-theme="dark"] .dashboard-review-box,
+:root[data-theme="dark"] .features {
+  background: rgba(34, 29, 18, 0.75);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
+}
+
+:root[data-theme="dark"] .features__link:hover {
+  color: var(--yellow);
+}
+
+:root[data-theme="dark"] .edu-card {
+  background: #2b2417;
+}
+
+:root[data-theme="dark"] .dashboard-review-card {
+  background: #262015;
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.28);
+}
+
+:root[data-theme="dark"] .dashboard-review-card.is-selected {
+  background-color: #332a18;
+  border-color: var(--yellow);
+}
+
+:root[data-theme="dark"] .review-select-checkbox {
+  accent-color: var(--yellow);
+}
+
+:root[data-theme="dark"] .add-reviews-button {
+  background-color: var(--yellow);
+  color: #2a2108;
+}
+
+:root[data-theme="dark"] .add-reviews-button:hover {
+  background-color: var(--yellow-dark);
+}
+
+:root[data-theme="dark"] .add-reviews-button svg {
+  color: #2a2108;
+}
+
+/* Review Filter Pills, Bulk Actions, Load More & Review Modal */
+:root[data-theme="dark"] .review-filter-btn,
+:root[data-theme="dark"] .review-select-all-btn {
+  background: #262015;
+  color: var(--ink);
+  border-color: var(--yellow-dark);
+}
+
+:root[data-theme="dark"] .review-filter-btn:hover,
+:root[data-theme="dark"] .review-select-all-btn:hover {
+  background: rgba(242, 183, 5, 0.2);
+}
+
+:root[data-theme="dark"] .review-filter-btn.active {
+  background: var(--yellow);
+  color: #2a2108;
+  border-color: var(--yellow);
+}
+
+:root[data-theme="dark"] .bulk-delete-reviews-btn {
+  background: #262015;
+  color: #ff6b7a;
+  border-color: #dc3545;
+}
+
+:root[data-theme="dark"] .bulk-delete-reviews-btn:hover {
+  background: rgba(220, 53, 69, 0.2);
+}
+
+:root[data-theme="dark"] .load-more-reviews-button {
+  background-color: var(--yellow);
+  color: #2a2108;
+}
+
+:root[data-theme="dark"] .load-more-reviews-button:hover {
+  background-color: var(--yellow-dark);
+}
+
+:root[data-theme="dark"] .form-group input,
+:root[data-theme="dark"] .form-group select,
+:root[data-theme="dark"] .form-group textarea,
+:root[data-theme="dark"] .star-rating-picker {
+  background: #262015;
+  color: var(--ink);
+  border-color: var(--line);
+}
+
+:root[data-theme="dark"] .star-rating-btn {
+  color: #4a4028;
+}
+
+:root[data-theme="dark"] .star-rating-btn.is-filled {
+  color: var(--yellow);
+}
+
+:root[data-theme="dark"] .form-group input[readonly],
+:root[data-theme="dark"] .form-control-readonly {
+  background-color: #1e1910 !important;
+  color: var(--muted) !important;
+  border-color: var(--line) !important;
+}
+
+:root[data-theme="dark"] .modal-close-btn:hover {
+  background: rgba(247, 241, 220, 0.1);
+}
+
+/* Food Catalog (catalog.css) Dark Mode */
+:root[data-theme="dark"] .cat-page {
+  --c-hero: #282112;
+  --c-card: #221c10;
+  --c-line: #44381f;
+  --c-ink: #f7f1dc;
+  --c-mute: #c7b78a;
+  --c-yel: #f2b705;
+  --c-yel2: #e0a800;
+  --c-chip: #332a18;
+  --c-track: #3a301b;
+  color: var(--c-ink);
+}
+
+:root[data-theme="dark"] .cat-hero {
+  background: linear-gradient(135deg, #2d2514 0%, #211b0f 100%);
+  border: 1px solid var(--c-line);
+  color: var(--c-ink);
+}
+
+:root[data-theme="dark"] .cat-hero h1 {
+  color: var(--c-ink);
+}
+
+:root[data-theme="dark"] .cat-hero p {
+  color: var(--c-mute);
+}
+
+:root[data-theme="dark"] .cat-tools input {
+  background: var(--c-card);
+  color: var(--c-ink);
+  border-color: var(--c-yel);
+}
+
+:root[data-theme="dark"] .cat-tools input::placeholder {
+  color: var(--c-mute);
+}
+
+:root[data-theme="dark"] .cat-card {
+  background: var(--c-card);
+  border-color: var(--c-line);
+  color: var(--c-ink);
+}
+
+:root[data-theme="dark"] .cat-card h3,
+:root[data-theme="dark"] .cat-kcal {
+  color: var(--c-ink);
+}
+
+:root[data-theme="dark"] .cat-sub,
+:root[data-theme="dark"] .cat-kcal small,
+:root[data-theme="dark"] .cat-count,
+:root[data-theme="dark"] .cat-note {
+  color: var(--c-mute);
+}
+
+:root[data-theme="dark"] .m-p {
+  background: #1f3318;
+  color: #a8e08d;
+  border: 1px solid rgba(168, 224, 141, 0.25);
+}
+
+:root[data-theme="dark"] .m-c {
+  background: #382c11;
+  color: #f7d26a;
+  border: 1px solid rgba(247, 210, 106, 0.25);
+}
+
+:root[data-theme="dark"] .m-f {
+  background: #3a1e1b;
+  color: #f59c92;
+  border: 1px solid rgba(245, 156, 146, 0.25);
+}
+
+:root[data-theme="dark"] .cat-btn--ghost {
+  background: rgba(242, 183, 5, 0.08);
+  border-color: var(--c-yel);
+  color: var(--c-ink);
+}
+
+:root[data-theme="dark"] .cat-btn--ghost:hover {
+  background: var(--c-yel);
+  color: #2b2108;
+}
+
+:root[data-theme="dark"] .cat-pg .cur {
+  color: #2b2108;
+}
+
+:root[data-theme="dark"] dialog.cat-dlg {
+  background: #221c10;
+  color: var(--ink);
+  border-color: var(--yellow);
+}
+
+:root[data-theme="dark"] .cat-dh p,
+:root[data-theme="dark"] .cat-x,
+:root[data-theme="dark"] .cat-db h4 {
+  color: #c7b78a;
+}
+
+:root[data-theme="dark"] .cat-tr {
+  background: #3a301b;
+}
+
+:root[data-theme="dark"] .cat-tg {
+  background: #332a18;
+  color: var(--ink);
+}
+
+/* Calorie Count, Portion Guidance & Auth Dark Mode */
+:root[data-theme="dark"] .calorie-page {
+  --calorie-page: #17140d;
+  --calorie-panel: #231e12;
+  --calorie-card: #262015;
+  --calorie-line: #3a321e;
+  --calorie-ink: #f7f1dc;
+  --calorie-muted: #b9ab82;
+  background: linear-gradient(145deg, #231e12, #1a160d);
+}
+
+:root[data-theme="dark"] .calorie-panel,
+:root[data-theme="dark"] .calorie-date time,
+:root[data-theme="dark"] .calorie-date button,
+:root[data-theme="dark"] .calorie-ring::before,
+:root[data-theme="dark"] .food-lookup__form,
+:root[data-theme="dark"] .stepper-button,
+:root[data-theme="dark"] .icon-button,
+:root[data-theme="dark"] .product-add__meal,
+:root[data-theme="dark"] .manual-add-button,
+:root[data-theme="dark"] .button-secondary,
+:root[data-theme="dark"] .needs-edit,
+:root[data-theme="dark"] .calorie-dialog,
+:root[data-theme="dark"] .form-grid input,
+:root[data-theme="dark"] .form-grid select,
+:root[data-theme="dark"] .entry-edit__form input,
+:root[data-theme="dark"] .entry-edit__form select {
+  background: #262015;
+  color: var(--ink);
+  border-color: var(--line);
+}
+
+:root[data-theme="dark"] .needs-row,
+:root[data-theme="dark"] .entry-edit__form {
+  background: #2e2618;
+  color: var(--ink);
+}
+
+:root[data-theme="dark"] .portion-guidance__button,
+:root[data-theme="dark"] .portion-guidance-form button,
+:root[data-theme="dark"] .portion-guidance__nutrition > a,
+:root[data-theme="dark"] .portion-guidance-card__button:not(.portion-guidance-card__button--secondary):not(.portion-guidance-card__button--danger) {
+  color: #2a2108;
+}
+
+:root[data-theme="dark"] .portion-guidance-card__button--secondary {
+  color: var(--ink);
+  border-color: var(--line);
+}
+
+:root[data-theme="dark"] .auth-page {
+  --auth-green: #22261b;
+  --auth-green-dark: #181b13;
+  --auth-field: #262015;
+}
+
+:root[data-theme="dark"] .auth-toggle a.is-active {
+  background: #2e2618;
+  color: var(--ink);
+}

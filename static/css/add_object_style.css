@@ -123,7 +123,7 @@
 .form-group select {
   cursor: pointer;
   appearance: none;
-  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23827345'%3e%3cpath d='M7 10l5 5 5-5z'/%3e%3c/svg%3e");
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23827345'%3e%3cpath d='M7 10l5 5 5-5z'/%3e%3c/svg>&");
   background-repeat: no-repeat;
   background-position: right 14px center;
   background-size: 18px;
@@ -209,6 +209,7 @@
   display: flex;
   align-items: center;
   gap: 12px;
+  flex-shrink: 0;
 }
 
 .dashboard-reviews-body {
@@ -349,9 +350,29 @@
 }
 
 @media (max-width: 640px) {
-  .dashboard-reviews-header__actions {
-    width: 100%;
+  .dashboard-reviews-header {
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
     justify-content: space-between;
+  }
+
+  .dashboard-reviews-header__actions {
+    display: contents;
+  }
+
+  .dashboard-reviews__title {
+    order: 1;
+    flex: 1 1 calc(100% - 48px);
+  }
+
+  .dashboard-reviews__toggle {
+    order: 2;
+    margin-left: auto;
+  }
+
+  .dashboard-reviews-header .add-reviews-button {
+    order: 3;
   }
 
   .dashboard-reviews-toolbar {

@@ -1,4 +1,42 @@
 (() => {
+    // Dark mode toggle 
+    const themeToggles = document.querySelectorAll(".theme-toggle");
+    const root = document.documentElement;
+
+    const applyTheme = (theme) => {
+        const isDark = theme === "dark";
+        if (isDark) {
+            root.setAttribute("data-theme", "dark");
+            root.classList.add("dark");
+        } else {
+            root.removeAttribute("data-theme");
+            root.classList.remove("dark");
+        }
+        themeToggles.forEach((btn) => {
+            btn.setAttribute("aria-pressed", String(isDark));
+            const label = isDark ? "Switch to light mode" : "Switch to dark mode";
+            btn.setAttribute("aria-label", label);
+            btn.setAttribute("title", label);
+        });
+    };
+
+    let savedTheme = "light";
+    try {
+        savedTheme = localStorage.getItem("caloreat-theme") === "dark" ? "dark" : "light";
+    } catch (_) {}
+    applyTheme(savedTheme);
+
+    themeToggles.forEach((btn) => {
+        btn.addEventListener("click", () => {
+            const nextTheme = root.getAttribute("data-theme") === "dark" ? "light" : "dark";
+            applyTheme(nextTheme);
+            try {
+                localStorage.setItem("caloreat-theme", nextTheme);
+            } catch (_) {}
+        });
+    });
+
+    // Mobile drawer toggle
     const toggle = document.getElementById("nav-toggle");
     const icon = document.getElementById("nav-icon4");
     const drawer = document.getElementById("nav-mobile-drawer");
