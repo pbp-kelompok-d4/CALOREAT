@@ -26,7 +26,7 @@ class Reviews(models.Model):
     )
     profile_picture = models.URLField(default=DEFAULT_PROFILE_PICTURE, editable=False)
     customer_name = models.CharField(max_length=25)
-    content = models.TextField()
+    content = models.TextField(max_length=500)
     date = models.DateTimeField(auto_now_add=True, editable=False)
     star = models.CharField(max_length=5, choices=STAR_CHOICES, default='★★★★★')
 

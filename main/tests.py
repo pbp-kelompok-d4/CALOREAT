@@ -3,6 +3,7 @@ from django.urls import reverse
 from django.contrib.auth.models import User
 
 from main.models import Reviews
+from main.forms import ReviewsForm
 
 # Create your tests here.
 class MainTest(TestCase):
@@ -56,6 +57,26 @@ class MainTest(TestCase):
             content.index('src="/static/js/toast.js"'),
             content.index('src="/static/js/reviews.js"'),
         )
+
+    def test_review_form_limits_content_to_500_characters(self):
+        response = self.client.get(reverse("main:show_main"))
+        self.assertContains(response, 'name="content"')
+        self.assertContains(response, 'maxlength="500"')
+
+        form = ReviewsForm(data={
+            "customer_name": "Test User",
+            "star": "★★★★★",
+            "content": "x" * 500,
+        })
+        self.assertTrue(form.is_valid())
+
+        form = ReviewsForm(data={
+            "customer_name": "Test User",
+            "star": "★★★★★",
+            "content": "x" * 501,
+        })
+        self.assertFalse(form.is_valid())
+        self.assertIn("content", form.errors)
 
     def test_get_reviews_json(self):
         response = self.client.get(reverse("main:get_reviews_json"))

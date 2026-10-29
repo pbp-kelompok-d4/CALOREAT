@@ -15,5 +15,10 @@ __pycache__/
 !.vscode/settings.json
 .idea/
 
-# Coverage
+# Coverage test
 .coverage
+htmlcov/
+
+# Test and build caches
+.pytest_cache/
+staticfiles/
