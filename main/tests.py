@@ -334,6 +334,25 @@ class MainTest(TestCase):
         self.assertEqual(response.status_code, 201)
         self.assertTrue(Reviews.objects.filter(customer_name="Admin").exists())
 
+    def test_add_review_truncates_long_user_name_to_model_limit(self):
+        long_name = "A" * 150
+        self.user.first_name = long_name
+        self.user.save()
+
+        response = self.client.post(
+            reverse("main:add_review_ajax"),
+            {
+                "customer_name": "Ignored by server",
+                "star": "★★★★★",
+                "content": "Aplikasi sangat membantu!",
+            },
+        )
+
+        self.assertEqual(response.status_code, 201)
+        review = Reviews.objects.get(created_by=self.user)
+        self.assertEqual(review.customer_name, long_name[:25])
+        self.assertEqual(len(review.customer_name), 25)
+
     def test_add_review_ajax_invalid(self):
         # customer_name kosong
         payload = {
@@ -455,6 +474,33 @@ class MainTest(TestCase):
         self.assertEqual(delete_response.status_code, 200)
         self.assertFalse(Reviews.objects.filter(id=review.id).exists())
 
+    def test_review_edit_cannot_change_customer_name(self):
+        owner = User.objects.create_user(
+            username="owner-name@example.com",
+            first_name="Review Owner",
+        )
+        review = Reviews.objects.create(
+            created_by=owner,
+            customer_name="Review Owner",
+            content="Original review",
+            star="★★★★★",
+        )
+        self.client.force_login(owner)
+
+        response = self.client.post(
+            reverse("main:edit_review", kwargs={"reviews_id": review.id}),
+            {
+                "customer_name": "Impersonated Name",
+                "star": "★★★★☆",
+                "content": "Updated review",
+            },
+        )
+
+        self.assertEqual(response.status_code, 200)
+        review.refresh_from_db()
+        self.assertEqual(review.customer_name, "Review Owner")
+        self.assertEqual(review.content, "Updated review")
+
     def test_non_creator_cannot_edit_review(self):
         owner = User.objects.create_user(
             username="owner@example.com",
@@ -525,10 +571,9 @@ class MainTest(TestCase):
         self.assertContains(response, f'href="{reverse("main:calorie_count")}"')
         self.assertContains(response, f'href="{reverse("main:portion_guidance")}"')
         self.assertContains(response, f'href="{reverse("main:food_catalog")}"')
-        self.assertContains(response, "Feature 1: Smart Calorie Counter")
-        self.assertContains(response, "Feature 2: Visual Portion Control")
-        self.assertContains(response, "Feature 3: Food &amp; Nutrition Database")
-        self.assertContains(response, "Daily Calorie &amp; Macro Tracker")
+        self.assertContains(response, "Daily Calorie & Macro Tracker")
+        self.assertContains(response, "Smart Portion Guidance")
+        self.assertContains(response, "Curated Food & Nutrient Explorer")
         self.assertNotContains(response, "this is feature")
 
     def test_non_superuser_cannot_delete_review(self):

@@ -298,6 +298,9 @@ document.addEventListener("DOMContentLoaded", function () {
 	// Add or edit a review
 	form.addEventListener("submit", async function (e) {
 		e.preventDefault();
+		if (submitBtn.disabled) return;
+		submitBtn.disabled = true;
+
 		const formData = new FormData(form);
 		const isEdit = Boolean(form.dataset.url && form.dataset.url !== form.dataset.addUrl);
 
@@ -326,6 +329,8 @@ document.addEventListener("DOMContentLoaded", function () {
 		} catch (err) {
 			console.error(err);
 			showToast("An error occurred.", "error");
+		} finally {
+			submitBtn.disabled = false;
 		}
 	});
 	

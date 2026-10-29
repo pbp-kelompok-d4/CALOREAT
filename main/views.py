@@ -9,6 +9,7 @@ from django.core import serializers
 from django.http import HttpResponse, JsonResponse
 from django.views.decorators.http import require_POST, require_http_methods
 from django.contrib.auth.decorators import login_required
+from django.db import IntegrityError
 
 from main.models import Reviews
 
@@ -17,10 +18,7 @@ from main.forms import RegisterForm, LoginForm, ReviewsForm
 
 # Menampilkan main.
 def show_main(request):
-    context = {
-        'review_list': Reviews.objects.order_by('-date')[:6],
-    }
-    return render(request, "index.html", context)
+    return render(request, "index.html")
 
 
 # get reviews json using AJAX
@@ -73,8 +71,14 @@ def add_review_ajax(request):
         review = form.save(commit=False)
         review.created_by = request.user
 
-        review.customer_name = request.user.first_name or "Admin"
-        review.save()
+        review.customer_name = (request.user.first_name or "Admin")[:25]
+        try:
+            review.save()
+        except IntegrityError:
+            return JsonResponse({
+                "status": "error",
+                "message": "You already have a review. Please delete it before adding another.",
+            }, status=409)
 
         return JsonResponse({
             "status": "success",
@@ -158,9 +162,12 @@ def edit_review(request, reviews_id):
             "content": review.content,
         })
 
+    original_customer_name = review.customer_name
     form = ReviewsForm(request.POST, instance=review)
     if form.is_valid():
-        review = form.save()
+        review = form.save(commit=False)
+        review.customer_name = original_customer_name
+        review.save()
         return JsonResponse({
             "status": "success",
             "message": "Review updated successfully!",
