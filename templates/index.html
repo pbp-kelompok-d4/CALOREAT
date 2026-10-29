@@ -146,19 +146,34 @@
         </div>
 
         <div class="dashboard-reviews-body" id="reviews-content">
-          <div class="dashboard-reviews-filters" id="reviewStarFilters" role="group" aria-label="Filter reviews">
-            <button type="button" class="review-filter-btn active" data-star="">All</button>
-            {% if user.is_authenticated %}
-              <button type="button" class="review-filter-btn" data-mine="1">My Review</button>
+          <div class="dashboard-reviews-toolbar">
+            <div class="dashboard-reviews-filters" id="reviewStarFilters" role="group" aria-label="Filter reviews">
+              <button type="button" class="review-filter-btn active" data-star="">All</button>
+              {% if user.is_authenticated %}
+                <button type="button" class="review-filter-btn" data-mine="1">My Review</button>
+              {% endif %}
+              <button type="button" class="review-filter-btn" data-star="★★★★★">5 ★</button>
+              <button type="button" class="review-filter-btn" data-star="★★★★☆">4 ★</button>
+              <button type="button" class="review-filter-btn" data-star="★★★☆☆">3 ★</button>
+              <button type="button" class="review-filter-btn" data-star="★★☆☆☆">2 ★</button>
+              <button type="button" class="review-filter-btn" data-star="★☆☆☆☆">1 ★</button>
+            </div>
+
+            {% if user.is_superuser %}
+              <div class="dashboard-reviews-bulk-actions" id="reviewBulkActions">
+                <button type="button" class="review-select-all-btn" id="selectAllReviewsBtn">Select All</button>
+                <button type="button" class="bulk-delete-reviews-btn" id="bulkDeleteReviewsBtn" style="display: none;">
+                  Delete Selected (0)
+                </button>
+              </div>
             {% endif %}
-            <button type="button" class="review-filter-btn" data-star="★★★★★">5 ★</button>
-            <button type="button" class="review-filter-btn" data-star="★★★★☆">4 ★</button>
-            <button type="button" class="review-filter-btn" data-star="★★★☆☆">3 ★</button>
-            <button type="button" class="review-filter-btn" data-star="★★☆☆☆">2 ★</button>
-            <button type="button" class="review-filter-btn" data-star="★☆☆☆☆">1 ★</button>
           </div>
 
-          <div class="dashboard-review-comments" id="reviewCardsContainer" data-url="{% url 'main:get_reviews_json' %}">
+          <div class="dashboard-review-comments"
+               id="reviewCardsContainer"
+               data-url="{% url 'main:get_reviews_json' %}"
+               data-bulk-delete-url="{% url 'main:bulk_delete_reviews_ajax' %}"
+               data-is-superuser="{% if user.is_superuser %}true{% else %}false{% endif %}">
             <div class="dashboard-review-empty">
               <p>Loading reviews...</p>
             </div>

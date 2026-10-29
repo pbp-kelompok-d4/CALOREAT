@@ -1,3 +1,5 @@
+import json
+
 from django.test import TestCase
 from django.urls import reverse
 from django.contrib.auth.models import User
@@ -297,6 +299,71 @@ class MainTest(TestCase):
         fake_id = uuid.uuid4()
         response = self.client.post(reverse("main:delete_review_ajax", kwargs={"id": fake_id}))
         self.assertEqual(response.status_code, 404)
+
+    def test_bulk_delete_reviews_as_superuser(self):
+        reviews = Reviews.objects.bulk_create([
+            Reviews(customer_name="Bulk One", content="First", star="★★★★★"),
+            Reviews(customer_name="Bulk Two", content="Second", star="★★★★☆"),
+        ])
+
+        response = self.client.post(
+            reverse("main:bulk_delete_reviews_ajax"),
+            {"ids": [str(review.id) for review in reviews]},
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()["status"], "success")
+        self.assertEqual(response.json()["deleted_count"], 2)
+        self.assertFalse(Reviews.objects.filter(id__in=[review.id for review in reviews]).exists())
+
+    def test_bulk_delete_reviews_accepts_json_ids(self):
+        reviews = Reviews.objects.bulk_create([
+            Reviews(customer_name="JSON One", content="First", star="★★★★★"),
+            Reviews(customer_name="JSON Two", content="Second", star="★★★☆☆"),
+        ])
+
+        response = self.client.post(
+            reverse("main:bulk_delete_reviews_ajax"),
+            data=json.dumps({"ids": [str(review.id) for review in reviews]}),
+            content_type="application/json",
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()["deleted_count"], 2)
+
+    def test_bulk_delete_reviews_rejects_empty_selection(self):
+        response = self.client.post(
+            reverse("main:bulk_delete_reviews_ajax"),
+            {"ids": []},
+        )
+
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json()["message"], "No reviews selected for deletion.")
+
+    def test_bulk_delete_reviews_rejects_invalid_ids(self):
+        response = self.client.post(
+            reverse("main:bulk_delete_reviews_ajax"),
+            data=json.dumps({"ids": ["not-a-uuid"]}),
+            content_type="application/json",
+        )
+
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json()["message"], "Invalid review ID.")
+
+    def test_non_superuser_cannot_bulk_delete_reviews(self):
+        regular_user = User.objects.create_user(
+            username="bulk-regular@example.com",
+            is_superuser=False,
+        )
+        self.client.force_login(regular_user)
+
+        response = self.client.post(
+            reverse("main:bulk_delete_reviews_ajax"),
+            {"ids": [str(self.review.id)]},
+        )
+
+        self.assertEqual(response.status_code, 302)
+        self.assertTrue(Reviews.objects.filter(id=self.review.id).exists())
 
     def test_review_creator_can_edit_and_delete_review(self):
         owner = User.objects.create_user(

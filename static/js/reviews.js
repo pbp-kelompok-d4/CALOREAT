@@ -11,10 +11,14 @@ document.addEventListener("DOMContentLoaded", function () {
 	const loadMoreBtn = document.getElementById("loadMoreReviewsBtn");
 	const starFiltersContainer = document.getElementById("reviewStarFilters");
 	const starPicker = document.getElementById("starRatingPicker");
+	const selectAllBtn = document.getElementById("selectAllReviewsBtn");
+	const bulkDeleteBtn = document.getElementById("bulkDeleteReviewsBtn");
+	const isSuperuser = container && container.dataset.isSuperuser === "true";
 	let visibleReviewsCount = 6;
 	const reviewsIncrement = 3;
 	let selectedStar = "";
 	let onlyMine = false;
+	const selectedReviewIds = new Set();
 
 	function countFilledStars(starString) {
 		return (String(starString || "★★★★★").match(/★/g) || []).length || 5;
@@ -77,6 +81,30 @@ document.addEventListener("DOMContentLoaded", function () {
 		return url.toString();
 	}
 
+	function updateBulkDeleteUI() {
+		if (!isSuperuser) return;
+		const checkboxes = Array.from(container.querySelectorAll(".review-select-checkbox"));
+		const visibleIds = checkboxes.map((cb) => cb.dataset.id);
+
+		Array.from(selectedReviewIds).forEach((id) => {
+			if (!visibleIds.includes(id)) {
+				selectedReviewIds.delete(id);
+			}
+		});
+
+		const allVisibleSelected = checkboxes.length > 0 && checkboxes.every((cb) => selectedReviewIds.has(cb.dataset.id));
+
+		if (selectAllBtn) {
+			selectAllBtn.style.display = checkboxes.length > 0 ? "inline-flex" : "none";
+			selectAllBtn.textContent = allVisibleSelected ? "Deselect All" : "Select All";
+		}
+
+		if (bulkDeleteBtn) {
+			bulkDeleteBtn.style.display = selectedReviewIds.size > 0 ? "inline-flex" : "none";
+			bulkDeleteBtn.textContent = `Delete Selected (${selectedReviewIds.size})`;
+		}
+	}
+
     // get reviews
 	async function refreshReviews() {
 		try {
@@ -99,14 +127,18 @@ document.addEventListener("DOMContentLoaded", function () {
 				if (loadMoreWrapper) {
 					loadMoreWrapper.style.display = "none";
 				}
+				selectedReviewIds.clear();
+				updateBulkDeleteUI();
 				return;
 			}
 
 			// Render card for each review
 			let htmlString = "";
 			reviews.slice(0, visibleReviewsCount).forEach((review) => {
+				const isSelected = selectedReviewIds.has(String(review.id));
 				htmlString += `
-					<div class="dashboard-review-card">
+					<div class="dashboard-review-card${isSelected ? " is-selected" : ""}">
+						${isSuperuser ? `<input type="checkbox" class="review-select-checkbox" data-id="${escapeHtml(review.id)}" ${isSelected ? "checked" : ""} aria-label="Select review by ${escapeHtml(review.customer_name)}">` : ""}
 						<img class="review-avatar" src="${escapeHtml(review.profile_picture)}" alt="${escapeHtml(review.customer_name)}'s profile picture" loading="lazy">
 						<div class="review-details">
 							<h3>${escapeHtml(review.customer_name)}</h3>
@@ -136,6 +168,7 @@ document.addEventListener("DOMContentLoaded", function () {
 			if (loadMoreWrapper) {
 				loadMoreWrapper.style.display = reviews.length > visibleReviewsCount ? "flex" : "none";
 			}
+			updateBulkDeleteUI();
 		} catch (error) {
 			console.error("Error:", error);
 			container.innerHTML = `<div class="dashboard-review-empty"><p>Failed to load reviews.</p></div>`;
@@ -158,6 +191,7 @@ document.addEventListener("DOMContentLoaded", function () {
 				selectedStar = filterBtn.dataset.star || "";
 			}
 			visibleReviewsCount = 6;
+			selectedReviewIds.clear();
 
 			starFiltersContainer.querySelectorAll(".review-filter-btn").forEach((btn) => {
 				btn.classList.toggle("active", btn === filterBtn);
@@ -171,6 +205,62 @@ document.addEventListener("DOMContentLoaded", function () {
 		loadMoreBtn.addEventListener("click", () => {
 			visibleReviewsCount += reviewsIncrement;
 			refreshReviews();
+		});
+	}
+
+	if (selectAllBtn) {
+		selectAllBtn.addEventListener("click", () => {
+			const checkboxes = Array.from(container.querySelectorAll(".review-select-checkbox"));
+			const allSelected = checkboxes.length > 0 && checkboxes.every((cb) => cb.checked);
+			checkboxes.forEach((cb) => {
+				cb.checked = !allSelected;
+				const card = cb.closest(".dashboard-review-card");
+				if (!allSelected) {
+					selectedReviewIds.add(cb.dataset.id);
+					if (card) card.classList.add("is-selected");
+				} else {
+					selectedReviewIds.delete(cb.dataset.id);
+					if (card) card.classList.remove("is-selected");
+				}
+			});
+			updateBulkDeleteUI();
+		});
+	}
+
+	if (bulkDeleteBtn) {
+		bulkDeleteBtn.addEventListener("click", async () => {
+			if (selectedReviewIds.size === 0) return;
+			if (!confirm(`Are you sure you want to delete ${selectedReviewIds.size} selected review(s)?`)) {
+				return;
+			}
+
+			try {
+				const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]')?.value || getCookie('csrftoken') || '';
+				const response = await fetch(container.dataset.bulkDeleteUrl, {
+					method: "POST",
+					headers: {
+						"Content-Type": "application/json",
+						"X-CSRFToken": csrfToken,
+					},
+					body: JSON.stringify({ ids: Array.from(selectedReviewIds) }),
+				});
+
+				if (response.redirected) {
+					window.location.href = response.url;
+					return;
+				}
+
+				if (response.ok) {
+					selectedReviewIds.clear();
+					await refreshReviews();
+					showToast("Selected reviews deleted!", "success");
+				} else {
+					showToast("Failed to delete selected reviews.", "error");
+				}
+			} catch (err) {
+				console.error("Error bulk deleting reviews:", err);
+				showToast("An error occurred while deleting reviews.", "error");
+			}
 		});
 	}
 
@@ -249,6 +339,21 @@ document.addEventListener("DOMContentLoaded", function () {
 		return cookieValue;
 	}
 
+	container.addEventListener("change", (e) => {
+		const checkbox = e.target.closest(".review-select-checkbox");
+		if (!checkbox) return;
+		const id = checkbox.dataset.id;
+		const card = checkbox.closest(".dashboard-review-card");
+		if (checkbox.checked) {
+			selectedReviewIds.add(id);
+			if (card) card.classList.add("is-selected");
+		} else {
+			selectedReviewIds.delete(id);
+			if (card) card.classList.remove("is-selected");
+		}
+		updateBulkDeleteUI();
+	});
+
 	// Edit or delete review via AJAX
 	container.addEventListener("click", async (e) => {
 		const editBtn = e.target.closest(".btn-update-review");
@@ -299,6 +404,7 @@ document.addEventListener("DOMContentLoaded", function () {
 			}
 
 			if (response.ok) {
+				selectedReviewIds.delete(reviewId);
 				await refreshReviews();
 				showToast("Review deleted!", "success");
 			} else {

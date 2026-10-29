@@ -1,3 +1,5 @@
+import json
+from uuid import UUID
 from django.contrib import messages
 from django.contrib.auth import login, logout
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
@@ -102,6 +104,42 @@ def delete_review_ajax(request, id):
     return JsonResponse({
         "status": "success",
         "message": "Review deleted successfully!"
+    })
+
+# Bulk delete reviews for admin
+@require_POST
+@login_required(login_url="/login/")
+def bulk_delete_reviews_ajax(request):
+    if not request.user.is_superuser:
+        return redirect("main:login")
+
+    ids = request.POST.getlist("ids")
+    if not ids and request.content_type == "application/json":
+        try:
+            payload = json.loads(request.body)
+            ids = payload.get("ids", [])
+        except (ValueError, AttributeError):
+            ids = []
+
+    if not isinstance(ids, list) or not ids:
+        return JsonResponse({
+            "status": "error",
+            "message": "No reviews selected for deletion.",
+        }, status=400)
+
+    try:
+        ids = [str(UUID(review_id)) for review_id in ids]
+    except (AttributeError, TypeError, ValueError):
+        return JsonResponse({
+            "status": "error",
+            "message": "Invalid review ID.",
+        }, status=400)
+
+    deleted_count, _ = Reviews.objects.filter(id__in=ids).delete()
+    return JsonResponse({
+        "status": "success",
+        "deleted_count": deleted_count,
+        "message": "Selected reviews deleted successfully!",
     })
 
 # Edit reviews using AJAX
