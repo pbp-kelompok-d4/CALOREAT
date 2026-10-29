@@ -268,14 +268,16 @@ document.addEventListener("DOMContentLoaded", function () {
 	refreshReviews();
 
 	// Popup modal
-	openBtn.addEventListener("click", () => {
-		if (openBtn.dataset.authenticated !== "true") {
-			window.location.href = openBtn.dataset.loginUrl;
-			return;
-		}
-		setStarRating("★★★★★");
-		modal.style.display = "flex";
-	});
+	if (openBtn) {
+		openBtn.addEventListener("click", () => {
+			if (openBtn.dataset.authenticated !== "true") {
+				window.location.href = openBtn.dataset.loginUrl;
+				return;
+			}
+			setStarRating("★★★★★");
+			modal.style.display = "flex";
+		});
+	}
 
 	function closeModal() {
 		modal.style.display = "none";

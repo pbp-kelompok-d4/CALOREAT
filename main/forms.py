@@ -91,11 +91,11 @@ class ReviewsForm(ModelForm):
             ),
         }
 
-    def clean_title(self):
-        title = strip_tags(self.cleaned_data["content"]).strip()
-        if not title:
+    def clean_content(self):
+        content = strip_tags(self.cleaned_data["content"]).strip()
+        if not content:
             raise ValidationError("The review cannot contain only HTML tags.")
-        return title
+        return content
 
 class PortionGuideForm(forms.ModelForm):
     reference_kcal = forms.IntegerField(
