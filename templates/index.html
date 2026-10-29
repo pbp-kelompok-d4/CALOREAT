@@ -146,8 +146,11 @@
         </div>
 
         <div class="dashboard-reviews-body" id="reviews-content">
-          <div class="dashboard-reviews-filters" id="reviewStarFilters" role="group" aria-label="Filter reviews by star rating">
+          <div class="dashboard-reviews-filters" id="reviewStarFilters" role="group" aria-label="Filter reviews">
             <button type="button" class="review-filter-btn active" data-star="">All</button>
+            {% if user.is_authenticated %}
+              <button type="button" class="review-filter-btn" data-mine="1">My Review</button>
+            {% endif %}
             <button type="button" class="review-filter-btn" data-star="★★★★★">5 ★</button>
             <button type="button" class="review-filter-btn" data-star="★★★★☆">4 ★</button>
             <button type="button" class="review-filter-btn" data-star="★★★☆☆">3 ★</button>

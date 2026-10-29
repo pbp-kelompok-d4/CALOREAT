@@ -155,6 +155,70 @@ class MainTest(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json(), [])
 
+    def test_get_reviews_json_filters_to_authenticated_users_reviews(self):
+        Reviews.objects.all().delete()
+        own_review = Reviews.objects.create(
+            created_by=self.user,
+            customer_name="Test User",
+            content="My review",
+            star="★★★★☆",
+        )
+        Reviews.objects.create(
+            customer_name="Another User",
+            content="Someone else's review",
+            star="★★★★★",
+        )
+
+        response = self.client.get(
+            reverse("main:get_reviews_json"),
+            {"mine": "1"},
+        )
+        self.assertEqual(response.status_code, 200)
+        data = response.json()
+        self.assertEqual(len(data), 1)
+        self.assertEqual(data[0]["id"], str(own_review.id))
+        self.assertEqual(data[0]["customer_name"], "Test User")
+
+    def test_get_reviews_json_mine_filter_can_combine_with_star_filter(self):
+        Reviews.objects.all().delete()
+        Reviews.objects.create(
+            created_by=self.user,
+            customer_name="Test User",
+            content="My review",
+            star="★★★★☆",
+        )
+        Reviews.objects.create(
+            customer_name="Another User",
+            content="Five-star review",
+            star="★★★★★",
+        )
+
+        response = self.client.get(
+            reverse("main:get_reviews_json"),
+            {"mine": "true", "star": "4"},
+        )
+        self.assertEqual(response.status_code, 200)
+        data = response.json()
+        self.assertEqual(len(data), 1)
+        self.assertEqual(data[0]["star"], "★★★★☆")
+
+    def test_get_reviews_json_mine_filter_returns_no_reviews_for_anonymous_users(self):
+        self.client.logout()
+        response = self.client.get(
+            reverse("main:get_reviews_json"),
+            {"mine": "1"},
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json(), [])
+
+    def test_review_page_shows_mine_filter_only_to_authenticated_users(self):
+        response = self.client.get(reverse("main:show_main"))
+        self.assertContains(response, 'data-mine="1"')
+
+        self.client.logout()
+        response = self.client.get(reverse("main:show_main"))
+        self.assertNotContains(response, 'data-mine="1"')
+
     def test_empty_review_page(self):
         Reviews.objects.all().delete()
         response = self.client.get(reverse("main:get_reviews_json"))

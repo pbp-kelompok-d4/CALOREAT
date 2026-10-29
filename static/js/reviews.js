@@ -14,6 +14,7 @@ document.addEventListener("DOMContentLoaded", function () {
 	let visibleReviewsCount = 6;
 	const reviewsIncrement = 3;
 	let selectedStar = "";
+	let onlyMine = false;
 
 	function countFilledStars(starString) {
 		return (String(starString || "★★★★★").match(/★/g) || []).length || 5;
@@ -70,6 +71,9 @@ document.addEventListener("DOMContentLoaded", function () {
 		if (selectedStar) {
 			url.searchParams.set("star", selectedStar);
 		}
+		if (onlyMine) {
+			url.searchParams.set("mine", "1");
+		}
 		return url.toString();
 	}
 
@@ -81,9 +85,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
 			// If 0 reviews
 			if (reviews.length === 0) {
-				const emptyMessage = selectedStar
-					? "No reviews found for this star rating."
-					: "There are no reviews yet, add some!";
+				let emptyMessage = "There are no reviews yet, add some!";
+				if (onlyMine) {
+					emptyMessage = "You haven't written a review yet.";
+				} else if (selectedStar) {
+					emptyMessage = "No reviews found for this star rating.";
+				}
 				container.innerHTML = `
 					<div class="dashboard-review-empty">
 						<p>${emptyMessage}</p>
@@ -143,7 +150,13 @@ document.addEventListener("DOMContentLoaded", function () {
 			const filterBtn = e.target.closest(".review-filter-btn");
 			if (!filterBtn) return;
 
-			selectedStar = filterBtn.dataset.star || "";
+			if (filterBtn.dataset.mine === "1") {
+				onlyMine = true;
+				selectedStar = "";
+			} else {
+				onlyMine = false;
+				selectedStar = filterBtn.dataset.star || "";
+			}
 			visibleReviewsCount = 6;
 
 			starFiltersContainer.querySelectorAll(".review-filter-btn").forEach((btn) => {

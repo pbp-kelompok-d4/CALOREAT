@@ -25,6 +25,7 @@ def show_main(request):
 def get_reviews_json(request):
     reviews = Reviews.objects.order_by('-date')
     star_filter = request.GET.get("star", "").strip()
+    mine_filter = request.GET.get("mine", "").strip().lower()
     star_map = {
         "5": "★★★★★",
         "4": "★★★★☆",
@@ -34,6 +35,11 @@ def get_reviews_json(request):
     }
     if star_filter:
         reviews = reviews.filter(star=star_map.get(star_filter, star_filter))
+    if mine_filter in ("1", "true"):
+        if request.user.is_authenticated:
+            reviews = reviews.filter(created_by=request.user)
+        else:
+            reviews = reviews.none()
 
     data = [
         {
