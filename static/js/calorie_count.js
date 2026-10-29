@@ -40,6 +40,7 @@
         upstream_unavailable: "Open Food Facts is temporarily unavailable. You can add this food manually.",
         product_not_found: "No product found for that barcode.",
         future_date: "You cannot select a future date.",
+        birth_date_too_old: "Date of birth must be within the last 200 years.",
       };
       const error = new Error(messages[data.error] || data.error || `Request failed (HTTP ${response.status}).`);
       error.code = data.error;
@@ -442,6 +443,17 @@
 
   function openProfile(profile = {}) {
     const form = $("#profile-form");
+    const birthDateInput = form.elements.birth_date;
+    const todayDate = new Date(`${today}T00:00:00`);
+    const oldestYear = todayDate.getFullYear() - 200;
+    const oldestDay = Math.min(todayDate.getDate(), new Date(oldestYear, todayDate.getMonth() + 1, 0).getDate());
+    const oldestDate = new Date(oldestYear, todayDate.getMonth(), oldestDay);
+    const oldestIso = `${oldestDate.getFullYear()}-${String(oldestDate.getMonth() + 1).padStart(2, "0")}-${String(oldestDate.getDate()).padStart(2, "0")}`;
+    const yesterday = new Date(todayDate);
+    yesterday.setDate(yesterday.getDate() - 1);
+    const yesterdayIso = `${yesterday.getFullYear()}-${String(yesterday.getMonth() + 1).padStart(2, "0")}-${String(yesterday.getDate()).padStart(2, "0")}`;
+    birthDateInput.min = oldestIso;
+    birthDateInput.max = yesterdayIso;
     ["sex", "birth_date", "height_cm", "weight_kg", "activity_level", "goal"].forEach((key) => { form.elements[key].value = profile[key] ?? ""; });
     $("#profile-error").hidden = true;
     const dialog = $("#profile-dialog");

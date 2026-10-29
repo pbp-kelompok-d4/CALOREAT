@@ -35,6 +35,16 @@ def _today():
     return timezone.localdate()
 
 
+def _oldest_allowed_birth_date(on_date=None):
+    """Return the date exactly 200 years before the given (or local current) date."""
+    today = on_date or _today()
+    try:
+        return today.replace(year=today.year - 200)
+    except ValueError:
+        # A leap day becomes February 28 in a non-leap year.
+        return today.replace(year=today.year - 200, day=28)
+
+
 def _selected_date(value):
     if not value:
         return _today()
@@ -376,6 +386,8 @@ def profile_api(request):
         return _error("invalid_birth_date")
     if birth_date and birth_date >= _today():
         return _error("invalid_birth_date")
+    if birth_date and birth_date < _oldest_allowed_birth_date():
+        return _error("birth_date_too_old")
     try:
         height = _number(data.get("height_cm", profile.height_cm), "height_cm", Decimal("50"), Decimal("260"), True)
         weight = _number(data.get("weight_kg", profile.weight_kg), "weight_kg", Decimal("20"), Decimal("500"), True)
