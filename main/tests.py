@@ -106,6 +106,29 @@ class MainTest(TestCase):
         self.assertEqual(response.json()["status"], "success")
         self.assertTrue(Reviews.objects.filter(customer_name="Test User").exists())
 
+    def test_user_cannot_add_more_than_one_review(self):
+        Reviews.objects.filter(created_by=self.user).delete()
+        Reviews.objects.create(
+            created_by=self.user,
+            customer_name="Test User",
+            content="Existing review",
+            star="★★★★★",
+        )
+
+        response = self.client.post(
+            reverse("main:add_review_ajax"),
+            {
+                "customer_name": "Test User",
+                "star": "★★★★☆",
+                "content": "Second review",
+            },
+        )
+
+        self.assertEqual(response.status_code, 409)
+        self.assertEqual(response.json()["status"], "error")
+        self.assertIn("already have a review", response.json()["message"])
+        self.assertEqual(Reviews.objects.filter(created_by=self.user).count(), 1)
+
     def test_add_review_uses_admin_when_user_has_no_first_name(self):
         self.user.first_name = ""
         self.user.save()

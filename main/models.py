@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models import Q
 import uuid
 
 DEFAULT_PROFILE_PICTURE = (
@@ -29,6 +30,15 @@ class Reviews(models.Model):
     content = models.TextField(max_length=500)
     date = models.DateTimeField(auto_now_add=True, editable=False)
     star = models.CharField(max_length=5, choices=STAR_CHOICES, default='★★★★★')
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=["created_by"],
+                condition=Q(created_by__isnull=False),
+                name="one_review_per_user",
+            ),
+        ]
 
     def save(self, *args, **kwargs):
         self.profile_picture = DEFAULT_PROFILE_PICTURE

@@ -43,6 +43,12 @@ def get_reviews_json(request):
 @require_POST
 @login_required(login_url="/login/")
 def add_review_ajax(request):
+    if Reviews.objects.filter(created_by=request.user).exists():
+        return JsonResponse({
+            "status": "error",
+            "message": "You already have a review. Please delete it before adding another.",
+        }, status=409)
+
     form = ReviewsForm(request.POST)
     if form.is_valid():
         review = form.save(commit=False)

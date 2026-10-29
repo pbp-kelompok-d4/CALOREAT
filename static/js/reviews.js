@@ -117,7 +117,10 @@ document.addEventListener("DOMContentLoaded", function () {
 				showToast(isEdit ? "Review updated!" : "Review added!", "success");
 			} else {
 				const data = await response.json();
-				showToast(data.errors ? "Please check your review details." : "Failed to save the review.", "error");
+				showToast(
+					data.message || (data.errors ? "Please check your review details." : "Failed to save the review."),
+					"error"
+				);
 			}
 		} catch (err) {
 			console.error(err);
