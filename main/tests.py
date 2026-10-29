@@ -439,7 +439,8 @@ class MainTest(TestCase):
             {"ids": [str(self.review.id)]},
         )
 
-        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.json()["message"], "Superuser access required.")
         self.assertTrue(Reviews.objects.filter(id=self.review.id).exists())
 
     def test_review_creator_can_edit_and_delete_review(self):

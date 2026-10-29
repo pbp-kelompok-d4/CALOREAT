@@ -1,4 +1,5 @@
 import json
+from functools import wraps
 from uuid import UUID
 from django.contrib import messages
 from django.contrib.auth import login, logout
@@ -15,6 +16,20 @@ from main.models import Reviews
 
 from main.forms import RegisterForm, LoginForm, ReviewsForm
 
+# Custom decorator
+def superuser_required(view_func):
+    @wraps(view_func)
+    def _wrapped_view(request, *args, **kwargs):
+        if not request.user.is_superuser:
+            return JsonResponse(
+                {
+                    "status": "error",
+                    "message": "Superuser access required.",
+                },
+                status=403,
+            )
+        return view_func(request, *args, **kwargs)
+    return _wrapped_view
 
 # Menampilkan main.
 def show_main(request):
@@ -113,10 +128,8 @@ def delete_review_ajax(request, id):
 # Bulk delete reviews for admin
 @require_POST
 @login_required(login_url="/login/")
+@superuser_required
 def bulk_delete_reviews_ajax(request):
-    if not request.user.is_superuser:
-        return redirect("main:login")
-
     ids = request.POST.getlist("ids")
     if not ids and request.content_type == "application/json":
         try:
