@@ -269,6 +269,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
 	// Popup modal
 	openBtn.addEventListener("click", () => {
+		if (openBtn.dataset.authenticated !== "true") {
+			window.location.href = openBtn.dataset.loginUrl;
+			return;
+		}
 		setStarRating("★★★★★");
 		modal.style.display = "flex";
 	});

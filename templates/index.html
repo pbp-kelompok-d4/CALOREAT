@@ -132,13 +132,18 @@
         <div class="dashboard-reviews-header">
           <h2 class="dashboard-reviews__title" id="reviews-title">What our Customers say?</h2>
           <div class="dashboard-reviews-header__actions">
-            <button type="button" class="btn add-reviews-button">
+            {% if not user.is_superuser %}
+            <button type="button"
+                    class="btn add-reviews-button"
+                    data-authenticated="{% if user.is_authenticated %}true{% else %}false{% endif %}"
+                    data-login-url="{% url 'main:login' %}">
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
                 <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
                 <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/>
               </svg>
               Write a Review
             </button>
+            {% endif %}
             <button class="features__toggle dashboard-reviews__toggle" type="button" aria-expanded="true" aria-controls="reviews-content" aria-label="Collapse reviews">
               <span class="features__close" aria-hidden="true"></span>
             </button>
@@ -149,7 +154,7 @@
           <div class="dashboard-reviews-toolbar">
             <div class="dashboard-reviews-filters" id="reviewStarFilters" role="group" aria-label="Filter reviews">
               <button type="button" class="review-filter-btn active" data-star="">All</button>
-              {% if user.is_authenticated %}
+              {% if user.is_authenticated and not user.is_superuser %}
                 <button type="button" class="review-filter-btn" data-mine="1">My Review</button>
               {% endif %}
               <button type="button" class="review-filter-btn" data-star="★★★★★">5 ★</button>

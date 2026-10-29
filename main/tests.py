@@ -48,6 +48,42 @@ class MainTest(TestCase):
         self.assertTemplateUsed(response, "index.html")
         self.assertContains(response, 'id="reviewCardsContainer"')
 
+    def test_authenticated_user_can_open_review_form(self):
+        regular_user = User.objects.create_user(
+            username="reviewer@example.com",
+            first_name="Reviewer",
+        )
+        self.client.force_login(regular_user)
+        response = self.client.get(reverse("main:show_main"))
+        self.assertContains(response, 'class="btn add-reviews-button"')
+        self.assertContains(response, 'data-authenticated="true"')
+        self.assertContains(response, f'data-login-url="{reverse("main:login")}"')
+
+    def test_superuser_does_not_see_write_review_button(self):
+        response = self.client.get(reverse("main:show_main"))
+        self.assertNotContains(response, 'class="btn add-reviews-button"')
+        self.assertNotContains(response, "Write a Review")
+
+    def test_anonymous_user_review_button_points_to_login(self):
+        self.client.logout()
+        response = self.client.get(reverse("main:show_main"))
+        self.assertContains(response, 'class="btn add-reviews-button"')
+        self.assertContains(response, 'data-authenticated="false"')
+        self.assertContains(response, f'data-login-url="{reverse("main:login")}"')
+
+    def test_anonymous_user_cannot_submit_review_directly(self):
+        self.client.logout()
+        response = self.client.post(
+            reverse("main:add_review_ajax"),
+            {
+                "customer_name": "Guest",
+                "star": "★★★★★",
+                "content": "Unauthorized review",
+            },
+        )
+        self.assertEqual(response.status_code, 302)
+        self.assertIn(reverse("main:login"), response.url)
+
     def test_review_page_includes_toast_assets_in_order(self):
         response = self.client.get(reverse("main:show_main"))
         content = response.content.decode()
@@ -213,11 +249,20 @@ class MainTest(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json(), [])
 
-    def test_review_page_shows_mine_filter_only_to_authenticated_users(self):
+    def test_review_page_shows_mine_filter_only_to_regular_authenticated_users(self):
+        regular_user = User.objects.create_user(
+            username="mine-filter@example.com",
+        )
+        self.client.force_login(regular_user)
         response = self.client.get(reverse("main:show_main"))
         self.assertContains(response, 'data-mine="1"')
 
         self.client.logout()
+        response = self.client.get(reverse("main:show_main"))
+        self.assertNotContains(response, 'data-mine="1"')
+
+    def test_review_page_hides_mine_filter_from_superusers(self):
+        self.client.force_login(self.user)
         response = self.client.get(reverse("main:show_main"))
         self.assertNotContains(response, 'data-mine="1"')
 
