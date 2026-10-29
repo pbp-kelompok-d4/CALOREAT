@@ -63,6 +63,10 @@ class MainTest(TestCase):
         response = self.client.get(reverse("main:show_main"))
         self.assertNotContains(response, 'class="btn add-reviews-button"')
         self.assertNotContains(response, "Write a Review")
+        self.assertContains(
+            response,
+            'data-is-superuser="true"',
+        )
 
     def test_anonymous_user_review_button_points_to_login(self):
         self.client.logout()
