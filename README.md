@@ -12,7 +12,7 @@
 # Deskripsi Website:
 CALOREAT adalah platform kalkulator dan pemantau nutrisi harian yang membantu pengguna menghitung calorie intake secara presisi sekaligus memahami kandungan gizi pada makanan. Mengusung prinsip Sustainable Living, CALOREAT tidak hanya berfokus pada target kesehatan personal pengguna, tetapi juga mengedukasi dampak emisi karbon (carbon footprint) dari pilihan makanan harian agar pengguna dapat mengambil keputusan konsumsi yang lebih bijak dan ramah lingkungan.
 
-Tak hanya sekadar pelacak kalori, CALOREAT menyediakan panduan takaran porsi makan yang ideal untuk memenuhi kebutuhan gizi tanpa memicu pembelian berlebih. Melalui integrasi katalog nutrisi, panduan porsi harian, dan rekomendasi cegah sampah (zero-waste tips), CALOREAT memudahkan pengguna menjaga berat badan ideal sekaligus berkontribusi aktif dalam mengurangi food waste, menciptakan ekosistem gaya hidup sehat yang berkelanjutan bagi tubuh dan bumi.
+Tak hanya sekadar pelacak kalori, CALOREAT menyediakan panduan takaran porsi makan yang ideal untuk memenuhi kebutuhan gizi tanpa memicu pembelian berlebih. Melalui integrasi katalog nutrisi dan panduan porsi harian, CALOREAT memudahkan pengguna menjaga berat badan ideal sekaligus berkontribusi aktif dalam mengurangi food waste, menciptakan ekosistem gaya hidup sehat yang berkelanjutan bagi tubuh dan bumi.
 
 # Public API
 Public API yang kami gunakan bersumber dari basis data Open Food Facts: [https://id.openfoodfacts.org/]
@@ -22,9 +22,7 @@ Public API yang kami gunakan bersumber dari basis data Open Food Facts: [https:/
 
 - Halaman Autentikasi, Profil dan Admin Portal: Halaman login, register, profil pengguna, dan admin portal untuk mengelola pengguna serta basis data makanan. (Samuel Haganta Surbakti)
 
-- Homepage: Halaman utama yang menampilkan fitur-fitur unggulan website, edukasi singkat pola makan sehat, dan navigasi cepat. (Andranu Dhawy Purditya)
-
-- About: Menyajikan informasi mengenai latar belakang, serta visi dan misi platform CALOREAT dalam mendukung pemenuhan gizi seimbang dan gaya hidup sehat. (Andranu Dhawy Purditya)
+- Homepage & Navbar: Halaman utama yang menampilkan fitur-fitur unggulan website, edukasi singkat pola makan sehat, Reviews dari pengguna, beserta Navbar. (Andranu Dhawy Purditya)
 
 - Kalkulator & Pelacak Kalori: Pengguna dapat menghitung kebutuhan kalori harian (BMR/TDEE) serta mencatat asupan makanan harian secara teratur. (Nathanael Orrick Hatmoko)
 
@@ -35,19 +33,33 @@ Public API yang kami gunakan bersumber dari basis data Open Food Facts: [https:/
 
 # Role Pengguna
 
-- Belum login: Dapat melihat halaman homepage, berita edukasi, dan profile page dengan akses terbatas
+- Belum login: Dapat melihat halaman homepage, berita edukasi, mengakses katalog makanan, dan melihat reviews pengguna lain
 
-- login sebagai pengguna: Dapat mengakses kalkulator kalori, melengkapi profil, mengakses katalog nutrisi, dan panduan porsi makan sehat.
+- login sebagai pengguna: Dapat mengakses kalkulator kalori, melengkapi profil, mengakses katalog nutrisi, panduan porsi makan sehat, menambahkan, mengedit, menghapus, dan memfilter review milik masing-masing.
 
-- login sebagai admin: Dapat merubah/menambahkan informasi pada katalog nutrisi dan panduan makan sehat, serta mengakses admin portal
+- login sebagai admin: Dapat merubah/menambahkan informasi pada katalog nutrisi dan panduan makan sehat, serta menghapus reviews dari seluruh pengguna lain.
 
-# Tautan Figma
+# Tautan Penting
+- Link Figma : https://www.figma.com/design/V68iKwXFe8rn1on5zE9wi6/Caloreat?node-id=0-1&t=RW25UIKrE2cFGLEP-1
+- Aplikasi (PWS Deployment): https://muhammad-fachri54-caloreat.pws.cs.ui.ac.id
 
-Link Figma : https://www.figma.com/design/V68iKwXFe8rn1on5zE9wi6/Caloreat?node-id=0-1&t=RW25UIKrE2cFGLEP-1
+# Tampilan Aplikasi 
 
+| Homepage & Reviews | Halaman Autentikasi (Login & Register) |
+| :---: | :---: |
+| ![Homepage](static/img/screenshots/homepage.png) | ![Authentication](static/img/screenshots/auth.png) |
 
+| Katalog Nutrisi Makanan | Kalkulator & Pelacak Kalori |
+| :---: | :---: |
+| ![Food Catalog](static/img/screenshots/catalog.png) | ![Calorie Count](static/img/screenshots/calorie_count.png) |
 
+| Panduan Porsi Makan Sehat |
+| :---: |
+| ![Portion Guidance](static/img/screenshots/portion_guidance.png) |
 
+| Dark Theme |
+| :---: |
+| ![Dark Theme](static/img/screenshots/CALOREAT_dark_theme.gif) |
 
 ## Calorie Count
 
@@ -56,3 +68,182 @@ The authenticated `/calorie-count/` page supports food search and barcode lookup
 The JSON API is available at `/api/foods/search/`, `/api/foods/barcode/<code>/`, `/api/entries/`, `/api/entries/<id>/`, `/api/summary/`, `/api/summary/week/`, and `/api/profile/`. Mutating requests use the session cookie and Django CSRF token. Open Food Facts search responses are cached for 24 hours, and requests are throttled to stay within its search limits. The lookup credits [Open Food Facts](https://id.openfoodfacts.org/) under the ODbL.
 
 After updating, apply the database migration with `python manage.py migrate`. To use a non-default contact for the Open Food Facts User-Agent, update `USER_AGENT` in `main/off.py` before deployment.
+
+# Setup Guide
+
+## Prasyarat (Prerequisites)
+Pastikan perangkat Anda telah terinstal:
+- **Python**
+- **Git**
+- **Google Chrome** (opsional, untuk menjalankan pengujian E2E dengan Selenium)
+
+---
+
+## 1. Clone Repositori
+```bash
+git clone https://github.com/pbp-kelompok-d4/CALOREAT.git
+cd CALOREAT
+```
+
+## 2. Buat & Aktifkan Virtual Environment
+**Windows (PowerShell / CMD):**
+```powershell
+python -m venv env
+.\env\Scripts\activate
+```
+
+**macOS / Linux:**
+```bash
+python3 -m venv env
+source env/bin/activate
+```
+
+## 3. Instal Dependensi
+```bash
+pip install -r requirements.txt
+```
+
+## 4. Konfigurasi Environment Variables (`.env`)
+Buat file `.env` di direktori utama (*root*) proyek.
+
+- **Untuk Development Lokal (SQLite - Default):**
+  ```env
+  PRODUCTION=False
+  E2E_USER_PASSWORD=your_test_user_password
+  E2E_ADMIN_PASSWORD=your_test_admin_password
+  ```
+- **Untuk Production (PWS):**
+  ```env.prod
+  PRODUCTION=True
+  DB_NAME=your_db_name
+  DB_USER=your_db_user
+  DB_PASSWORD=your_db_password
+  DB_HOST=your_db_host
+  DB_PORT=5432
+  SCHEMA=public
+  ```
+
+## 5. Migrasi Database
+Jalankan migrasi untuk membuat tabel database:
+```bash
+python manage.py migrate
+```
+
+## 6. Jalankan Server Development
+```bash
+python manage.py runserver
+```
+Buka browser dan akses aplikasi di `http://127.0.0.1:8000/`.
+
+---
+
+## Menjalankan Pengujian (Testing)
+
+### Unit Tests
+```bash
+python manage.py test
+```
+
+### End-to-End (E2E) Selenium Tests
+Pastikan server Django sedang berjalan di `http://127.0.0.1:8000` serta variabel `E2E_USER_PASSWORD` dan `E2E_ADMIN_PASSWORD` sudah diatur di `.env`, lalu jalankan di terminal terpisah:
+```bash
+python e2e_reviews_test.py
+```
+
+# Project Structure
+
+```text
+CALOREAT/
+├── caloreat/                       # Konfigurasi utama proyek Django
+│   ├── __init__.py
+│   ├── asgi.py
+│   ├── settings.py                 # Pengaturan aplikasi, database, cache, dan static files
+│   ├── urls.py                     # Routing URL tingkat proyek
+│   ├── views.py
+│   └── wsgi.py
+├── main/                           # Aplikasi utama (modul fitur CALOREAT)
+│   ├── fixtures/
+│   │   └── off_products.json       # Data fixture produk Open Food Facts untuk pengujian
+│   ├── migrations/                 # File migrasi skema database & tabel cache
+│   ├── admin.py                    # Konfigurasi Django Admin
+│   ├── apps.py
+│   ├── calorie_views.py            # View & endpoint JSON API untuk Calorie Count
+│   ├── catalog_views.py            # View untuk Katalog Nutrisi Makanan
+│   ├── forms.py                    # Definisi form Django (Review, PortionGuide, dll.)
+│   ├── models.py                   # Model database (Reviews, CalorieProfile, FoodEntry, PortionGuide)
+│   ├── off.py                      # Klien API Open Food Facts (pencarian & barcode dengan caching)
+│   ├── portion_views.py            # View CRUD untuk Panduan Porsi Makan Sehat
+│   ├── test_calorie.py             # Unit tests modul Calorie Count
+│   ├── test_portion_guidance.py    # Unit tests modul Portion Guidance
+│   ├── test_reviews.py             # Unit tests modul Reviews
+│   ├── tests.py                    # Unit tests umum & autentikasi
+│   ├── urls.py                     # Routing URL aplikasi main
+│   └── views.py                    # View halaman utama (Landing Page), autentikasi, & AJAX Review
+├── static/                         # Aset statis (CSS, Gambar, JavaScript)
+│   ├── css/                        # CSS
+│   │   ├── add_object_style.css
+│   │   ├── auth.css
+│   │   ├── calorie_count.css
+│   │   ├── catalog.css
+│   │   ├── dark_theme.css
+│   │   ├── input.css               # Entrypoint Tailwind CSS
+│   │   ├── output.css              # Hasil build Tailwind CSS
+│   │   ├── portion_guidance.css
+│   │   ├── style.css
+│   │   └── toast.css
+│   ├── img/                        # Aset gambar 
+│   └── js/                         # JavaScript
+│       ├── auth.js
+│       ├── calorie_count.js
+│       ├── catalog.js
+│       ├── collapse.js
+│       ├── food_search.js
+│       ├── navbar.js
+│       ├── portion_guidance.js
+│       ├── reviews.js
+│       └── toast.js
+├── templates/                      # Template HTML Django
+│   ├── components/
+│   │   ├── add_reviews_form.html   # Modal/form tambah & edit review
+│   │   └── portion_guide_list.html # Komponen daftar panduan porsi
+│   ├── authentication.html         # Halaman Login & Register
+│   ├── base.html                   # Layout dasar aplikasi
+│   ├── calorie_count.html          # Halaman Kalkulator & Pelacak Kalori
+│   ├── catalog.html                # Halaman Katalog Nutrisi Makanan
+│   ├── footer.html                 # Komponen footer
+│   ├── header.html                 # Komponen navigasi (navbar)
+│   ├── index.html                  # Halaman utama (Homepage, About, Education, & Reviews)
+│   ├── portion_guidance.html       # Halaman Panduan Porsi Makan Sehat
+│   └── portion_guidance_form.html  # Form tambah/edit Panduan Porsi (Admin)
+├── .env                            # Variabel environment 
+├── .gitignore
+├── e2e_reviews_test.py             # Script pengujian End-to-End (E2E) menggunakan Selenium
+├── manage.py                       # Utilitas CLI manajemen proyek Django
+├── package.json                    # Konfigurasi script npm & dependensi Tailwind CSS
+└── requirements.txt                # Daftar dependensi paket Python
+```
+
+# AI Disclosure
+
+Dalam pengembangan **CALOREAT**, kelompok kami memanfaatkan AI secara bertanggung jawab sebagai alat bantu. Seluruh arsitektur, logika bisnis, integrasi antar-modul, dan pengujian akhir tetap diverifikasi serta dikendalikan penuh oleh anggota kelompok kami masing-masing.
+
+## 1. Model dan Tools AI yang Digunakan
+- **ChatGPT Luna 6**
+- **Claude Opus 5.5**
+- **Gemini 4 Argon** 
+
+## 2. Tujuan Penggunaan
+- **Interaktivitas Klien:** Membantu pembuatan JavaScript untuk menambah interaktivitas program kami.
+- **Pembuatan Unit Test:** Mempercepat pembuatan unit test..
+- **Styling & Responsivitas:** Membantu penyesuaian Layout CSS, dark theme, serta integrasi Tailwind CSS pada proyek kami.
+
+## 3. Strategi Prompting
+- **Context-First Prompting:** Kami selalu menyertakan konteks kode aktual (seperti definisi model di `main/models.py` atau endpoint di `main/urls.py`) sebelum meminta saran implementasi agar kode yang dihasilkan sesuai dengan skema proyek.
+- **Iterative & Modular Prompting:** Alih-alih meminta AI membuat satu halaman penuh sekaligus, kami memecah instruksi menjadi bagian-bagian kecil yang spesifik (contoh: membuat validasi form terlebih dahulu, lalu membuat view JSON, baru kemudian mengintegrasikan fetch AJAX di sisi klien).
+- **Verification-Driven Prompting:** Setiap kode atau *test case* yang dihasilkan AI langsung dijalankan melalui `python manage.py test` untuk memverifikasi kebenarannya secara empiris.
+
+## 4. Keterbatasan AI
+Selama proses pengembangan, kami menemukan beberapa keterbatasan dari output AI yang harus diperbaiki secara manual:
+- **Membuat kode yang redundant:** AI sering membuat kode yang sebenarnya tidak dibutuhkan sama sekali. Setiap kali AI selesai memberikan jawaban, kami tetap membaca setiap line untuk memastikan kode yang sudah dibuat memang dibutuhkan.
+- **Kemampuan desain yang kurang:** AI masih kesulitan dalam mendesain bagian sesuai dengan yang kita inginkan. Kami harus tetap mengubah beberapa bagian (terutama pada css) untuk menyesuaikan dengan yang benar-benar kami inginkan.
+- **Penggunaan API yang deprecated:** AI salah dalam menggunakan endpoint API untuk open food facts. Alih-alih menggunakan endpoint versi terbaru, AI menggunakan versi lama yang sudah tidak disupport. Kami secara manual membaca dokumentasi pada open food facts untuk mencari endpoint API yang baru tersebut.
