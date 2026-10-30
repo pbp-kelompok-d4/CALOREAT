@@ -230,6 +230,8 @@ html.dark .modal-close-btn:hover {
 /* Food Catalog (catalog.css) Dark Mode */
 html.dark .cat-page {
   --c-hero: #282112;
+  --c-hero-bg: linear-gradient(135deg, #2d2514 0%, #211b0f 100%);
+  --c-hero-border: var(--c-line);
   --c-card: #221c10;
   --c-line: #44381f;
   --c-ink: #f7f1dc;
@@ -238,103 +240,27 @@ html.dark .cat-page {
   --c-yel2: #e0a800;
   --c-chip: #332a18;
   --c-track: #3a301b;
-  color: var(--c-ink);
+  --c-ghost-bg: rgba(242, 183, 5, 0.08);
+  --c-ghost-hover: rgba(242, 183, 5, 0.16);
+  --c-ghost-hover-ink: #f7f1dc;
+  --c-mp-bg: #1f3318;
+  --c-mp-ink: #a8e08d;
+  --c-mp-border: rgba(168, 224, 141, 0.25);
+  --c-mc-bg: #382c11;
+  --c-mc-ink: #f7d26a;
+  --c-mc-border: rgba(247, 210, 106, 0.25);
+  --c-mf-bg: #3a1e1b;
+  --c-mf-ink: #f59c92;
+  --c-mf-border: rgba(245, 156, 146, 0.25);
 }
 
-html.dark .cat-hero {
-  background: linear-gradient(135deg, #2d2514 0%, #211b0f 100%);
-  border: 1px solid var(--c-line);
-  color: var(--c-ink);
-}
-
-html.dark .cat-hero h1 {
-  color: var(--c-ink);
-}
-
-html.dark .cat-hero p {
-  color: var(--c-mute);
-}
-
-html.dark .cat-tools input {
-  background: var(--c-card);
-  color: var(--c-ink);
-  border-color: var(--c-yel);
-}
-
-html.dark .cat-tools input::placeholder {
-  color: var(--c-mute);
-}
-
-html.dark .cat-card {
-  background: var(--c-card);
-  border-color: var(--c-line);
-  color: var(--c-ink);
-}
-
-html.dark .cat-card h3,
-html.dark .cat-kcal {
-  color: var(--c-ink);
-}
-
-html.dark .cat-sub,
-html.dark .cat-kcal small,
-html.dark .cat-count,
-html.dark .cat-note {
-  color: var(--c-mute);
-}
-
-html.dark .m-p {
-  background: #1f3318;
-  color: #a8e08d;
-  border: 1px solid rgba(168, 224, 141, 0.25);
-}
-
-html.dark .m-c {
-  background: #382c11;
-  color: #f7d26a;
-  border: 1px solid rgba(247, 210, 106, 0.25);
-}
-
-html.dark .m-f {
-  background: #3a1e1b;
-  color: #f59c92;
-  border: 1px solid rgba(245, 156, 146, 0.25);
-}
-
-html.dark .cat-btn--ghost {
-  background: rgba(242, 183, 5, 0.08);
-  border-color: var(--c-yel);
-  color: var(--c-ink);
-}
-
-html.dark .cat-btn--ghost:hover {
-  background: var(--c-yel);
-  color: #2b2108;
-}
-
-html.dark .cat-pg .cur {
-  color: #2b2108;
-}
-
-html.dark dialog.cat-dlg {
-  background: #221c10;
-  color: var(--ink);
-  border-color: var(--yellow);
-}
-
-html.dark .cat-dh p,
-html.dark .cat-x,
-html.dark .cat-db h4 {
-  color: #c7b78a;
-}
-
-html.dark .cat-tr {
-  background: #3a301b;
-}
-
-html.dark .cat-tg {
-  background: #332a18;
-  color: var(--ink);
+html.dark .cat-page .cat-dlg {
+  --c-card: #221c10;
+  --c-yel: #f2b705;
+  --c-ink: #f7f1dc;
+  --c-mute: #c7b78a;
+  --c-chip: #332a18;
+  --c-track: #3a301b;
 }
 
 /* Calorie Count, Portion Guidance & Auth Dark Mode */
