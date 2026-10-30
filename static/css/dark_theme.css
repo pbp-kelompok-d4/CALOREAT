@@ -387,6 +387,102 @@ html.dark .portion-guidance-card__button--secondary {
   border-color: var(--line);
 }
 
+/* Healthy Portion Guidance: replace light-only utility surfaces in dark mode. */
+html.dark .portion-guidance-form {
+  background: var(--plate);
+  border-color: var(--line);
+  color: var(--ink);
+}
+
+html.dark .portion-guidance-form input,
+html.dark .portion-guidance-form select,
+html.dark .portion-guidance-form textarea {
+  background: var(--card);
+  color: var(--ink);
+  border-color: var(--line);
+}
+
+html.dark .portion-guidance-form input::placeholder,
+html.dark .portion-guidance-form textarea::placeholder {
+  color: var(--muted);
+  opacity: 1;
+}
+
+html.dark .portion-guidance-form__back,
+html.dark .portion-guidance-form__header > p:last-child,
+html.dark .portion-guidance-form__hint,
+html.dark .portion-guidance-form__optional,
+html.dark .portion-guidance-form small {
+  color: var(--muted);
+}
+
+html.dark .portion-guidance-form__back:hover {
+  color: var(--ink);
+}
+
+html.dark .portion-guidance-form__actions a {
+  background: var(--card);
+  color: var(--ink);
+  border-color: var(--line);
+}
+
+html.dark .portion-guidance-form__actions a:hover {
+  background: var(--plate);
+  color: var(--ink);
+}
+
+html.dark .portion-guidance__nutrition li,
+html.dark .portion-guidance__message,
+html.dark .portion-guidance-card__portions li,
+html.dark .portion-guidance-card__personalized,
+html.dark .portion-guidance__empty,
+html.dark .portion-delete-modal__guide {
+  background: var(--plate);
+  color: var(--ink);
+  border-color: var(--line);
+}
+
+html.dark .portion-guidance-card__meal {
+  background: var(--hero-bottom);
+  color: var(--ink);
+}
+
+html.dark .portion-guidance-card__image {
+  background: var(--plate);
+}
+
+html.dark .portion-guidance-card__personalized p,
+html.dark .portion-guidance-card__personalized-hint {
+  color: var(--muted);
+}
+
+html.dark .portion-guidance-card__button--danger {
+  background: #3a1e1b;
+  border-color: #8f3b34;
+  color: #ffb4ab;
+}
+
+html.dark .portion-guidance-card__button--danger:hover {
+  background: #512722;
+  color: #ffd5cf;
+}
+
+html.dark .portion-delete-modal__icon {
+  background: #382c20;
+  color: #ffb4ab;
+}
+
+html.dark .portion-delete-modal__button--cancel {
+  background: var(--card);
+  color: var(--ink);
+  border-color: var(--line);
+}
+
+html.dark .portion-delete-modal__button--cancel:hover {
+  background: var(--plate);
+  color: var(--ink);
+}
+
 html.dark .auth-page {
   --auth-green: #22261b;
   --auth-green-dark: #181b13;

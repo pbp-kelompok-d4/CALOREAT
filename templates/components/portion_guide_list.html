@@ -1,67 +1,67 @@
 {% if guides %}
-    <div class="portion-guide-list">
+    <div class="portion-guide-list grid grid-cols-1 gap-5 min-[681px]:grid-cols-2">
         {% for guide in guides %}
-            <article class="portion-guidance-card">
+            <article class="portion-guidance-card min-w-0 overflow-hidden rounded-[22px] border border-line bg-card shadow-[0_8px_24px_rgba(42,33,8,0.06)]">
                 {% if guide.image_url %}
                     <img
-                        class="portion-guidance-card__image"
+                        class="portion-guidance-card__image block max-h-[260px] w-full bg-[#f9f5e7] object-cover"
                         src="{{ guide.image_url }}"
                         alt="{{ guide.title }}"
                         loading="lazy"
                     >
                 {% endif %}
 
-                <div class="portion-guidance-card__body">
-                    <span class="portion-guidance-card__meal">
+                <div class="portion-guidance-card__body p-[22px]">
+                    <span class="portion-guidance-card__meal mb-2.5 inline-block rounded-full bg-[#f9efc6] px-2.5 py-[5px] text-xs font-bold text-ink">
                         {{ guide.get_meal_type_display }}
                     </span>
 
-                    <h2>{{ guide.title }}</h2>
+                    <h2 class="mb-2.5 font-outfit text-2xl leading-tight">{{ guide.title }}</h2>
 
-                    <p class="portion-guidance-card__description">
+                    <p class="portion-guidance-card__description mb-5 leading-[1.65]">
                         {{ guide.description }}
                     </p>
 
-                    <h3>Recommended portions</h3>
+                    <h3 class="mb-3 font-outfit text-[1.05rem]">Recommended portions</h3>
 
-                    <ul class="portion-guidance-card__portions">
-                        <li>
+                    <ul class="portion-guidance-card__portions grid list-none gap-2.5 p-0">
+                        <li class="rounded-xl bg-[#f9f5e7] px-3.5 py-3 leading-normal">
                             <strong>Vegetables</strong><br>
                             {{ guide.vegetables }}
                         </li>
-                        <li>
+                        <li class="rounded-xl bg-[#f9f5e7] px-3.5 py-3 leading-normal">
                             <strong>Protein</strong><br>
                             {{ guide.protein }}
                         </li>
-                        <li>
+                        <li class="rounded-xl bg-[#f9f5e7] px-3.5 py-3 leading-normal">
                             <strong>Carbohydrates</strong><br>
                             {{ guide.carbohydrates }}
                         </li>
                     </ul>
 
                     {% if guide.personalized_portions %}
-                        <section class="portion-guidance-card__personalized">
-                            <h3>Your Estimated Portions</h3>
+                        <section class="portion-guidance-card__personalized mt-5 rounded-2xl border border-line bg-[#f9f5e7] p-[18px]">
+                            <h3 class="mb-2 font-outfit text-[1.05rem]">Your Estimated Portions</h3>
 
-                            <p>
+                            <p class="text-muted leading-relaxed">
                                 Based on a meal target of
                                 {{ guide.personalized_portions.target_kcal }} kcal.
                             </p>
 
-                            <ul>
-                                <li>
+                            <ul class="mt-3 list-disc pl-5">
+                                <li class="my-1.5">
                                     Vegetables:
                                     <strong>
                                         {{ guide.personalized_portions.vegetables_grams }} g
                                     </strong>
                                 </li>
-                                <li>
+                                <li class="my-1.5">
                                     Protein:
                                     <strong>
                                         {{ guide.personalized_portions.protein_grams }} g
                                     </strong>
                                 </li>
-                                <li>
+                                <li class="my-1.5">
                                     Carbohydrates:
                                     <strong>
                                         {{ guide.personalized_portions.carbohydrates_grams }} g
@@ -70,28 +70,28 @@
                             </ul>
                         </section>
                     {% elif not nutrition_needs.complete %}
-                        <p class="portion-guidance-card__personalized-hint">
+                        <p class="portion-guidance-card__personalized-hint text-muted leading-relaxed">
                             Complete your calorie profile to see estimated
                             portion quantities.
                         </p>
                     {% else %}
-                        <p class="portion-guidance-card__personalized-hint">
+                        <p class="portion-guidance-card__personalized-hint text-muted leading-relaxed">
                             Personalized quantities aren't available for this guide yet.
                             Please check back later.
                         </p>
                     {% endif %}
 
                     {% if user.is_staff %}
-                        <div class="portion-guidance-card__actions">
+                        <div class="portion-guidance-card__actions mt-5 flex flex-wrap gap-2.5">
                             <a
-                                class="portion-guidance-card__button portion-guidance-card__button--secondary"
+                                class="portion-guidance-card__button portion-guidance-card__button--secondary inline-flex min-h-11 items-center justify-center rounded-full border border-line px-[18px] py-2.5 font-bold hover:bg-card"
                                 href="{% url 'main:portion_edit' guide.id %}"
                             >
                                 Edit
                             </a>
 
                             <button
-                                class="portion-guidance-card__button portion-guidance-card__button--danger"
+                                class="portion-guidance-card__button portion-guidance-card__button--danger inline-flex min-h-11 items-center justify-center rounded-full border border-[#b3261e] bg-[#fff5f4] px-[18px] py-2.5 font-bold text-[#8f1d18] hover:bg-[#ffe3e0]"
                                 type="button"
                                 data-delete-url="{% url 'main:portion_delete' guide.id %}"
                                 data-guide-title="{{ guide.title }}"
@@ -106,8 +106,8 @@
         {% endfor %}
     </div>
 {% else %}
-    <div class="portion-guidance__empty">
-        <h2>No portion guides yet</h2>
+    <div class="portion-guidance__empty rounded-[20px] border border-dashed border-line bg-[#f9f5e7] px-5 py-9 text-center">
+        <h2 class="mb-2 font-outfit">No portion guides yet</h2>
         <p>
             {% if selected_meal %}
                 There are no guides for this meal type yet.

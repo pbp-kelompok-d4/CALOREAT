@@ -3,47 +3,47 @@
 {% load static %}
 
 {% block content %}
-<section class="portion-guidance-form">
+<section class="portion-guidance-form mx-auto my-8 mb-14 w-[calc(100%-32px)] max-w-[760px] rounded-3xl border border-line bg-[#f9f5e7] p-[clamp(22px,5vw,40px)] text-ink">
     <a
-        class="portion-guidance-form__back"
+        class="portion-guidance-form__back mb-6 inline-block font-semibold text-muted hover:text-ink"
         href="{% url 'main:portion_guidance' %}"
     >
         &larr; Back to Portion Guides
     </a>
 
-    <header class="portion-guidance-form__header">
-        <p class="portion-guidance-form__eyebrow">Healthy Portion Guidance</p>
-        <h1>{{ page_title }}</h1>
-        <p>
+    <header class="portion-guidance-form__header mb-7">
+        <p class="portion-guidance-form__eyebrow mb-2 text-xs font-bold tracking-[0.1em] text-muted uppercase">Healthy Portion Guidance</p>
+        <h1 class="mb-3 font-outfit text-[clamp(2rem,5vw,3.5rem)] leading-[1.1]">{{ page_title }}</h1>
+        <p class="max-w-[560px] text-muted leading-[1.7]">
             Create a balanced meal guide by describing the recommended
             portions for vegetables, protein, and carbohydrates.
         </p>
     </header>
 
     {% if form.non_field_errors %}
-        <div class="portion-guidance-form__errors">
+        <div class="portion-guidance-form__errors mb-5 rounded-xl border border-[#b3261e] px-4 py-3 text-[#8f1d18]">
             {{ form.non_field_errors }}
         </div>
     {% endif %}
 
-    <form method="POST" class="portion-guidance-form__fields">
+    <form method="POST" class="portion-guidance-form__fields grid gap-5 border-t border-line pt-6">
         {% csrf_token %}
 
         {% for field in form %}
-            <div class="portion-guidance-form__field">
-                <label for="{{ field.id_for_label }}">
+            <div class="portion-guidance-form__field min-w-0">
+                <label class="mb-2 block font-bold" for="{{ field.id_for_label }}">
                     {{ field.label }}
                     {% if field.field.required %}
-                        <span class="portion-guidance-form__required">*</span>
+                        <span class="portion-guidance-form__required text-[#b3261e]">*</span>
                     {% else %}
-                        <span class="portion-guidance-form__optional">
+                        <span class="portion-guidance-form__optional text-xs font-normal text-muted">
                             (optional)
                         </span>
                     {% endif %}
                 </label>
 
                 {% if field.name == "vegetables" or field.name == "protein" or field.name == "carbohydrates" %}
-                    <p class="portion-guidance-form__hint">
+                    <p class="portion-guidance-form__hint mb-2 ml-0 mt-[-2px] text-sm text-muted leading-normal">
                         Describe the suggested portion for this food group.
                     </p>
                 {% endif %}
@@ -51,23 +51,23 @@
                 {{ field }}
 
                 {% if field.help_text %}
-                    <small>{{ field.help_text }}</small>
+                    <small class="mt-1.5 block text-muted">{{ field.help_text }}</small>
                 {% endif %}
 
                 {% for error in field.errors %}
-                    <p class="portion-guidance-form__error">
+                    <p class="portion-guidance-form__error mt-2 text-sm text-[#b3261e]">
                         {{ error }}
                     </p>
                 {% endfor %}
             </div>
         {% endfor %}
 
-        <div class="portion-guidance-form__actions">
-            <button type="submit">
+        <div class="portion-guidance-form__actions flex flex-wrap items-center gap-3 pt-2 max-[480px]:flex-col max-[480px]:items-stretch">
+            <button class="inline-flex min-h-11 items-center justify-center rounded-full border border-amber bg-amber px-[18px] py-2.5 font-bold text-ink hover:bg-[#dba500] active:translate-y-px max-[480px]:w-full" type="submit">
                 {{ submit_label }}
             </button>
 
-            <a href="{% url 'main:portion_guidance' %}">
+            <a class="inline-flex min-h-11 items-center justify-center rounded-full border border-line px-[18px] py-2.5 font-bold text-ink hover:bg-card max-[480px]:w-full" href="{% url 'main:portion_guidance' %}">
                 Cancel
             </a>
         </div>
