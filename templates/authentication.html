@@ -1,121 +1,125 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block content %}
-<link rel="stylesheet" href="{% static 'css/authentication_page.css' %}">
+{% block extra_head %}
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Outfit:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{% static 'css/auth.css' %}">
+{% endblock extra_head %}
 
-<main class="auth-page" data-active="{{ active }}">
+{% block content %}
+
+<main class="auth-page relative isolate grid min-h-[560px] flex-1 grid-cols-[1.2fr_1fr] gap-2 overflow-hidden bg-[var(--card)] p-0 text-[var(--ink)] max-[768px]:flex max-[768px]:min-h-0 max-[768px]:flex-col max-[768px]:gap-0 max-[768px]:overflow-x-hidden" data-active="{{ active }}">
 
   <!-- PANEL KIRI -->
-  <section class="auth-visual">
-    <div class="auth-slides">
-      <img class="auth-slide" src="{% static 'img/auth_page/indomie.svg' %}" alt="gambar mie rebus">
-      <img class="auth-slide" src="{% static 'img/auth_page/nasi-goreng.svg' %}" alt="gambar nasi goreng">
-      <img class="auth-slide" src="{% static 'img/auth_page/nasi-uduk.svg' %}" alt="gambar nasi uduk">
+  <section class="auth-visual flex min-h-0 flex-col items-center justify-center rounded-[32px] bg-[var(--hero-top)] p-8 max-[768px]:flex-none max-[768px]:justify-start max-[768px]:px-5 max-[768px]:pt-4 max-[768px]:pb-14">
+    <div class="auth-slides relative h-[clamp(260px,44vh,440px)] w-full flex-none max-[768px]:h-[150px] max-[768px]:max-w-[260px]">
+      <img class="auth-slide absolute inset-0 h-full w-full object-contain opacity-0" src="{% static 'img/auth_page/indomie.svg' %}" alt="gambar mie rebus">
+      <img class="auth-slide absolute inset-0 h-full w-full object-contain opacity-0" src="{% static 'img/auth_page/nasi-goreng.svg' %}" alt="gambar nasi goreng">
+      <img class="auth-slide absolute inset-0 h-full w-full object-contain opacity-0" src="{% static 'img/auth_page/nasi-uduk.svg' %}" alt="gambar nasi uduk">
     </div>
 
-    <h2 class="auth-tagline">Know your meal,<br>own your goal.</h2>
+    <h2 class="auth-tagline mt-6 mb-4 text-center font-outfit text-[clamp(1.75rem,2.6vw,2.25rem)] leading-[1.15] font-bold text-[var(--ink)] max-[768px]:mt-2 max-[768px]:mb-0 max-[768px]:text-2xl">Know your meal,<br>own your goal.</h2>
 
-    <ul class="auth-points">
-      <li>Look up calories for any food</li>
-      <li>Calculate your daily needs</li>
-      <li>Stay on track with your goal</li>
+    <ul class="auth-points m-0 grid list-none gap-2 p-0 text-[0.95rem] text-[var(--ink)] max-[768px]:hidden">
+      <li class="flex items-center gap-[10px] before:h-2 before:w-2 before:flex-none before:rounded-full before:bg-[var(--yellow)] before:content-['']">Look up calories for any food</li>
+      <li class="flex items-center gap-[10px] before:h-2 before:w-2 before:flex-none before:rounded-full before:bg-[var(--yellow)] before:content-['']">Calculate your daily needs</li>
+      <li class="flex items-center gap-[10px] before:h-2 before:w-2 before:flex-none before:rounded-full before:bg-[var(--yellow)] before:content-['']">Stay on track with your goal</li>
     </ul>
   </section>
 
   <!-- PANEL KANAN -->
-  <section class="auth-panel">
-    <div class="auth-card">
+  <section class="auth-panel flex min-h-0 items-center justify-center rounded-[32px] bg-[var(--auth-green)] p-6 max-[768px]:relative max-[768px]:mt-[-28px] max-[768px]:flex-1 max-[768px]:items-start max-[768px]:px-5 max-[768px]:pt-7 max-[768px]:pb-8 max-[768px]:shadow-[0_-6px_20px_rgba(42,26,5,0.08)]">
+    <div class="auth-card w-full max-w-[480px] max-[768px]:max-w-none">
 
       
-      <div class="auth-stack">
-        <h1 class="auth-title {% if active == 'login' %}is-active{% endif %}" data-pane="login">Welcome back</h1>
-        <h1 class="auth-title {% if active == 'register' %}is-active{% endif %}" data-pane="register">Create your account</h1>
+      <div class="auth-stack grid">
+        <h1 class="auth-title mb-6 text-center font-outfit text-[clamp(1.9rem,2.8vw,2.5rem)] leading-[1.1] font-extrabold text-[var(--ink)] max-[768px]:mb-4 max-[768px]:text-[1.75rem] {% if active == 'login' %}is-active{% endif %}" data-pane="login">Welcome back</h1>
+        <h1 class="auth-title mb-6 text-center font-outfit text-[clamp(1.9rem,2.8vw,2.5rem)] leading-[1.1] font-extrabold text-[var(--ink)] max-[768px]:mb-4 max-[768px]:text-[1.75rem] {% if active == 'register' %}is-active{% endif %}" data-pane="register">Create your account</h1>
       </div>
 
       <!-- TOGGLE BUTTON  -->
-      <nav class="auth-toggle" aria-label="Pilih halaman">
+      <nav class="auth-toggle mb-6 grid grid-cols-2 gap-1 rounded-full border-2 border-[var(--auth-green-dark)] bg-[var(--auth-green-dark)] p-1 max-[768px]:mb-5" aria-label="Pilih halaman">
         <a href="{% url 'main:login' %}" data-target="login"
-           class="{% if active == 'login' %}is-active{% endif %}"
+           class="rounded-full py-2.5 text-center text-[0.9rem] font-medium text-[var(--muted)] no-underline transition-[color,background-color] duration-200 hover:text-[var(--ink)] max-[768px]:flex max-[768px]:min-h-11 max-[768px]:items-center max-[768px]:justify-center max-[768px]:py-0 max-[768px]:text-base {% if active == 'login' %}is-active{% endif %}"
            {% if active == 'login' %}aria-current="page"{% endif %}>Log in</a>
         <a href="{% url 'main:register' %}" data-target="register"
-           class="{% if active == 'register' %}is-active{% endif %}"
+           class="rounded-full py-2.5 text-center text-[0.9rem] font-medium text-[var(--muted)] no-underline transition-[color,background-color] duration-200 hover:text-[var(--ink)] max-[768px]:flex max-[768px]:min-h-11 max-[768px]:items-center max-[768px]:justify-center max-[768px]:py-0 max-[768px]:text-base {% if active == 'register' %}is-active{% endif %}"
            {% if active == 'register' %}aria-current="page"{% endif %}>Sign up</a>
       </nav>
 
       <!-- FORM LOGIN DAN FORM SIGN UP-->
-      <div class="auth-stack">
+      <div class="auth-stack grid">
 
         <!-- FORM LOGIN -->
         <div data-pane="login" class="{% if active == 'login' %}is-active{% endif %}">
-          <form class="auth-form" method="post" action="{% url 'main:login' %}">
+          <form class="auth-form grid content-start gap-5" method="post" action="{% url 'main:login' %}">
             {% csrf_token %}
             {% if next %}<input type="hidden" name="next" value="{{ next }}">{% endif %}
 
             {% for error in login_form.non_field_errors %}
-              <p class="auth-error">{{ error }}</p>
+              <p class="auth-error m-0 text-[0.78rem] font-medium text-[#b3261e]">{{ error }}</p>
             {% endfor %}
 
-            <div class="auth-field {% if login_form.username.errors %}has-error{% endif %}">
-              <label for="{{ login_form.username.id_for_label }}">Email</label>
+            <div class="auth-field grid gap-1.5 {% if login_form.username.errors %}has-error{% endif %}">
+              <label class="text-[0.8rem] font-semibold text-[var(--ink)] max-[768px]:text-sm" for="{{ login_form.username.id_for_label }}">Email</label>
               {{ login_form.username }}
               {% for error in login_form.username.errors %}
-                <p class="auth-error">{{ error }}</p>
+                <p class="auth-error m-0 text-[0.78rem] font-medium text-[#b3261e]">{{ error }}</p>
               {% endfor %}
             </div>
 
-            <div class="auth-field {% if login_form.password.errors %}has-error{% endif %}">
-              <label for="{{ login_form.password.id_for_label }}">Password</label>
+            <div class="auth-field grid gap-1.5 {% if login_form.password.errors %}has-error{% endif %}">
+              <label class="text-[0.8rem] font-semibold text-[var(--ink)] max-[768px]:text-sm" for="{{ login_form.password.id_for_label }}">Password</label>
               {{ login_form.password }}
               {% for error in login_form.password.errors %}
-                <p class="auth-error">{{ error }}</p>
+                <p class="auth-error m-0 text-[0.78rem] font-medium text-[#b3261e]">{{ error }}</p>
               {% endfor %}
             </div>
 
-            <div class="auth-remember">
+            <div class="auth-remember mt-[-4px] flex items-center gap-2 text-[0.8rem] text-[var(--muted)] max-[768px]:mt-0 max-[768px]:min-h-11 max-[768px]:gap-3 max-[768px]:text-[0.95rem]">
               {{ login_form.remember_me }}
-              <label for="{{ login_form.remember_me.id_for_label }}">Remember me</label>
+              <label class="cursor-pointer" for="{{ login_form.remember_me.id_for_label }}">Remember me</label>
             </div>
 
-            <button type="submit" class="auth-submit">Log in</button>
+            <button type="submit" class="auth-submit mt-1 cursor-pointer rounded-[14px] border-0 bg-[var(--yellow)] py-3.5 text-[0.95rem] font-semibold text-[var(--ink)] shadow-[0_8px_18px_rgba(242,183,5,0.3)] transition-[background-color,transform] duration-150 hover:bg-[var(--yellow-dark)] active:translate-y-px focus-visible:outline-3 focus-visible:outline-[var(--ink)] focus-visible:outline-offset-2 max-[768px]:h-[54px] max-[768px]:rounded-2xl max-[768px]:py-0 max-[768px]:text-[1.05rem]">Log in</button>
           </form>
         </div>
 
         <!-- FORM SIGN UP -->
         <div data-pane="register" class="{% if active == 'register' %}is-active{% endif %}">
-          <form class="auth-form" method="post" action="{% url 'main:register' %}" novalidate>
+          <form class="auth-form grid content-start gap-5 max-[768px]:gap-4" method="post" action="{% url 'main:register' %}" novalidate>
             {% csrf_token %}
 
             {% for error in register_form.non_field_errors %}
-              <p class="auth-error">{{ error }}</p>
+              <p class="auth-error m-0 text-[0.78rem] font-medium text-[#b3261e]">{{ error }}</p>
             {% endfor %}
 
-            <div class="auth-field {% if register_form.full_name.errors %}has-error{% endif %}">
-              <label for="{{ register_form.full_name.id_for_label }}">Full name</label>
+            <div class="auth-field grid gap-1.5 {% if register_form.full_name.errors %}has-error{% endif %}">
+              <label class="text-[0.8rem] font-semibold text-[var(--ink)] max-[768px]:text-sm" for="{{ register_form.full_name.id_for_label }}">Full name</label>
               {{ register_form.full_name }}
               {% for error in register_form.full_name.errors %}
-                <p class="auth-error">{{ error }}</p>
+                <p class="auth-error m-0 text-[0.78rem] font-medium text-[#b3261e]">{{ error }}</p>
               {% endfor %}
             </div>
 
-            <div class="auth-field {% if register_form.email.errors %}has-error{% endif %}">
-              <label for="{{ register_form.email.id_for_label }}">Email</label>
+            <div class="auth-field grid gap-1.5 {% if register_form.email.errors %}has-error{% endif %}">
+              <label class="text-[0.8rem] font-semibold text-[var(--ink)] max-[768px]:text-sm" for="{{ register_form.email.id_for_label }}">Email</label>
               {{ register_form.email }}
               {% for error in register_form.email.errors %}
-                <p class="auth-error">{{ error }}</p>
+                <p class="auth-error m-0 text-[0.78rem] font-medium text-[#b3261e]">{{ error }}</p>
               {% endfor %}
             </div>
 
-            <div class="auth-field {% if register_form.password.errors %}has-error{% endif %}">
-              <label for="{{ register_form.password.id_for_label }}">Password</label>
+            <div class="auth-field grid gap-1.5 {% if register_form.password.errors %}has-error{% endif %}">
+              <label class="text-[0.8rem] font-semibold text-[var(--ink)] max-[768px]:text-sm" for="{{ register_form.password.id_for_label }}">Password</label>
               {{ register_form.password }}
-              <p class="auth-hint">At least 8 characters.</p>
+              <p class="auth-hint m-0 text-[0.72rem] text-[var(--muted)] max-[768px]:text-[0.8rem]">At least 8 characters.</p>
               {% for error in register_form.password.errors %}
-                <p class="auth-error">{{ error }}</p>
+                <p class="auth-error m-0 text-[0.78rem] font-medium text-[#b3261e]">{{ error }}</p>
               {% endfor %}
             </div>
 
-            <button type="submit" class="auth-submit">Create account</button>
+            <button type="submit" class="auth-submit mt-1 cursor-pointer rounded-[14px] border-0 bg-[var(--yellow)] py-3.5 text-[0.95rem] font-semibold text-[var(--ink)] shadow-[0_8px_18px_rgba(242,183,5,0.3)] transition-[background-color,transform] duration-150 hover:bg-[var(--yellow-dark)] active:translate-y-px focus-visible:outline-3 focus-visible:outline-[var(--ink)] focus-visible:outline-offset-2 max-[768px]:h-[54px] max-[768px]:rounded-2xl max-[768px]:py-0 max-[768px]:text-[1.05rem]">Create account</button>
           </form>
         </div>
 
