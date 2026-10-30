@@ -2,6 +2,7 @@
 @import "tailwindcss/utilities.css";
 
 @source "../../templates";
+@source "../js/calorie_count.js";
 
 @theme {
   --color-card: #fffbea;
