@@ -3,6 +3,7 @@
 
 @source "../../templates";
 @source "../js/calorie_count.js";
+@source "../js/catalog.js";
 
 @theme {
   --color-card: #fffbea;
