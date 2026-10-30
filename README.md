@@ -45,7 +45,7 @@ Public API yang kami gunakan bersumber dari basis data Open Food Facts: [https:/
 
 # Tampilan Aplikasi 
 
-| Homepage & Reviews | Halaman Autentikasi (Login & Register) |
+| Homepage | Halaman Autentikasi |
 | :---: | :---: |
 | ![Homepage](static/img/screenshots/homepage.png) | ![Authentication](static/img/screenshots/auth.png) |
 
