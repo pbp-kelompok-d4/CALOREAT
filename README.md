@@ -245,5 +245,5 @@ Dalam pengembangan **CALOREAT**, kelompok kami memanfaatkan AI secara bertanggun
 ## 4. Keterbatasan AI
 Selama proses pengembangan, kami menemukan beberapa keterbatasan dari output AI yang harus diperbaiki secara manual:
 - **Membuat kode yang redundant:** AI sering membuat kode yang sebenarnya tidak dibutuhkan sama sekali. Setiap kali AI selesai memberikan jawaban, kami tetap membaca setiap line untuk memastikan kode yang sudah dibuat memang dibutuhkan.
-- **Kemampuan desain yang kurang:** AI masih kesulitan dalam mendesain bagian sesuai dengan yang kita inginkan. Kami harus tetap mengubah beberapa bagian (terutama pada css) untuk menyesuaikan dengan yang benar-benar kami inginkan.
-- **Penggunaan API yang deprecated:** AI salah dalam menggunakan endpoint API untuk open food facts. Alih-alih menggunakan endpoint versi terbaru, AI menggunakan versi lama yang sudah tidak disupport. Kami secara manual membaca dokumentasi pada open food facts untuk mencari endpoint API yang baru tersebut.
+- **Kemampuan desain pada css yang kurang:** AI masih kesulitan dalam menyusun css sesuai dengan desain yang kami inginkan. Kami harus tetap mengubah beberapa bagian (terutama pada css) untuk menyesuaikan dengan desain halaman yang benar-benar kami inginkan.
+- **Menggunakan API yang deprecated:** AI salah dalam menggunakan endpoint API untuk Open Food Facts. Alih-alih menggunakan endpoint versi terbaru, AI menggunakan versi lama yang sudah tidak disupport. Kami secara manual membaca dokumentasi pada open food facts untuk mencari endpoint API yang baru tersebut.
