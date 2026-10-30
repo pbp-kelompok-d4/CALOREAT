@@ -222,3 +222,28 @@ CALOREAT/
 ├── package.json                    # Konfigurasi script npm & dependensi Tailwind CSS
 └── requirements.txt                # Daftar dependensi paket Python
 ```
+
+# AI Disclosure
+
+Dalam pengembangan **CALOREAT**, kelompok kami memanfaatkan AI secara bertanggung jawab sebagai alat bantu. Seluruh arsitektur, logika bisnis, integrasi antar-modul, dan pengujian akhir tetap diverifikasi serta dikendalikan penuh oleh anggota kelompok kami masing-masing.
+
+## 1. Model dan Tools AI yang Digunakan
+- **ChatGPT Luna 6**
+- **Claude Opus 5.5**
+- **Gemini 4 Argon** 
+
+## 2. Tujuan Penggunaan
+- **Interaktivitas Klien:** Membantu pembuatan JavaScript untuk menambah interaktivitas program kami.
+- **Pembuatan Unit Test:** Mempercepat pembuatan unit test..
+- **Styling & Responsivitas:** Membantu penyesuaian Layout CSS, dark theme, serta integrasi Tailwind CSS pada proyek kami.
+
+## 3. Strategi Prompting
+- **Context-First Prompting:** Kami selalu menyertakan konteks kode aktual (seperti definisi model di `main/models.py` atau endpoint di `main/urls.py`) sebelum meminta saran implementasi agar kode yang dihasilkan sesuai dengan skema proyek.
+- **Iterative & Modular Prompting:** Alih-alih meminta AI membuat satu halaman penuh sekaligus, kami memecah instruksi menjadi bagian-bagian kecil yang spesifik (contoh: membuat validasi form terlebih dahulu, lalu membuat view JSON, baru kemudian mengintegrasikan fetch AJAX di sisi klien).
+- **Verification-Driven Prompting:** Setiap kode atau *test case* yang dihasilkan AI langsung dijalankan melalui `python manage.py test` untuk memverifikasi kebenarannya secara empiris.
+
+## 4. Keterbatasan AI
+Selama proses pengembangan, kami menemukan beberapa keterbatasan dari output AI yang harus diperbaiki secara manual:
+- **Membuat kode yang redundant:** AI sering membuat kode yang sebenarnya tidak dibutuhkan sama sekali. Setiap kali AI selesai memberikan jawaban, kami tetap membaca setiap line untuk memastikan kode yang sudah dibuat memang dibutuhkan.
+- **Kemampuan desain yang kurang:** AI masih kesulitan dalam mendesain bagian sesuai dengan yang kita inginkan. Kami harus tetap mengubah beberapa bagian (terutama pada css) untuk menyesuaikan dengan yang benar-benar kami inginkan.
+- **Penggunaan API yang deprecated:** AI salah dalam menggunakan endpoint API untuk open food facts. Alih-alih menggunakan endpoint versi terbaru, AI menggunakan versi lama yang sudah tidak disupport. Kami secara manual membaca dokumentasi pada open food facts untuk mencari endpoint API yang baru tersebut.
