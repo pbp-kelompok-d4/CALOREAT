@@ -39,13 +39,27 @@ Public API yang kami gunakan bersumber dari basis data Open Food Facts: [https:/
 
 - login sebagai admin: Dapat merubah/menambahkan informasi pada katalog nutrisi dan panduan makan sehat, serta menghapus reviews dari seluruh pengguna lain.
 
-# Tautan Figma
+# Tautan Penting
+- Link Figma : https://www.figma.com/design/V68iKwXFe8rn1on5zE9wi6/Caloreat?node-id=0-1&t=RW25UIKrE2cFGLEP-1
+- Aplikasi (PWS Deployment): https://muhammad-fachri54-caloreat.pws.cs.ui.ac.id
 
-Link Figma : https://www.figma.com/design/V68iKwXFe8rn1on5zE9wi6/Caloreat?node-id=0-1&t=RW25UIKrE2cFGLEP-1
+# Tampilan Aplikasi 
 
+| Homepage & Reviews | Halaman Autentikasi (Login & Register) |
+| :---: | :---: |
+| ![Homepage](static/img/screenshots/homepage.png) | ![Authentication](static/img/screenshots/auth.png) |
 
+| Katalog Nutrisi Makanan | Kalkulator & Pelacak Kalori |
+| :---: | :---: |
+| ![Food Catalog](static/img/screenshots/catalog.png) | ![Calorie Count](static/img/screenshots/calorie_count.png) |
 
+| Panduan Porsi Makan Sehat |
+| :---: |
+| ![Portion Guidance](static/img/screenshots/portion_guidance.png) |
 
+| Dark Theme |
+| :---: |
+| ![Dark Theme](static/img/screenshots/CALOREAT_dark_theme.gif) |
 
 ## Calorie Count
 
