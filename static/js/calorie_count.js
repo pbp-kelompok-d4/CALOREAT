@@ -15,9 +15,94 @@
   let pendingUndo = null;
 
   const $ = (selector, root = document) => root.querySelector(selector);
+  // Keep utility classes in static strings so Tailwind can scan every generated state.
+  const utilityClasses = {
+    "region-state": "grid min-h-[92px] place-items-center p-[14px] text-center text-sm leading-[1.45] text-[var(--calorie-muted)]",
+    "is-error": "text-[#9b3329]",
+    "region-retry": "justify-self-center rounded-full border border-[#8d382e] bg-[#fffef5] px-[13px] py-1 text-[#783027] font-bold",
+    "calorie-ring__text": "relative z-[1] flex flex-col items-center text-center",
+    "calorie-ring__value": "font-outfit text-[clamp(23px,2.5vw,34px)] leading-[1.05] font-bold tabular-nums max-[640px]:text-[22px]",
+    "calorie-ring__unit": "mt-1 text-[13px] text-[var(--calorie-muted)] max-[640px]:text-[11px]",
+    "calorie-ring": "relative grid aspect-square w-[min(100%,176px)] justify-self-center place-items-center rounded-full",
+    "nutrition-bars": "grid gap-[17px] max-[640px]:gap-[13px]",
+    "nutrition-bar": "min-w-0",
+    "nutrition-bar__label": "mb-1.5 flex justify-between gap-[10px] text-[13px] max-[640px]:text-[11px]",
+    "nutrition-bar__value": "whitespace-nowrap text-right text-[var(--calorie-muted)]",
+    "nutrition-bar__track": "h-[9px] overflow-hidden rounded-full bg-[#f0e8ca]",
+    "nutrition-bar__fill": "block h-full rounded-[inherit] bg-[var(--calorie-amber)] transition-[width] duration-[350ms]",
+    "meal-group__title": "font-outfit text-[15px] font-bold",
+    "meal-group__total": "text-[13px] text-[var(--calorie-muted)]",
+    "summary-profile-note": "col-span-full mt-3 text-center text-sm text-[var(--calorie-muted)]",
+    "remaining-kcal": "col-span-full mt-3 text-center text-sm text-[var(--calorie-muted)]",
+    "remaining-kcal-over": "font-bold text-[#a74337]",
+    "meal-group": "border-b border-[#eee3b5] py-[7px] pb-1 last:border-0",
+    "meal-group__heading": "mb-[5px] flex justify-between gap-[10px]",
+    "empty-meal-action": "min-h-[30px] cursor-pointer border-0 bg-transparent px-1 py-0.5 font-semibold text-[#725923] hover:underline",
+    "meal-entry": "border-t border-[#f3edda] py-[7px]",
+    "meal-entry__main": "flex justify-between gap-3",
+    "meal-entry__info": "grid min-w-0 gap-0.5",
+    "meal-entry__name": "overflow-hidden text-ellipsis whitespace-nowrap text-[13px]",
+    "meal-entry__brand": "mt-[3px] text-xs text-[var(--calorie-muted)]",
+    "meal-entry__amount": "text-xs text-[var(--calorie-muted)]",
+    "meal-entry__kcal": "shrink-0 text-[13px]",
+    "meal-entry__actions": "mt-1 grid grid-cols-[minmax(0,1fr)_auto] items-end gap-x-2 gap-y-1",
+    "entry-edit": "min-w-0",
+    "entry-edit__summary": "w-fit max-w-full cursor-pointer bg-transparent px-0 py-0.5 text-xs text-[var(--calorie-muted)] underline decoration-1 underline-offset-2",
+    "entry-edit__form": "mt-1 grid w-fit min-w-0 max-w-full grid-cols-[minmax(0,1fr)_minmax(0,1fr)_auto] items-end gap-1.5 rounded-xl border border-[var(--calorie-line)] bg-[#fbf6df] p-1.5 max-[400px]:w-full max-[400px]:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] max-[400px]:gap-x-2 max-[400px]:gap-y-1.5",
+    "entry-edit__label": "grid min-w-0 gap-[3px] text-[11px] text-[var(--calorie-muted)]",
+    "entry-edit__control": "box-border h-[34px] w-[108px] min-w-0 max-w-full rounded-lg border border-[#cbb968] bg-[#fffef5] px-2 text-[13px] text-[var(--calorie-ink)] focus:outline-none",
+    "entry-edit__save": "box-border h-[34px] cursor-pointer self-end rounded-full border-0 bg-[var(--calorie-amber)] px-2.5 text-[13px] font-bold text-[#2c2308] transition-colors hover:bg-[#dba500] max-[400px]:col-span-full max-[400px]:justify-self-end",
+    "text-button": "cursor-pointer border-0 bg-transparent px-0 py-0.5 text-xs text-[#6f581c] underline decoration-1 underline-offset-2",
+    "meal-entry__delete": "col-start-2 row-start-1 self-end justify-self-end",
+    "is-danger": "text-[#8e372e]",
+    "form-error": "mt-3 text-[13px] text-[#9b3329]",
+    "needs-list": "my-1 mb-3.5 grid gap-[10px]",
+    "needs-row": "flex justify-between gap-[10px] rounded-xl bg-[#e7efd9] px-[13px] py-[11px] text-sm",
+    "needs-empty": "grid flex-1 content-center gap-[14px]",
+    "needs-setup": "!m-0 !min-h-[38px] justify-self-start",
+    "needs-empty__copy": "text-sm leading-[1.5] text-[var(--calorie-muted)]",
+    "needs-row__value": "tabular-nums",
+    "needs-edit": "min-h-[34px] cursor-pointer self-start rounded-full border border-[#b9a762] bg-[#fffef5] px-3 py-1.5 font-semibold text-[var(--calorie-ink)]",
+    "estimate-note": "mt-auto pt-4 text-xs text-[var(--calorie-muted)]",
+    "week-caption": "mt-[15px] text-center text-xs leading-[1.45] text-[var(--calorie-muted)]",
+    "product-add__meal": "min-h-[35px] max-w-[125px] rounded-[9px] border border-[#d7c777] bg-[#fffef5] px-[9px] py-1",
+    "food-result": "grid min-h-[63px] grid-cols-[44px_minmax(0,1fr)_auto] items-center gap-[11px] border-b border-[#eee3b5] px-[5px] py-[9px] max-[640px]:grid-cols-[38px_minmax(0,1fr)] max-[640px]:gap-2",
+    "is-missing": "opacity-[0.78]",
+    "food-result__image": "h-[42px] w-[42px] rounded-[10px] bg-[#f7edbf] object-contain max-[640px]:h-9 max-[640px]:w-9",
+    "food-result__placeholder": "grid h-[42px] w-[42px] place-items-center rounded-[10px] bg-[#f7edbf] text-xl text-[#76632f] max-[640px]:h-9 max-[640px]:w-9",
+    "food-result__description": "min-w-0",
+    "food-result__name": "overflow-hidden text-ellipsis whitespace-nowrap text-sm font-bold",
+    "food-result__brand": "mt-[3px] text-xs text-[var(--calorie-muted)]",
+    "food-result__meta": "flex items-center gap-2 whitespace-nowrap text-xs text-[var(--calorie-muted)] max-[640px]:col-start-2 max-[640px]:whitespace-normal",
+    "food-result__score": "grid h-[25px] w-[25px] place-items-center rounded-[7px] bg-[#86b055] font-bold text-[#172208] data-[score=c]:bg-[#f2ce45] data-[score=d]:bg-[#ef9a7a] data-[score=e]:bg-[#ef9a7a]",
+    "product-add": "col-span-full flex flex-wrap items-center justify-end gap-2 pt-[7px] max-[640px]:justify-start",
+    "product-add__amount": "inline-flex items-center gap-[5px]",
+    "product-add__input": "w-[58px] rounded-[9px] border border-[#d7c777] px-[5px] py-[7px] text-center",
+    "stepper-button": "h-8 w-8 cursor-pointer rounded-full border border-[#d7c777] bg-[#fffef5] text-[var(--calorie-ink)]",
+    "product-add__total": "min-w-[75px] text-[13px]",
+    "product-add__submit": "!min-h-[35px] !px-4",
+    "button-primary": "rounded-full border-0 bg-[var(--calorie-amber)] font-bold text-[#2c2308] transition-[background-color,transform] duration-[160ms] hover:bg-[#dfaa00] disabled:cursor-wait disabled:opacity-[0.65]",
+    "button-secondary": "min-h-[34px] cursor-pointer rounded-full border border-[#b9a762] bg-[#fffef5] px-3 py-1.5 font-semibold text-[var(--calorie-ink)]",
+    "manual-add-button": "col-start-2 col-end-[-1] min-h-[34px] cursor-pointer justify-self-end rounded-full border border-[#b9a762] bg-[#fffef5] px-3 py-1.5 font-semibold text-[var(--calorie-ink)]",
+    "search-pagination": "flex items-center justify-center gap-3 py-[10px] text-[13px] text-[var(--calorie-muted)]",
+    "search-pagination__button": "!min-h-[30px] px-3 py-1 disabled:cursor-not-allowed disabled:opacity-50",
+    "week-chart__columns": "absolute inset-0 grid grid-cols-7 gap-2",
+    "week-chart": "relative mt-[7px] h-[210px] px-0.5 pt-2",
+    "week-chart__goal-line": "pointer-events-none absolute right-0.5 left-0.5 z-[1]",
+    "week-column": "z-[2] grid min-w-0 grid-rows-[minmax(0,1fr)_auto_auto] justify-items-center gap-[5px]",
+    "week-column__bar-wrap": "flex h-full w-full items-end justify-center",
+    "week-column__bar": "block min-h-0.5 w-[min(100%,28px)] rounded-[9px] bg-[#86b055]",
+    "week-column__day": "text-[11px] text-[var(--calorie-muted)]",
+    "week-column__value": "max-w-full overflow-hidden text-ellipsis whitespace-nowrap text-[10px] text-[var(--calorie-ink)] max-[640px]:text-[9px]",
+    "is-selected": "bg-[var(--calorie-amber)]",
+    "is-over": "bg-[#f07468]",
+  };
   const el = (tag, className, text) => {
     const node = document.createElement(tag);
-    if (className) node.className = className;
+    if (className) {
+      const utilities = className.split(/\s+/).map((name) => utilityClasses[name] || "").filter(Boolean);
+      node.className = [className, ...utilities].join(" ");
+    }
     if (text !== undefined && text !== null) node.textContent = text;
     return node;
   };
@@ -109,16 +194,16 @@
     ring.setAttribute("role", "img");
     ring.setAttribute("aria-label", `${formatNumber(data.consumed_kcal)} of ${goal ? formatNumber(goal) : "no"} kcal${data.remaining_kcal !== null ? `; ${formatNumber(data.remaining_kcal)} kcal remaining` : "; complete your profile to set a goal"}`);
     const ringText = el("div", "calorie-ring__text");
-    ringText.append(el("strong", "", formatNumber(data.consumed_kcal)), el("span", "", goal ? `of ${formatNumber(goal)} kcal` : "kcal consumed"));
+    ringText.append(el("strong", "calorie-ring__value", formatNumber(data.consumed_kcal)), el("span", "calorie-ring__unit", goal ? `of ${formatNumber(goal)} kcal` : "kcal consumed"));
     ring.append(ringText);
     const bars = el("div", "nutrition-bars");
     ["carbs", "protein", "fat"].forEach((macro) => {
       const values = data.macros[macro];
       const row = el("div", "nutrition-bar");
       const line = el("div", "nutrition-bar__label");
-      line.append(el("strong", "", macro[0].toUpperCase() + macro.slice(1)), el("span", "", `${formatNumber(values.consumed_g, 1)} / ${formatNumber(values.target_g, 1)} g`));
+      line.append(el("strong", "", macro[0].toUpperCase() + macro.slice(1)), el("span", "nutrition-bar__value", `${formatNumber(values.consumed_g, 1)} / ${formatNumber(values.target_g, 1)} g`));
       const track = el("div", `nutrition-bar__track ${macro}`);
-      const fill = el("span");
+      const fill = el("span", "nutrition-bar__fill");
       fill.style.width = values.target_g ? `${Math.min(values.consumed_g / values.target_g * 100, 100)}%` : "0%";
       track.append(fill);
       row.append(line, track);
@@ -129,7 +214,7 @@
       const note = el("p", "summary-profile-note", "Complete your profile to see calories remaining and macro targets.");
       summaryItems.push(note);
     } else {
-      const remaining = el("p", `remaining-kcal${data.over_goal ? " is-over" : ""}`,
+      const remaining = el("p", `remaining-kcal${data.over_goal ? " remaining-kcal-over" : ""}`,
         data.over_goal ? `${formatNumber(Math.abs(data.remaining_kcal))} kcal over goal` : `${formatNumber(data.remaining_kcal)} kcal left today`);
       summaryItems.push(remaining);
     }
@@ -158,7 +243,7 @@
       const items = data.entries.filter((entry) => entry.meal === meal);
       const group = el("section", "meal-group");
       const header = el("div", "meal-group__heading");
-      header.append(el("h3", "", titles[meal]), el("span", "", `${formatNumber(data.meal_totals[meal] || 0)} kcal`));
+      header.append(el("h3", "meal-group__title", titles[meal]), el("span", "meal-group__total", `${formatNumber(data.meal_totals[meal] || 0)} kcal`));
       group.append(header);
       if (!items.length) {
         const empty = el("button", "empty-meal-action", `+ Add ${meal === "snack" ? "snack" : meal}`);
@@ -183,16 +268,39 @@
     const row = el("article", "meal-entry");
     const main = el("div", "meal-entry__main");
     const info = el("div", "meal-entry__info");
-    info.append(el("strong", "", entry.name));
+    info.append(el("strong", "meal-entry__name", entry.name));
     if (entry.brand) info.append(el("span", "meal-entry__brand", entry.brand));
     info.append(el("span", "meal-entry__amount", `${formatNumber(entry.grams, 1)} g`));
     main.append(info, el("strong", "meal-entry__kcal", `${formatNumber(entry.kcal)} kcal`));
     row.append(main);
     const actions = el("div", "meal-entry__actions");
     const edit = el("details", "entry-edit");
-    const summary = el("summary", "", "Edit");
+    const summary = el("summary", "entry-edit__summary", "Edit");
     const form = el("form", "entry-edit__form");
-    form.innerHTML = `<label>Amount (g)<input name="grams" type="number" min="1" max="5000" step="1" value="${Number(entry.grams)}" required></label><label>Meal<select name="meal"><option value="breakfast">Breakfast</option><option value="lunch">Lunch</option><option value="dinner">Dinner</option><option value="snack">Snacks</option></select></label><button type="submit">Save</button>`;
+    const amountLabel = el("label", "entry-edit__label");
+    const amountInput = el("input", "entry-edit__control");
+    amountInput.name = "grams";
+    amountInput.type = "number";
+    amountInput.min = "1";
+    amountInput.max = "5000";
+    amountInput.step = "1";
+    amountInput.value = Number(entry.grams);
+    amountInput.required = true;
+    amountLabel.append(document.createTextNode("Amount (g)"), amountInput);
+
+    const mealLabel = el("label", "entry-edit__label");
+    const mealSelect = el("select", "entry-edit__control");
+    mealSelect.name = "meal";
+    for (const [value, text] of [["breakfast", "Breakfast"], ["lunch", "Lunch"], ["dinner", "Dinner"], ["snack", "Snacks"]]) {
+      const option = el("option", "", text);
+      option.value = value;
+      mealSelect.append(option);
+    }
+    mealLabel.append(document.createTextNode("Meal"), mealSelect);
+
+    const save = el("button", "entry-edit__save", "Save");
+    save.type = "submit";
+    form.append(amountLabel, mealLabel, save);
     form.elements.meal.value = entry.meal;
     form.addEventListener("submit", async (event) => {
       event.preventDefault();
@@ -207,7 +315,7 @@
       finally { submit.disabled = false; }
     });
     edit.append(summary, form);
-    const remove = el("button", "text-button is-danger", "Delete");
+    const remove = el("button", "text-button is-danger meal-entry__delete", "Delete");
     remove.type = "button";
     remove.addEventListener("click", async () => {
       remove.disabled = true;
@@ -285,7 +393,7 @@
     const region = $("#needs-content");
     if (!profile.complete) {
       const box = el("div", "needs-empty");
-      box.append(el("p", "", "Complete your profile to calculate your daily needs."));
+      box.append(el("p", "needs-empty__copy", "Complete your profile to calculate your daily needs."));
       const button = el("button", "button-primary needs-setup", "Set up profile");
       button.type = "button";
       button.addEventListener("click", () => openProfile(profile));
@@ -296,7 +404,7 @@
     const list = el("div", "needs-list");
     [["BMR", profile.bmr], ["Maintenance", profile.maintenance], ["Your goal", profile.goal_kcal]].forEach(([label, value]) => {
       const item = el("div", "needs-row");
-      item.append(el("span", "", label), el("strong", "", `${formatNumber(value)} kcal`));
+      item.append(el("span", "", label), el("strong", "needs-row__value", `${formatNumber(value)} kcal`));
       list.append(item);
     });
     const edit = el("button", "needs-edit", "Edit profile");
@@ -358,7 +466,7 @@
     const add = el("div", "product-add");
     const amountLabel = el("label", "product-add__amount");
     amountLabel.append(el("span", "sr-only", "Amount in grams"));
-    const amount = el("input"); amount.type = "number"; amount.min = "1"; amount.max = "5000"; amount.step = "1"; amount.value = String(Math.round(product.serving_g || 100)); amount.setAttribute("aria-label", "Amount in grams");
+    const amount = el("input", "product-add__input"); amount.type = "number"; amount.min = "1"; amount.max = "5000"; amount.step = "1"; amount.value = String(Math.round(product.serving_g || 100)); amount.setAttribute("aria-label", "Amount in grams");
     const minus = el("button", "stepper-button", "−"); minus.type = "button"; minus.setAttribute("aria-label", "Decrease amount by 1 gram");
     const plus = el("button", "stepper-button", "+"); plus.type = "button"; plus.setAttribute("aria-label", "Increase amount by 1 gram");
     const meal = mealSelector(defaultMeal);
@@ -411,9 +519,9 @@
     }
     region.replaceChildren(...data.results.map(renderProduct));
     const pagination = el("div", "search-pagination");
-    const previous = el("button", "button-secondary", "Previous"); previous.type = "button"; previous.disabled = searchPage <= 1;
+    const previous = el("button", "button-secondary search-pagination__button", "Previous"); previous.type = "button"; previous.disabled = searchPage <= 1;
     const pageText = el("span", "", `Page ${searchPage}`);
-    const next = el("button", "button-secondary", "Next"); next.type = "button"; next.disabled = data.results.length < 10;
+    const next = el("button", "button-secondary search-pagination__button", "Next"); next.type = "button"; next.disabled = data.results.length < 10;
     previous.addEventListener("click", () => runSearch(lastSearchQuery, searchPage - 1));
     next.addEventListener("click", () => runSearch(lastSearchQuery, searchPage + 1));
     pagination.append(previous, pageText, next);

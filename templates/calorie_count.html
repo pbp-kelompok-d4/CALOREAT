@@ -3,94 +3,94 @@
 {% block title %}Calorie Count | CALOREAT{% endblock title %}
 {% block extra_head %}<link rel="stylesheet" href="{% static 'css/calorie_count.css' %}?v=prd-4">{% endblock extra_head %}
 {% block content %}
-<div class="calorie-page" id="calorie-app" data-today="{{ calorie_today }}" data-default-meal="{{ default_meal }}" data-profile-complete="{{ profile_complete|yesno:'true,false' }}">
-  <header class="calorie-heading">
+<div class="calorie-page flex flex-1 flex-col gap-[22px] rounded-[28px] p-[clamp(18px,2.5vw,32px)] text-[var(--calorie-ink)] max-[640px]:gap-[14px] max-[640px]:rounded-[21px] max-[640px]:p-[15px_11px]" id="calorie-app" data-today="{{ calorie_today }}" data-default-meal="{{ default_meal }}" data-profile-complete="{{ profile_complete|yesno:'true,false' }}">
+  <header class="calorie-heading flex items-center justify-between gap-4 max-[640px]:items-start max-[640px]:flex-col">
     <div>
-      <p class="calorie-greeting">Good {{ greeting_period }}, {{ calorie_user_name }}!</p>
-      <p class="calorie-subtitle" id="daily-status">Your daily nutrition overview.</p>
+      <p class="calorie-greeting font-outfit text-[clamp(25px,2.8vw,36px)] leading-[1.1] font-bold max-[640px]:text-[27px]">Good {{ greeting_period }}, {{ calorie_user_name }}!</p>
+      <p class="calorie-subtitle mt-[7px] text-[var(--calorie-muted)]" id="daily-status">Your daily nutrition overview.</p>
     </div>
-    <div class="calorie-date" aria-label="Choose day">
-      <button type="button" id="previous-day" aria-label="Previous day">‹</button>
-      <time id="selected-date" datetime="{{ calorie_today }}">{{ calorie_today }}</time>
-      <button type="button" id="next-day" aria-label="Next day" disabled>›</button>
+    <div class="calorie-date flex shrink-0 items-center gap-[9px] max-[640px]:self-end max-[640px]:gap-1.5" aria-label="Choose day">
+      <button class="grid h-[38px] w-[38px] min-h-[38px] place-items-center rounded-full border border-[var(--calorie-line)] bg-[#fffef5] text-[var(--calorie-ink)] text-xl enabled:hover:bg-[#fff7d5] disabled:cursor-not-allowed disabled:opacity-40 max-[640px]:h-[34px] max-[640px]:w-[34px] max-[640px]:min-h-[34px]" type="button" id="previous-day" aria-label="Previous day">‹</button>
+      <time class="grid min-h-[38px] min-w-[150px] place-items-center rounded-full border border-[var(--calorie-line)] bg-[#fffef5] px-[15px] font-semibold text-[var(--calorie-ink)] max-[640px]:min-w-[132px] max-[640px]:px-[9px] max-[640px]:text-xs" id="selected-date" datetime="{{ calorie_today }}">{{ calorie_today }}</time>
+      <button class="grid h-[38px] w-[38px] min-h-[38px] place-items-center rounded-full border border-[var(--calorie-line)] bg-[#fffef5] text-[var(--calorie-ink)] text-xl enabled:hover:bg-[#fff7d5] disabled:cursor-not-allowed disabled:opacity-40 max-[640px]:h-[34px] max-[640px]:w-[34px] max-[640px]:min-h-[34px]" type="button" id="next-day" aria-label="Next day" disabled>›</button>
     </div>
   </header>
 
-  <div class="calorie-top-grid">
-    <section class="calorie-panel calorie-summary" aria-labelledby="calories-title" id="summary-region" aria-busy="true">
-      <div class="calorie-panel__heading"><h2 id="calories-title">Today's calories</h2><span id="goal-label">Loading…</span></div>
-      <div class="calorie-summary__body" id="summary-content"><p class="region-state">Loading your summary…</p></div>
+  <div class="calorie-top-grid grid grid-cols-[minmax(0,1.05fr)_minmax(0,1fr)] gap-[18px] max-[1000px]:grid-cols-1">
+    <section class="calorie-panel calorie-summary min-h-[318px] min-w-0 rounded-[21px] border border-[rgba(240,215,122,0.9)] bg-[#fffef5] p-[clamp(18px,2vw,26px)] max-[1000px]:min-h-[290px] max-[640px]:rounded-[17px] max-[640px]:p-[17px_14px]" aria-labelledby="calories-title" id="summary-region" aria-busy="true">
+      <div class="calorie-panel__heading mb-[17px] flex items-center justify-between gap-4 max-[640px]:items-start max-[640px]:gap-2"><h2 class="font-outfit text-[21px] leading-[1.2] font-bold max-[640px]:text-[19px]" id="calories-title">Today's calories</h2><span class="text-right text-[13px] text-[var(--calorie-muted)] max-[640px]:max-w-[46%] max-[640px]:text-xs" id="goal-label">Loading…</span></div>
+      <div class="calorie-summary__body grid min-h-[225px] w-full items-center" id="summary-content"><p class="region-state grid min-h-[92px] place-items-center p-[14px] text-center text-sm leading-[1.45] text-[var(--calorie-muted)]">Loading your summary…</p></div>
     </section>
 
-    <section class="calorie-panel food-lookup" aria-labelledby="food-lookup-title" id="lookup-region">
-      <div class="calorie-panel__heading">
-        <h2 id="food-lookup-title">Look up a food</h2><span>Search products or enter a barcode</span>
+    <section class="calorie-panel food-lookup flex min-w-0 flex-col rounded-[21px] border border-[rgba(240,215,122,0.9)] bg-[#fffef5] p-[clamp(18px,2vw,26px)] max-[1000px]:min-h-[290px] max-[640px]:rounded-[17px] max-[640px]:p-[17px_14px]" aria-labelledby="food-lookup-title" id="lookup-region">
+      <div class="calorie-panel__heading mb-[13px] flex items-center justify-between gap-4 max-[640px]:items-start max-[640px]:gap-2">
+        <h2 class="font-outfit text-[21px] leading-[1.2] font-bold max-[640px]:text-[19px]" id="food-lookup-title">Look up a food</h2><span class="text-right text-[13px] text-[var(--calorie-muted)] max-[640px]:max-w-[46%] max-[640px]:text-xs">Search products or enter a barcode</span>
       </div>
-      <form class="food-lookup__form" id="food-search-form">
+      <form class="food-lookup__form grid min-h-12 grid-cols-[35px_minmax(0,1fr)_auto] items-center overflow-hidden rounded-full border-[1.5px] border-[var(--calorie-amber)] bg-[#fffbed] max-[640px]:grid-cols-[27px_minmax(0,1fr)_auto]" id="food-search-form">
         <label class="sr-only" for="food-search-input">Search food name or barcode</label>
-        <span class="food-lookup__sparkle" aria-hidden="true">✧</span>
-        <input id="food-search-input" name="q" type="search" placeholder="Search a food or scan its barcode" autocomplete="off" minlength="2" required>
-        <button type="submit">Search</button>
+        <span class="food-lookup__sparkle pl-[10px] text-center text-[17px] text-[#b17e00]" aria-hidden="true">✧</span>
+        <input class="w-full min-w-0 border-0 bg-transparent px-[9px] py-3 text-sm text-[var(--calorie-ink)] focus-visible:rounded-xl focus-visible:outline-2 focus-visible:outline-[var(--calorie-amber)] focus-visible:outline-offset-[-3px]" id="food-search-input" name="q" type="search" placeholder="Search a food or scan its barcode" autocomplete="off" minlength="2" required>
+        <button class="m-[3px] min-h-10 rounded-full bg-[var(--calorie-amber)] px-[22px] font-bold text-[#2c2308] transition-colors hover:bg-[#dfaa00] disabled:cursor-wait disabled:opacity-[0.65] max-[640px]:px-[14px] max-[640px]:text-[13px]" type="submit">Search</button>
       </form>
-      <div class="food-lookup__results" id="food-search-results" aria-live="polite" aria-busy="false">
-        <p class="region-state">Search by food name or barcode. Results appear here.</p>
+      <div class="food-lookup__results my-[10px] mb-1 min-h-[95px] max-h-[240px] flex-1 overflow-y-auto overscroll-contain" id="food-search-results" aria-live="polite" aria-busy="false">
+        <p class="region-state grid min-h-[92px] place-items-center p-[14px] text-center text-sm leading-[1.45] text-[var(--calorie-muted)]">Search by food name or barcode. Results appear here.</p>
       </div>
-      <button type="button" class="lookup-manual-launch" id="manual-entry-launch">+ Add food manually</button>
-      <div class="food-lookup__attribution"><a href="https://id.openfoodfacts.org/" target="_blank" rel="noopener noreferrer">Data from Open Food Facts (ODbL)</a><span>Nutri-Score A–E</span></div>
+      <button type="button" class="lookup-manual-launch mb-1.5 self-start cursor-pointer border-0 bg-transparent py-[5px] text-[13px] font-bold text-[#634d17] underline underline-offset-[3px]" id="manual-entry-launch">+ Add food manually</button>
+      <div class="food-lookup__attribution flex justify-between gap-3 pt-2 text-xs text-[var(--calorie-muted)] max-[640px]:text-[10px]"><a class="underline underline-offset-2" href="https://id.openfoodfacts.org/" target="_blank" rel="noopener noreferrer">Data from Open Food Facts (ODbL)</a><span>Nutri-Score A–E</span></div>
     </section>
   </div>
 
-  <div class="calorie-bottom-grid">
-    <section class="calorie-panel meals-panel" aria-labelledby="meals-title" id="meals-region" aria-busy="true">
-      <div class="calorie-panel__heading"><h2 id="meals-title">Meals today</h2><span id="meals-total">Loading…</span></div>
-      <div id="meals-content" class="meals-content"><p class="region-state">Loading your meals…</p></div>
+  <div class="calorie-bottom-grid grid flex-1 grid-cols-[minmax(0,1.1fr)_minmax(0,0.95fr)_minmax(0,0.85fr)] items-stretch gap-[18px] max-[1000px]:grid-cols-2 max-[640px]:grid-cols-1">
+    <section class="calorie-panel meals-panel flex min-h-[340px] min-w-0 flex-col rounded-[21px] border border-[rgba(240,215,122,0.9)] bg-[#fffef5] p-[clamp(18px,2vw,26px)] max-[640px]:rounded-[17px] max-[640px]:p-[17px_14px]" aria-labelledby="meals-title" id="meals-region" aria-busy="true">
+      <div class="calorie-panel__heading mb-[17px] flex items-center justify-between gap-4 max-[640px]:items-start max-[640px]:gap-2"><h2 class="font-outfit text-[21px] leading-[1.2] font-bold max-[640px]:text-[19px]" id="meals-title">Meals today</h2><span class="text-right text-[13px] text-[var(--calorie-muted)] max-[640px]:max-w-[46%] max-[640px]:text-xs" id="meals-total">Loading…</span></div>
+      <div id="meals-content" class="meals-content box-border min-h-0 max-h-[min(420px,50vh)] flex-1 overflow-y-auto overscroll-contain pr-3 [scrollbar-gutter:stable]"><p class="region-state grid min-h-[92px] place-items-center p-[14px] text-center text-sm leading-[1.45] text-[var(--calorie-muted)]">Loading your meals…</p></div>
     </section>
-    <section class="calorie-panel week-panel" aria-labelledby="week-title" id="week-region" aria-busy="true">
-      <div class="calorie-panel__heading"><h2 id="week-title">This week</h2><span id="week-goal">Daily goal —</span></div>
-      <div id="week-content"><p class="region-state">Loading your weekly summary…</p></div>
+    <section class="calorie-panel week-panel flex min-h-[340px] min-w-0 flex-col rounded-[21px] border border-[rgba(240,215,122,0.9)] bg-[#fffef5] p-[clamp(18px,2vw,26px)] max-[640px]:rounded-[17px] max-[640px]:p-[17px_14px]" aria-labelledby="week-title" id="week-region" aria-busy="true">
+      <div class="calorie-panel__heading mb-[17px] flex items-center justify-between gap-4 max-[640px]:items-start max-[640px]:gap-2"><h2 class="font-outfit text-[21px] leading-[1.2] font-bold max-[640px]:text-[19px]" id="week-title">This week</h2><span class="text-right text-[13px] text-[var(--calorie-muted)] max-[640px]:max-w-[46%] max-[640px]:text-xs" id="week-goal">Daily goal —</span></div>
+      <div id="week-content"><p class="region-state grid min-h-[92px] place-items-center p-[14px] text-center text-sm leading-[1.45] text-[var(--calorie-muted)]">Loading your weekly summary…</p></div>
     </section>
-    <section class="calorie-panel needs-panel" aria-labelledby="needs-title" id="needs-region" aria-busy="true">
-      <div class="calorie-panel__heading"><h2 id="needs-title">Your daily needs</h2></div>
-      <div id="needs-content"><p class="region-state">Loading your profile…</p></div>
+    <section class="calorie-panel needs-panel flex min-h-[340px] min-w-0 flex-col rounded-[21px] border border-[rgba(240,215,122,0.9)] bg-[#fffef5] p-[clamp(18px,2vw,26px)] max-[1000px]:col-span-full max-[640px]:col-auto max-[640px]:rounded-[17px] max-[640px]:p-[17px_14px]" aria-labelledby="needs-title" id="needs-region" aria-busy="true">
+      <div class="calorie-panel__heading mb-[17px] flex items-center justify-between gap-4 max-[640px]:items-start max-[640px]:gap-2"><h2 class="font-outfit text-[21px] leading-[1.2] font-bold max-[640px]:text-[19px]" id="needs-title">Your daily needs</h2></div>
+      <div id="needs-content"><p class="region-state grid min-h-[92px] place-items-center p-[14px] text-center text-sm leading-[1.45] text-[var(--calorie-muted)]">Loading your profile…</p></div>
     </section>
   </div>
 </div>
 
-<dialog class="calorie-dialog" id="profile-dialog" aria-labelledby="profile-dialog-title">
+<dialog class="calorie-dialog m-auto max-h-[min(88vh,760px)] w-[min(92vw,540px)] overflow-auto rounded-[20px] border border-[var(--calorie-line)] bg-[#fffef5] p-0 text-[var(--calorie-ink)] shadow-[0_18px_70px_rgba(55,45,18,0.3)]" id="profile-dialog" aria-labelledby="profile-dialog-title">
   <form id="profile-form" method="dialog">
-    <div class="dialog-heading"><h2 id="profile-dialog-title">Your profile</h2><button type="button" class="icon-button" data-close-dialog aria-label="Close profile form">×</button></div>
-    <p class="dialog-intro">Your daily target is an estimate based on these details.</p>
-    <div class="form-grid">
-      <label>Sex<select name="sex" required><option value="">Choose…</option><option value="female">Female</option><option value="male">Male</option></select></label>
-      <label>Date of birth<input name="birth_date" type="date" required></label>
-      <label>Height (cm)<input name="height_cm" type="number" min="50" max="260" step="0.1" required></label>
-      <label>Weight (kg)<input name="weight_kg" type="number" min="20" max="500" step="0.1" required></label>
-      <label>Activity level<select name="activity_level" required><option value="">Choose…</option><option value="sedentary">Sedentary</option><option value="light">Lightly active</option><option value="moderate">Moderately active</option><option value="active">Active</option></select></label>
-      <label>Goal<select name="goal" required><option value="">Choose…</option><option value="lose_025">Lose 0.25 kg / week</option><option value="lose_05">Lose 0.5 kg / week</option><option value="maintain">Maintain weight</option><option value="gain_025">Gain 0.25 kg / week</option></select></label>
+    <div class="dialog-heading flex items-center justify-between gap-[15px]"><h2 class="font-outfit text-[25px] font-bold" id="profile-dialog-title">Your profile</h2><button type="button" class="icon-button grid h-8 w-8 place-items-center rounded-full border border-[#d7c777] bg-[#fffef5] text-[var(--calorie-ink)] text-[22px]" data-close-dialog aria-label="Close profile form">×</button></div>
+    <p class="dialog-intro my-2 mb-5 text-sm text-[var(--calorie-muted)]">Your daily target is an estimate based on these details.</p>
+    <div class="form-grid grid grid-cols-2 gap-[13px] max-[640px]:grid-cols-1">
+      <label class="grid gap-1.5 text-[13px] font-semibold">Sex<select class="min-h-[42px] w-full rounded-[9px] border border-[#b6a45e] bg-[#fffef5] px-2.5 py-2 text-[var(--calorie-ink)]" name="sex" required autofocus><option value="">Choose…</option><option value="female">Female</option><option value="male">Male</option></select></label>
+      <label class="grid gap-1.5 text-[13px] font-semibold">Date of birth<input class="min-h-[42px] w-full rounded-[9px] border border-[#b6a45e] bg-[#fffef5] px-2.5 py-2 text-[var(--calorie-ink)]" name="birth_date" type="date" required></label>
+      <label class="grid gap-1.5 text-[13px] font-semibold">Height (cm)<input class="min-h-[42px] w-full rounded-[9px] border border-[#b6a45e] bg-[#fffef5] px-2.5 py-2 text-[var(--calorie-ink)]" name="height_cm" type="number" min="50" max="260" step="0.1" required></label>
+      <label class="grid gap-1.5 text-[13px] font-semibold">Weight (kg)<input class="min-h-[42px] w-full rounded-[9px] border border-[#b6a45e] bg-[#fffef5] px-2.5 py-2 text-[var(--calorie-ink)]" name="weight_kg" type="number" min="20" max="500" step="0.1" required></label>
+      <label class="grid gap-1.5 text-[13px] font-semibold">Activity level<select class="min-h-[42px] w-full rounded-[9px] border border-[#b6a45e] bg-[#fffef5] px-2.5 py-2 text-[var(--calorie-ink)]" name="activity_level" required><option value="">Choose…</option><option value="sedentary">Sedentary</option><option value="light">Lightly active</option><option value="moderate">Moderately active</option><option value="active">Active</option></select></label>
+      <label class="grid gap-1.5 text-[13px] font-semibold">Goal<select class="min-h-[42px] w-full rounded-[9px] border border-[#b6a45e] bg-[#fffef5] px-2.5 py-2 text-[var(--calorie-ink)]" name="goal" required><option value="">Choose…</option><option value="lose_025">Lose 0.25 kg / week</option><option value="lose_05">Lose 0.5 kg / week</option><option value="maintain">Maintain weight</option><option value="gain_025">Gain 0.25 kg / week</option></select></label>
     </div>
     <p class="form-error" id="profile-error" role="alert" hidden></p>
-    <div class="dialog-actions"><button type="button" class="button-secondary" data-close-dialog>Cancel</button><button type="submit" class="button-primary">Save profile</button></div>
+    <div class="dialog-actions mt-[22px] flex justify-end gap-[9px]"><button type="button" class="button-secondary min-h-10 rounded-full border border-[#b9a762] bg-[#fffef5] px-3 py-1.5 font-semibold text-[var(--calorie-ink)]" data-close-dialog>Cancel</button><button type="submit" class="button-primary m-0 min-h-10 rounded-full bg-[var(--calorie-amber)] px-[22px] font-bold text-[#2c2308] hover:bg-[#dfaa00]">Save profile</button></div>
   </form>
 </dialog>
 
-<dialog class="calorie-dialog" id="manual-dialog" aria-labelledby="manual-dialog-title">
+<dialog class="calorie-dialog m-auto max-h-[min(88vh,760px)] w-[min(92vw,540px)] overflow-auto rounded-[20px] border border-[var(--calorie-line)] bg-[#fffef5] p-0 text-[var(--calorie-ink)] shadow-[0_18px_70px_rgba(55,45,18,0.3)]" id="manual-dialog" aria-labelledby="manual-dialog-title">
   <form id="manual-form" method="dialog">
-    <div class="dialog-heading"><h2 id="manual-dialog-title">Add food manually</h2><button type="button" class="icon-button" data-close-dialog aria-label="Close manual entry form">×</button></div>
-    <p class="dialog-intro">Nutrition is missing for this food. Add the values from its label.</p>
+    <div class="dialog-heading flex items-center justify-between gap-[15px]"><h2 class="font-outfit text-[25px] font-bold" id="manual-dialog-title">Add food manually</h2><button type="button" class="icon-button grid h-8 w-8 place-items-center rounded-full border border-[#d7c777] bg-[#fffef5] text-[var(--calorie-ink)] text-[22px]" data-close-dialog aria-label="Close manual entry form">×</button></div>
+    <p class="dialog-intro my-2 mb-5 text-sm text-[var(--calorie-muted)]">Nutrition is missing for this food. Add the values from its label.</p>
     <input type="hidden" name="off_code"><input type="hidden" name="brand"><input type="hidden" name="nutriscore">
-    <div class="form-grid">
-      <label class="span-all">Food name<input name="name" maxlength="200" required></label>
-      <label>Calories / 100 g<input name="kcal_100g" type="number" min="0" max="900" step="0.1" required></label>
-      <label>Amount (g)<input name="grams" type="number" min="1" max="5000" step="1" value="100" required></label>
-      <label>Protein / 100 g (optional)<input name="protein_100g" type="number" min="0" max="100" step="0.1"></label>
-      <label>Carbs / 100 g (optional)<input name="carbs_100g" type="number" min="0" max="100" step="0.1"></label>
-      <label>Fat / 100 g (optional)<input name="fat_100g" type="number" min="0" max="100" step="0.1"></label>
-      <label>Meal<select name="meal"><option value="breakfast">Breakfast</option><option value="lunch">Lunch</option><option value="dinner">Dinner</option><option value="snack">Snacks</option></select></label>
+    <div class="form-grid grid grid-cols-2 gap-[13px] max-[640px]:grid-cols-1">
+      <label class="col-span-full grid gap-1.5 text-[13px] font-semibold max-[640px]:col-auto">Food name<input class="min-h-[42px] w-full rounded-[9px] border border-[#b6a45e] bg-[#fffef5] px-2.5 py-2 text-[var(--calorie-ink)]" name="name" maxlength="200" required autofocus></label>
+      <label class="grid gap-1.5 text-[13px] font-semibold">Calories / 100 g<input class="min-h-[42px] w-full rounded-[9px] border border-[#b6a45e] bg-[#fffef5] px-2.5 py-2 text-[var(--calorie-ink)]" name="kcal_100g" type="number" min="0" max="900" step="0.1" required></label>
+      <label class="grid gap-1.5 text-[13px] font-semibold">Amount (g)<input class="min-h-[42px] w-full rounded-[9px] border border-[#b6a45e] bg-[#fffef5] px-2.5 py-2 text-[var(--calorie-ink)]" name="grams" type="number" min="1" max="5000" step="1" value="100" required></label>
+      <label class="grid gap-1.5 text-[13px] font-semibold">Protein / 100 g (optional)<input class="min-h-[42px] w-full rounded-[9px] border border-[#b6a45e] bg-[#fffef5] px-2.5 py-2 text-[var(--calorie-ink)]" name="protein_100g" type="number" min="0" max="100" step="0.1"></label>
+      <label class="grid gap-1.5 text-[13px] font-semibold">Carbs / 100 g (optional)<input class="min-h-[42px] w-full rounded-[9px] border border-[#b6a45e] bg-[#fffef5] px-2.5 py-2 text-[var(--calorie-ink)]" name="carbs_100g" type="number" min="0" max="100" step="0.1"></label>
+      <label class="grid gap-1.5 text-[13px] font-semibold">Fat / 100 g (optional)<input class="min-h-[42px] w-full rounded-[9px] border border-[#b6a45e] bg-[#fffef5] px-2.5 py-2 text-[var(--calorie-ink)]" name="fat_100g" type="number" min="0" max="100" step="0.1"></label>
+      <label class="grid gap-1.5 text-[13px] font-semibold">Meal<select class="min-h-[42px] w-full rounded-[9px] border border-[#b6a45e] bg-[#fffef5] px-2.5 py-2 text-[var(--calorie-ink)]" name="meal"><option value="breakfast">Breakfast</option><option value="lunch">Lunch</option><option value="dinner">Dinner</option><option value="snack">Snacks</option></select></label>
     </div>
     <p class="form-error" id="manual-error" role="alert" hidden></p>
-    <div class="dialog-actions"><button type="button" class="button-secondary" data-close-dialog>Cancel</button><button type="submit" class="button-primary">Add food</button></div>
+    <div class="dialog-actions mt-[22px] flex justify-end gap-[9px]"><button type="button" class="button-secondary min-h-10 rounded-full border border-[#b9a762] bg-[#fffef5] px-3 py-1.5 font-semibold text-[var(--calorie-ink)]" data-close-dialog>Cancel</button><button type="submit" class="button-primary m-0 min-h-10 rounded-full bg-[var(--calorie-amber)] px-[22px] font-bold text-[#2c2308] hover:bg-[#dfaa00]">Add food</button></div>
   </form>
 </dialog>
-<div id="undo-toast" class="undo-toast" role="status" aria-live="polite" hidden><span id="undo-message"></span><button type="button" id="undo-action">Undo</button></div>
+<div id="undo-toast" class="undo-toast fixed right-[22px] bottom-[22px] z-20 flex max-w-[min(90vw,480px)] items-center gap-3 rounded-2xl border border-[var(--line)] bg-[var(--plate)] px-4 py-3 text-[var(--ink)] shadow-[0_6px_20px_rgba(42,33,8,0.14)]" role="status" aria-live="polite" hidden><span id="undo-message" class="min-w-0 break-words"></span><button class="shrink-0 cursor-pointer rounded-full border-0 bg-[var(--yellow)] px-3 py-1.5 text-[13px] font-bold text-[#2a2108] transition-colors hover:bg-[var(--yellow-dark)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--ink)]" type="button" id="undo-action">Undo</button></div>
 <script src="{% static 'js/calorie_count.js' %}?v=prd-5" defer></script>
 {% endblock content %}
