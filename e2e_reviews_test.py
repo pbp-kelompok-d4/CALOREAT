@@ -92,7 +92,7 @@ def main():
         driver.find_element(By.CSS_SELECTOR, "div[data-pane='login'] button[type='submit']").click()
 
         wait.until(EC.url_to_be(f"{base_url}/"))
-        wait.until(EC.text_to_be_present_in_element((By.CLASS_NAME, "nav-user"), "Burhan Test"))
+        wait.until(EC.text_to_be_present_in_element((By.CLASS_NAME, "nav-user__name"), "Burhan Test"))
         assert driver.get_cookie("sessionid")
         assert driver.find_elements(By.ID, "selectAllReviewsBtn") == []
         print("[PASS] Regular user login and admin button restriction verified")
@@ -136,7 +136,7 @@ def main():
         print("[PASS] 'My Review' filter and review edit verified")
 
         # Log out regular user & log in as Superuser (Admin)
-        logout_btn = driver.find_element(By.CSS_SELECTOR, ".nav-user button.nav-logout")
+        logout_btn = wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, "button.nav-logout")))
         driver.execute_script("arguments[0].click();", logout_btn)
         wait.until(EC.url_contains("/login/"))
 
@@ -145,7 +145,7 @@ def main():
         driver.find_element(By.CSS_SELECTOR, "div[data-pane='login'] button[type='submit']").click()
 
         wait.until(EC.url_to_be(f"{base_url}/"))
-        wait.until(EC.text_to_be_present_in_element((By.CLASS_NAME, "nav-user"), "Admin Test"))
+        wait.until(EC.text_to_be_present_in_element((By.CLASS_NAME, "nav-user__name"), "Admin Test"))
         assert driver.find_elements(By.CLASS_NAME, "add-reviews-button") == []
         print("[PASS] Superuser login verified ('Write a Review' button hidden)")
 
@@ -168,7 +168,7 @@ def main():
         print("[PASS] Superuser bulk delete review verified")
 
         # Check Superuser logout and session cleanup
-        logout_btn = driver.find_element(By.CSS_SELECTOR, ".nav-user button.nav-logout")
+        logout_btn = wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, "button.nav-logout")))
         driver.execute_script("arguments[0].click();", logout_btn)
         wait.until(EC.url_contains("/login/"))
         session_cookie = driver.get_cookie("sessionid")
