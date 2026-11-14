@@ -1,13 +1,13 @@
-from django.core.exceptions import ValidationError as DjangoValidationError
 from django.utils.html import strip_tags
 from rest_framework import serializers
 
-from main.models import Reviews, check_minimum_content
+from main.models import Reviews
 
 
 class ReviewsSerializer(serializers.ModelSerializer):
     date = serializers.DateTimeField(format="%d %b %Y", read_only=True)
     can_edit = serializers.SerializerMethodField()
+    can_delete = serializers.SerializerMethodField()
 
     class Meta:
         model = Reviews
@@ -19,6 +19,7 @@ class ReviewsSerializer(serializers.ModelSerializer):
             "content",
             "date",
             "can_edit",
+            "can_delete",
         ]
         read_only_fields = [
             "id",
@@ -31,7 +32,15 @@ class ReviewsSerializer(serializers.ModelSerializer):
         request = self.context.get("request")
         if request is None or not request.user.is_authenticated:
             return False
-        return request.user.is_superuser or obj.created_by_id == request.user.id
+        return obj.created_by_id is not None and obj.created_by_id == request.user.id
+
+    def get_can_delete(self, obj):
+        request = self.context.get("request")
+        if request is None or not request.user.is_authenticated:
+            return False
+        return request.user.is_superuser or (
+            obj.created_by_id is not None and obj.created_by_id == request.user.id
+        )
 
     def validate_star(self, value):
         value = strip_tags(value).strip()
@@ -44,10 +53,6 @@ class ReviewsSerializer(serializers.ModelSerializer):
         value = strip_tags(value).strip()
         if not value:
             raise serializers.ValidationError("The review cannot contain only HTML tags.")
-        try:
-            check_minimum_content(value)
-        except DjangoValidationError as exc:
-            raise serializers.ValidationError(exc.messages)
         return value
 
     def create(self, validated_data):
