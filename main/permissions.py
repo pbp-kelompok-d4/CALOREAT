@@ -1,7 +1,5 @@
 from rest_framework.permissions import BasePermission, SAFE_METHODS
 
-
-
 class IsReviewCreatorOrSuperuserDeleteOrReadOnly(BasePermission):
     message = "You do not have permission to perform this action on this review."
 
