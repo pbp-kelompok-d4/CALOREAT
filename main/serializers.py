@@ -1,7 +1,51 @@
 from django.utils.html import strip_tags
 from rest_framework import serializers
 
-from main.models import Reviews
+from main.models import PortionGuide, Reviews
+
+
+class PortionGuideSerializer(serializers.ModelSerializer):
+    personalized_portions = serializers.SerializerMethodField()
+
+    class Meta:
+        model = PortionGuide
+        fields = [
+            "id",
+            "title",
+            "meal_type",
+            "description",
+            "vegetables",
+            "protein",
+            "carbohydrates",
+            "reference_kcal",
+            "vegetables_grams",
+            "protein_grams",
+            "carbohydrates_grams",
+            "image_url",
+            "created_at",
+            "updated_at",
+            "personalized_portions",
+        ]
+        read_only_fields = ["id", "created_at", "updated_at", "personalized_portions"]
+
+    def get_personalized_portions(self, guide):
+        meal_targets = self.context.get("meal_targets", {})
+        target_kcal = meal_targets.get(guide.meal_type)
+        if not target_kcal or not all((
+            guide.reference_kcal,
+            guide.vegetables_grams,
+            guide.protein_grams,
+            guide.carbohydrates_grams,
+        )):
+            return None
+
+        scale = target_kcal / guide.reference_kcal
+        return {
+            "target_kcal": target_kcal,
+            "vegetables_grams": round(guide.vegetables_grams * scale),
+            "protein_grams": round(guide.protein_grams * scale),
+            "carbohydrates_grams": round(guide.carbohydrates_grams * scale),
+        }
 
 
 class ReviewsSerializer(serializers.ModelSerializer):
