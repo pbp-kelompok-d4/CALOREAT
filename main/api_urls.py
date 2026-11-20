@@ -3,6 +3,9 @@ from main import api_views, auth_api_views
 
 app_name = "api"
 urlpatterns = [
+    path("portion-guides/", api_views.portion_guide_list, name="portion-guide-list"),
+    path("portion-guides/<int:guide_id>/", api_views.portion_guide_detail, name="portion-guide-detail"),
+
     path("reviews/", api_views.review_list, name="review-list"),
     path("reviews/<uuid:review_id>/", api_views.review_detail, name="review-detail"),
     

@@ -10,9 +10,10 @@ from rest_framework.decorators import (
 from rest_framework.exceptions import PermissionDenied
 from rest_framework.response import Response
 
-from main.models import Reviews
-from main.permissions import IsReviewCreatorOrSuperuserDeleteOrReadOnly
-from main.serializers import ReviewsSerializer
+from main.calorie_views import _needs
+from main.models import CalorieProfile, PortionGuide, Reviews
+from main.permissions import IsReviewCreatorOrSuperuserDeleteOrReadOnly, IsStaffOrReadOnly
+from main.serializers import PortionGuideSerializer, ReviewsSerializer
 
 STAR_FILTER_MAP = {
     "5": "★★★★★",
@@ -23,6 +24,78 @@ STAR_FILTER_MAP = {
 }
 
 REVIEW_PERMISSION_CLASSES = (IsReviewCreatorOrSuperuserDeleteOrReadOnly,)
+
+
+def _portion_context(user):
+    nutrition_needs = {"complete": False, "bmr": None, "maintenance": None, "goal_kcal": None}
+    if user.is_authenticated:
+        profile = CalorieProfile.objects.filter(user=user).first()
+        if profile is not None:
+            nutrition_needs = _needs(profile)
+
+    meal_targets = {}
+    if nutrition_needs["complete"]:
+        goal_kcal = nutrition_needs["goal_kcal"]
+        meal_targets = {
+            "breakfast": round(goal_kcal * 0.25),
+            "lunch": round(goal_kcal * 0.35),
+            "dinner": round(goal_kcal * 0.30),
+        }
+        meal_targets["snack"] = goal_kcal - sum(meal_targets.values())
+
+    return {"nutrition_needs": nutrition_needs, "meal_targets": meal_targets}
+
+
+@api_view(["GET", "HEAD", "POST"])
+@permission_classes([IsStaffOrReadOnly])
+def portion_guide_list(request):
+    if request.method in ("GET", "HEAD"):
+        guides = PortionGuide.objects.all()
+        meal_type = request.query_params.get("meal_type", "").strip()
+        valid_meal_types = {choice[0] for choice in PortionGuide.MEAL_CHOICES}
+        if meal_type in valid_meal_types:
+            guides = guides.filter(meal_type=meal_type)
+
+        context = _portion_context(request.user)
+        serializer = PortionGuideSerializer(
+            guides,
+            many=True,
+            context={**context, "request": request},
+        )
+        return Response({**context, "guides": serializer.data})
+
+    serializer = PortionGuideSerializer(data=request.data, context={"request": request})
+    serializer.is_valid(raise_exception=True)
+    serializer.save()
+    return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+
+@api_view(["GET", "HEAD", "PUT", "PATCH", "DELETE"])
+@permission_classes([IsStaffOrReadOnly])
+def portion_guide_detail(request, guide_id):
+    guide = get_object_or_404(PortionGuide, pk=guide_id)
+    context = _portion_context(request.user)
+
+    if request.method in ("GET", "HEAD"):
+        serializer = PortionGuideSerializer(
+            guide,
+            context={**context, "request": request},
+        )
+        return Response(serializer.data)
+
+    if request.method == "DELETE":
+        guide.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+    serializer = PortionGuideSerializer(
+        guide,
+        data=request.data,
+        partial=request.method == "PATCH",
+        context={**context, "request": request},
+    )
+    serializer.is_valid(raise_exception=True)
+    serializer.save()
+    return Response(serializer.data)
 
 # Reviews
 def _check_object_permissions(request, obj, perm_classes=REVIEW_PERMISSION_CLASSES):
