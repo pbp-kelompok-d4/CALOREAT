@@ -61,7 +61,7 @@ def _profile_for(user):
     profile, _ = CalorieProfile.objects.get_or_create(user=user)
     return profile
 
-
+#-----
 def _needs(profile, on_date=None):
     complete = bool(profile.sex and profile.birth_date and profile.height_cm and profile.weight_kg and profile.activity_level and profile.goal)
     if not complete:
