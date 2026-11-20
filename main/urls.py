@@ -15,8 +15,7 @@ from main.portion_views import (
     portion_delete,
 )
 
-from main.catalog_views import food_catalog
-
+from main.catalog_views import food_catalog, food_catalog_json
 
 app_name = "main"
 
@@ -41,6 +40,7 @@ urlpatterns = [
     path("portion-guidance/<int:guide_id>/edit/", portion_edit, name="portion_edit"),
     path("portion-guidance/<int:guide_id>/delete/", portion_delete, name="portion_delete"),
     path("catalog/", food_catalog, name="food_catalog"),
+    path("api/catalog/", food_catalog_json, name="food_catalog_json"),
     
     path("register/", register, name="register"),
     path("login/", login_user, name="login"),

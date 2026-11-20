@@ -2,14 +2,13 @@ import hashlib
 import requests
 from django.core.cache import cache
 from django.core.paginator import Paginator
+from django.http import JsonResponse
 from django.shortcuts import render
 
 API_URL = "https://search.openfoodfacts.org/search"
 USER_AGENT = "Caloreat/0.1 (contact: orrickhatmoko@gmail.com)"
 PER_PAGE = 12
 
-# Daftar vitamin dan mineral yang mau ditampilkan di panel detail.
-# Kiri = nama di API, kanan = nama yang tampil ke pengguna.
 VITAMIN = [
     ("vitamin-a", "Vit A"), ("vitamin-b1", "Vit B1"), ("vitamin-b2", "Vit B2"),
     ("vitamin-b6", "Vit B6"), ("vitamin-b12", "Vit B12"), ("vitamin-c", "Vit C"),
@@ -38,7 +37,7 @@ def mikro(nutriments, daftar):
         if v:
             mg = v * 1000
             if mg < 1:
-                teks = f"{round(mg * 1000, 1)} mcg"   # nilai sangat kecil, pakai mcg
+                teks = f"{round(mg * 1000, 1)} mcg"
             else:
                 teks = f"{round(mg, 1)} mg"
             hasil.append(f"{label} {teks}")
@@ -76,7 +75,7 @@ def ambil_dari_api(q, page):
     return data
 
 
-def food_catalog(request):
+def _build_catalog_payload(request):
     q = request.GET.get("q", "").strip()
     try:
         page = max(1, int(request.GET.get("page", 1)))
@@ -95,7 +94,6 @@ def food_catalog(request):
     except (TypeError, ValueError):
         total = 0
 
-    # Paginator hanya dipakai untuk menghitung nomor halaman (1 2 3 ... 181 182 183).
     paginator = Paginator(range(total), PER_PAGE)
     page_obj = paginator.get_page(page)
     page_range = paginator.get_elided_page_range(
@@ -107,7 +105,7 @@ def food_catalog(request):
     for p in products:
         nama = (p.get("product_name") or "").strip()
         if not nama:
-            continue  # lewati produk yang belum punya nama
+            continue
         n = p.get("nutriments") or {}
         brands = p.get("brands")
         if isinstance(brands, list):
@@ -119,6 +117,7 @@ def food_catalog(request):
             kcal = round(kj / 4.184, 1) if kj is not None else None
 
         foods.append({
+            "code": str(p.get("code") or ""),
             "nama": nama,
             "merek": ", ".join(filter(None, [brands, p.get("quantity")])),
             "gambar": p.get("image_front_small_url"),
@@ -133,11 +132,34 @@ def food_catalog(request):
             "mineral": mikro(n, MINERAL),
         })
 
-    return render(request, "catalog.html", {
+    return {
         "foods": foods,
         "page_obj": page_obj,
         "page_range": page_range,
         "total": total,
         "q": q,
         "error": error,
-    })
+    }
+
+
+def food_catalog(request):
+    payload = _build_catalog_payload(request)
+    return render(request, "catalog.html", payload)
+
+
+def food_catalog_json(request):
+    payload = _build_catalog_payload(request)
+    page_obj = payload["page_obj"]
+    return JsonResponse(
+        {
+            "status": "error" if payload["error"] else "success",
+            "query": payload["q"],
+            "page": page_obj.number,
+            "total_pages": page_obj.paginator.num_pages,
+            "has_next": page_obj.has_next(),
+            "has_previous": page_obj.has_previous(),
+            "total": payload["total"],
+            "results": payload["foods"],
+        },
+        status=502 if payload["error"] else 200,
+    )
